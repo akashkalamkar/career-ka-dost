@@ -9,6 +9,9 @@ export const SITE = {
   whatsappE164: '919503821010',
   phoneTel: '+919503821010',
   instagramUrl: 'https://www.instagram.com/careerkadost',
-  addressLine: 'India — add your full centre address here',
+  addressLine:
+    '2nd Floor, Booty Chambers, opposite Fortune Mall, Sitabuldi, Nagpur, Maharashtra 440012',
+  /** Google Maps (short link) */
+  mapsUrl: 'https://maps.app.goo.gl/2FcYjpmDKMUZMP239',
   copyrightYear: 2026,
 }

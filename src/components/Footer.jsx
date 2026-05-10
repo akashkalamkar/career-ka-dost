@@ -41,6 +41,14 @@ export function Footer() {
         <div>
           <p className="text-sm font-semibold uppercase tracking-wider text-white">Visit</p>
           <p className="mt-4 text-sm leading-relaxed text-slate-400">{SITE.addressLine}</p>
+          <a
+            className="mt-3 inline-flex text-sm font-medium text-white underline decoration-white/40 underline-offset-4 transition hover:text-accent-300 hover:decoration-accent-300"
+            href={SITE.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open in Google Maps
+          </a>
         </div>
       </div>
       <div className="mx-auto mt-10 max-w-6xl border-t border-white/10 px-4 pt-8 text-center text-xs text-slate-500 md:px-6">
