@@ -1,0 +1,81 @@
+@import 'tailwindcss';
+
+@source './App.jsx';
+@source './main.jsx';
+@source './components/**/*.jsx';
+@source './config/**/*.js';
+@source './utils/**/*.js';
+@source '../index.html';
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #2563eb;
+  --color-brand-600: #1d4ed8;
+  --color-brand-700: #1e40af;
+  --color-accent-300: #fde047;
+  --color-accent-400: #facc15;
+  --color-accent-500: #eab308;
+  --animate-fade-up: fade-up 0.65s ease-out forwards;
+  --animate-float-slow: float-y 5s ease-in-out infinite;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-fade-up {
+  animation: var(--animate-fade-up);
+}
+
+.animate-float-slow {
+  animation: var(--animate-float-slow);
+}
+
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgb(37 99 235 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(37 99 235 / 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
