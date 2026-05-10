@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { IMAGES, IMAGE_FALLBACKS } from '../config/images'
 import { SITE } from '../config/site'
+import { submitLead } from '../utils/submitLead'
 import { openWhatsApp } from '../utils/whatsapp'
 import { PosterImage } from './PosterImage'
 
@@ -90,6 +91,14 @@ export function LeadGateModal() {
       `City: ${values.city}`,
     ].join('\n')
 
+    submitLead({
+      source: 'lead-modal',
+      studentName: values.studentName,
+      phone: values.phone,
+      email: values.email,
+      classExam: values.classExam,
+      city: values.city,
+    })
     openWhatsApp({ phoneE164: SITE.whatsappE164, message: msg })
     persistDismissed()
     setOpen(false)

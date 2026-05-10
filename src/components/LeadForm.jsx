@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { IMAGES, IMAGE_FALLBACKS } from '../config/images'
 import { SITE } from '../config/site'
+import { submitLead } from '../utils/submitLead'
 import { openWhatsApp } from '../utils/whatsapp'
 import { PosterImage } from './PosterImage'
 import { SectionHeading } from './SectionHeading'
@@ -34,6 +35,14 @@ export function LeadForm() {
     ].join('\n')
 
     setSubmitted(true)
+    submitLead({
+      source: 'lead-form',
+      studentName: values.studentName,
+      phone: values.phone,
+      email: values.email,
+      classExam: values.classExam,
+      city: values.city,
+    })
     openWhatsApp({ phoneE164: SITE.whatsappE164, message: msg })
   }
 
