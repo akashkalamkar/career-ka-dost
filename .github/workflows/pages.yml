@@ -3,6 +3,9 @@
 # Repository secret (required for leads): Settings → Secrets and variables → Actions → New repository secret
 #   Name:  VITE_LEADS_WEBHOOK_URL
 #   Value: your Apps Script Web App URL ending in /exec (same as local .env)
+# Second repository secret (required for the staff portal / Admin page), same place:
+#   Name:  VITE_ADMIN_API_URL
+#   Value: the staff portal Web App URL ending in /exec (same as local .env)
 
 name: Deploy GitHub Pages
 
@@ -40,6 +43,7 @@ jobs:
           # Project site: https://<user>.github.io/<repo>/
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
           VITE_LEADS_WEBHOOK_URL: ${{ secrets.VITE_LEADS_WEBHOOK_URL }}
+          VITE_ADMIN_API_URL: ${{ secrets.VITE_ADMIN_API_URL }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

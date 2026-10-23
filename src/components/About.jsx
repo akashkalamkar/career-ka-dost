@@ -1,54 +1,105 @@
-import { IMAGES, IMAGE_FALLBACKS } from '../config/images'
-import { PosterImage } from './PosterImage'
+﻿import { FOUNDER, SITE } from '../config/site'
+import { btnOutline, container } from '../config/ui'
+import { openWhatsApp } from '../utils/whatsapp'
+import { HowItWorks } from './HowItWorks'
+import { MissionVision } from './MissionVision'
+import { WhyChooseUs } from './WhyChooseUs'
 import { SectionHeading } from './SectionHeading'
+import { Tilt } from './Tilt'
 
-const points = [
-  'We help students choose the right college and career path—with clarity, not guesswork.',
-  'Guidance for NEET, JEE, Engineering, Medical admissions and long-term career planning.',
-  'Personalized counselling that respects your marks, rank, budget and dream branches.',
-  'Parents stay involved at every step—transparent timelines, realistic options, calm decisions.',
+const inclusive = [
+  {
+    title: 'Every option on the table',
+    text: 'Government, aided and private colleges compared side by side, so you see the full picture.',
+  },
+  {
+    title: 'Budget is part of the plan',
+    text: 'We build advice around what your family can realistically afford, and never push the costliest path.',
+  },
+  {
+    title: 'Parents are partners',
+    text: 'We guide students and parents at every step, so the whole family decides together.',
+  },
 ]
 
 export function About() {
   return (
-    <section id="about" className="scroll-mt-24 bg-white py-16 md:py-24">
-      <div className="mx-auto max-w-6xl px-4 md:px-6">
-        <SectionHeading
-          eyebrow="About Career Ka Dost"
-          title="Your trusted friend for admissions & career clarity"
-          subtitle="Admission season is stressful—we simplify choices so students aim higher with confidence and parents sleep better at night."
-        />
-        <div className="grid items-center gap-10 md:grid-cols-2 md:gap-14">
-          <div className="order-2 md:order-1">
-            <ul className="space-y-4">
-              {points.map((text) => (
-                <li key={text} className="flex gap-3">
-                  <span className="mt-1.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-400 text-xs font-bold text-slate-900">
-                    ✓
-                  </span>
-                  <p className="text-base leading-relaxed text-slate-700">{text}</p>
+    <>
+      <MissionVision />
+
+      <section id="founder" className="scroll-mt-20 bg-paper-2 py-20 md:py-28">
+        <div className={`${container} grid items-center gap-12 lg:grid-cols-12 lg:gap-16`}>
+          <div className="lg:col-span-5">
+            <Tilt max={6} lift={1.03} glare={false} className="mx-auto max-w-md">
+              <img
+                src={FOUNDER.photo}
+                alt={`${FOUNDER.name}, founder of ${SITE.name}`}
+                loading="lazy"
+                className="block w-full drop-shadow-[0_24px_24px_rgba(0,0,0,0.22)]"
+              />
+            </Tilt>
+            <div className="mx-auto mt-2 max-w-md border-t-4 border-brand pt-4 text-center">
+              <p className="font-display text-lg font-extrabold">{FOUNDER.name}</p>
+              <p className="text-sm text-ink-soft">{FOUNDER.role}</p>
+            </div>
+          </div>
+
+          <div className="lg:col-span-7">
+            <SectionHeading eyebrow="Meet the founder" title={`${FOUNDER.name}: an engineer and MBA who guides like a friend.`} />
+            <p className="-mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">{FOUNDER.summary}.</p>
+            <ul className="mt-8 space-y-3">
+              {FOUNDER.highlights.map((h) => (
+                <li key={h} className="flex gap-3 text-ink">
+                  <span className="mt-2 h-2 w-2 shrink-0 bg-brand" aria-hidden />
+                  {h}
                 </li>
               ))}
             </ul>
-            <div className="mt-8 rounded-2xl border border-brand-100 bg-brand-50/80 p-5 ring-1 ring-brand-100/60">
-              <p className="text-sm font-semibold text-brand-800">Built for Instagram learners & busy parents</p>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                Short, honest conversations. Actionable college lists. Support until you lock your seat—or pick the right stream after 10th.
-              </p>
-            </div>
-          </div>
-          <div className="order-1 md:order-2">
-            <div className="overflow-hidden rounded-3xl shadow-xl ring-1 ring-slate-200 transition hover:-translate-y-1 hover:shadow-2xl">
-              <PosterImage
-                src={IMAGES.about}
-                fallback={IMAGE_FALLBACKS.about}
-                alt="Career Ka Dost counselling and guidance"
-                className="aspect-[4/3] w-full object-cover"
-              />
-            </div>
+            <p className="mt-10 text-xs font-bold uppercase tracking-[0.2em]">Awards &amp; certifications</p>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {FOUNDER.awards.map((a) => (
+                <li
+                  key={a.name}
+                  className="flex items-center gap-3 border border-ink/20 bg-white py-2 pl-2 pr-4 text-sm font-semibold shadow-[0_3px_0_0_rgba(0,0,0,0.12)] transition hover:-translate-y-0.5 hover:shadow-[0_5px_0_0_#ffb81c]"
+                >
+                  <img src={a.logo} alt="" loading="lazy" className="h-9 w-9 shrink-0 object-contain" />
+                  {a.name}
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              className={`${btnOutline} mt-10`}
+              onClick={() =>
+                openWhatsApp({ phoneE164: SITE.whatsappE164, message: `Hi ${SITE.name}, I'd like to speak with ${FOUNDER.name} about counselling.` })
+              }
+            >
+              Talk to our team
+            </button>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <WhyChooseUs />
+      <HowItWorks />
+
+      <section className="py-20 md:py-28">
+        <div className={container}>
+          <SectionHeading
+            eyebrow="For every family"
+            title="Good guidance should never depend on how much you can spend."
+          />
+          <div className="grid gap-6 md:grid-cols-3">
+            {inclusive.map((p, i) => (
+              <Tilt key={p.title} as="article" className="border border-line border-t-4 border-t-brand bg-white p-8 hover:shadow-2xl">
+                <span className="font-display text-sm font-extrabold text-ink/40 [transform:translateZ(20px)]">0{i + 1}</span>
+                <h3 className="mt-6 font-display text-2xl font-extrabold leading-tight [transform:translateZ(30px)]">{p.title}</h3>
+                <p className="mt-3 leading-relaxed text-ink-soft [transform:translateZ(14px)]">{p.text}</p>
+              </Tilt>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
   )
 }

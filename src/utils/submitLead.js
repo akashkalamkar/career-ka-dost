@@ -10,6 +10,7 @@
  *   phone: string
  *   email: string
  *   classExam: string
+ *   schoolName: string
  *   city: string
  * }} payload
  */
@@ -34,6 +35,8 @@ export function submitLead(payload) {
     classExam: payload.classExam,
     city: payload.city,
     submittedAt: new Date().toISOString(),
+    schoolName: payload.schoolName ?? '',
+    concern: payload.concern ?? '',
   }
 
   const encoded = new URLSearchParams(fields).toString()
