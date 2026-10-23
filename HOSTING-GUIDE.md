@@ -63,7 +63,7 @@ Upload the **contents** so that `index.html` sits at the root of the site (not i
 | `src/admin/` | The staff portal screens (login, attendance, leave, staff, forgot password) and `api.js` (talks to Google). |
 | `src/utils/` | Lead submit, search index, jump-to-spot, whatsapp helpers. |
 | `scripts/leads-google-apps-script.gs` | Backend for the **lead form** (v5). Pasted into its own Apps Script. |
-| `scripts/staff-portal-google-apps-script.gs` | Backend for the **staff portal** (portal-v8). Same file as `3-STAFF-PORTAL-SETUP/Code.gs`. |
+| `scripts/staff-portal-google-apps-script.gs` | Backend for the **staff portal** (portal-v9). Same file as `3-STAFF-PORTAL-SETUP/Code.gs`. |
 | `scripts/portal-tests/` | Fake Google + 176 automated tests (`node scripts/portal-tests/run-all.cjs`). |
 | `.github/workflows/pages.yml` | Auto-deploy to GitHub Pages (only if that host is chosen). |
 | `HANDOFF.md`, `HOSTING-GUIDE.md`, `README.md` | Documentation. |
@@ -75,9 +75,9 @@ Upload the **contents** so that `index.html` sits at the root of the site (not i
 The website itself has no server. It depends on **two Google Apps Script web apps** (both "Execute as: Me", "Who has access: Anyone"):
 
 1. **Lead form script** (`leads-google-apps-script.gs`): already deployed. Its `/exec` URL is in `.env` as `VITE_LEADS_WEBHOOK_URL`. Leads go to the Google Sheet tab "NEW WEBSITE CKD".
-2. **Staff portal script** (`Code.gs`, version `portal-v8`): the URL is in `.env` as `VITE_ADMIN_API_URL`. **The owner has not yet confirmed that the live script was updated to portal-v8.** Until it is, `#/admin` shows an "older version" message.
+2. **Staff portal script** (`Code.gs`, version `portal-v9`): the URL is in `.env` as `VITE_ADMIN_API_URL`. **The owner has not yet confirmed that the live script was updated to portal-v9.** Until it is, `#/admin` shows an "older version" message.
 
-### Option 1 - update the EXISTING sheet to portal-v8 (the `/exec` link stays the same)
+### Option 1 - update the EXISTING sheet to portal-v9 (the `/exec` link stays the same)
 Use this only if you are keeping the current "CKD EMPLOYEE PORTAL" sheet.
 1. Open that Google Sheet → **Extensions → Apps Script**.
 2. Click in the code, **Ctrl+A**, **Delete**.
@@ -85,7 +85,7 @@ Use this only if you are keeping the current "CKD EMPLOYEE PORTAL" sheet.
 4. In the function dropdown choose **applyFixedUsernames** → **Run** (gives Bharat Rai the username `brxxckd1010`; first password = `brxxckd1010@123`). Allow permissions if asked.
 5. Choose **testEmail** → **Run**, allow the permission. A test email must arrive at careerkadost@gmail.com (check Spam).
 6. **Deploy → Manage deployments → pencil (edit) → Version: New version → Deploy.** (Must be "New version" on the existing deployment - this keeps the same `/exec` link. A brand-new deployment gives a NEW link instead, and then `.env` must be updated and the site rebuilt.)
-7. Open the `/exec` link in a browser. It must show `"version":"portal-v8"`.
+7. Open the `/exec` link in a browser. It must show `"version":"portal-v9"`.
 
 ### Option 2 - start completely fresh on a brand NEW Google Sheet (owner's choice, 21 Oct 2026)
 Use this if you are deleting the old sheet and starting over with a clean slate - only the owner's account, no old test data, no old employee rows.
@@ -95,7 +95,7 @@ Use this if you are deleting the old sheet and starting over with a clean slate 
 4. Choose **testEmail** → **Run**, allow the permission. A test email must arrive at careerkadost@gmail.com (check Spam) - this is what sends the password-reset codes later.
 5. **Deploy → New deployment → select type "Web app" → Execute as: Me → Who has access: Anyone → Deploy.** Copy the web app URL (ends in `/exec`).
 6. **This URL is NEW and different from the old one.** Put it into `.env` as `VITE_ADMIN_API_URL`, replacing the old value, then `npm run build` and re-upload the new `dist` to your host. The website will not talk to the new sheet until you do this step - this is the step people forget.
-7. Open the `/exec` link in a browser. It must show `"version":"portal-v8"`.
+7. Open the `/exec` link in a browser. It must show `"version":"portal-v9"`.
 8. Log in to the portal as `brxxckd1010` / `brxxckd1010@123`, set a real password. Then use **Staff → Add employee** to add each person when you are ready (you choose their username there; first password is automatically `username@123`).
 9. Only then can you safely delete the old sheet, once you are sure you do not need its attendance/leave history - deleting it is permanent and cannot be undone by anyone, including Claude.
 
@@ -170,7 +170,7 @@ npm run lint
 |---|---|
 | Blank page on a GitHub Pages site | Wrong base path. The workflow sets it to `/<repo-name>/`. For a custom domain use `/`. |
 | Admin page says "not connected" | The site was built without `VITE_ADMIN_API_URL`. Set it and rebuild (secrets for GitHub Pages / env var on Vercel). |
-| Admin page says the script is older / blank panels | The Apps Script is not on portal-v8, or "New version" was not deployed. Redo section 2. |
+| Admin page says the script is older / blank panels | The Apps Script is not on portal-v9, or "New version" was not deployed. Redo section 2. |
 | "Wrong username or password" for Bharat | Username has **two x**: `brxxckd1010`. First password `brxxckd1010@123`. Run `applyFixedUsernames` if the old username is still in the Sheet. |
 | No reset email | Run `testEmail` once and allow the permission; check Spam; only the exact owner username triggers an email; max 1 per minute and 5 per hour. |
 | Leads not appearing in the Sheet | Wrong or expired lead-script link; open the `/exec` link, it should answer. Redeploy as **New version** if code changed. |

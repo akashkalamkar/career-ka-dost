@@ -33,7 +33,7 @@
  *   - 5 wrong passwords lock that username for 15 minutes.
  */
 
-const SCRIPT_VERSION = 'portal-v8'
+const SCRIPT_VERSION = 'portal-v9'
 const TZ = 'Asia/Kolkata'
 const LATE_FROM_MINUTES = 10 * 60 + 10 // 10:10 AM
 const SESSION_HOURS = 12
@@ -48,6 +48,11 @@ const ATT_HEADERS = ['Date', 'Username', 'Name', 'Check-in', 'Check-out', 'Statu
 const LEAVE_SHEET = 'Leaves'
 const LEAVE_HEADERS = ['ID', 'Username', 'Name', 'Type', 'Half', 'From', 'To', 'Days', 'Reason', 'Applied on', 'Status', 'Decided by', 'Decided on']
 const MAX_LEAVE_DAYS = 60
+
+// Daily work report: one per person per day, written any time before they leave, visible to the owner by date.
+const REPORT_SHEET = 'DailyReports'
+const REPORT_HEADERS = ['Date', 'Username', 'Name', 'Report', 'Updated on']
+const MAX_REPORT_CHARS = 4000
 
 // Forgot password (owner only): a 6-digit code is emailed to the company address below.
 // The owner is the person whose role is "owner" in the Staff tab, whatever username he chose.
@@ -75,8 +80,9 @@ const USERNAME_FIXES = {
 let staffMemo = null
 let attendanceMemo = null
 let leavesMemo = null
+let reportsMemo = null
 // Only these change data, so only these wait for the lock. Reading and logging in do not.
-const WRITE_ACTIONS = { checkin: 1, checkout: 1, changePassword: 1, resetPassword: 1, forgotStart: 1, forgotConfirm: 1, addStaff: 1, setActive: 1, applyLeave: 1, cancelLeave: 1, decideLeave: 1 }
+const WRITE_ACTIONS = { checkin: 1, checkout: 1, changePassword: 1, resetPassword: 1, forgotStart: 1, forgotConfirm: 1, addStaff: 1, setActive: 1, applyLeave: 1, cancelLeave: 1, decideLeave: 1, submitReport: 1 }
 
 /**
  * Only the owner is created automatically. He adds every employee himself from the Staff tab in the
@@ -119,6 +125,7 @@ function setupPortal() {
   ])
 
   leavesSheet()
+  reportsSheet()
 
   const existing = readStaff()
   let added = 0
@@ -211,6 +218,7 @@ function doPost(e) {
   staffMemo = null
   attendanceMemo = null
   leavesMemo = null
+  reportsMemo = null
   const lock = LockService.getScriptLock()
   let locked = false
   try {
@@ -264,6 +272,8 @@ function route(req) {
     case 'applyLeave': return applyLeave(user, req)
     case 'cancelLeave': return cancelLeave(user, req)
     case 'decideLeave': return decideLeave(user, req)
+    case 'submitReport': return submitReport(user, req)
+    case 'teamReports': return teamReports(user, req)
     default: fail('Unknown request.')
   }
 }
@@ -711,13 +721,24 @@ function bootstrap(user) {
     today: clean(findToday(user.username, t.date)),
     rows: (isOwner ? all : all.filter(function (r) { return r.username === user.username })).map(clean),
     leaves: leavesFor(user, t.date.slice(0, 4)).map(cleanLeave),
+    myReport: isOwner ? null : reportToday(user.username, t.date),
   }
   if (isOwner) {
     const todays = all.filter(function (r) { return r.date === t.date })
     out.pendingLeaves = readLeaves().filter(function (l) { return l.status === 'Pending' }).length
     out.staff = readStaff().map(function (s) {
       const rec = todays.filter(function (r) { return r.username === s.username })[0]
-      return { username: s.username, name: s.name, role: s.role, active: s.active, lastLogin: s.lastLogin, mustChange: s.mustChange, today: clean(rec), leave: leaveToday(s.username, t.date) }
+      return {
+        username: s.username,
+        name: s.name,
+        role: s.role,
+        active: s.active,
+        lastLogin: s.lastLogin,
+        mustChange: s.mustChange,
+        today: clean(rec),
+        leave: leaveToday(s.username, t.date),
+        report: reportToday(s.username, t.date),
+      }
     })
   }
   return out
@@ -917,4 +938,85 @@ function decideLeave(owner, req) {
   sheet.getRange(l.row, 11, 1, 3).setValues([[decision, owner.name, nowStamp()]])
   leavesMemo = null
   return bootstrap(owner)
+}
+
+// ---------------------------------------------------------------------------------------------
+// Daily work report
+// ---------------------------------------------------------------------------------------------
+
+/** The DailyReports tab is created the first time it is needed (or by setupPortal). */
+function reportsSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet()
+  let sheet = ss.getSheetByName(REPORT_SHEET)
+  if (sheet) return sheet
+  sheet = ss.insertSheet(REPORT_SHEET)
+  sheet.getRange(1, 1, 1, REPORT_HEADERS.length).setValues([REPORT_HEADERS])
+  sheet.getRange(1, 1, 1, REPORT_HEADERS.length).setFontWeight('bold').setBackground('#ffb81c')
+  sheet.setFrozenRows(1)
+  sheet.getRange(2, 1, sheet.getMaxRows() - 1, 2).setNumberFormat('@')
+  return sheet
+}
+
+function readReports() {
+  if (reportsMemo) return reportsMemo
+  const sheet = reportsSheet()
+  if (sheet.getLastRow() < 2) {
+    reportsMemo = []
+    return reportsMemo
+  }
+  const rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, REPORT_HEADERS.length).getValues()
+  reportsMemo = rows
+    .map(function (r, i) {
+      return { row: i + 2, date: String(r[0]), username: String(r[1]).toLowerCase(), name: String(r[2]), text: String(r[3]), updatedOn: String(r[4]) }
+    })
+    .filter(function (r) { return r.date && r.username })
+  return reportsMemo
+}
+
+function findReport(username, date) {
+  const list = readReports()
+  for (let i = 0; i < list.length; i++) if (list[i].username === username && list[i].date === date) return list[i]
+  return null
+}
+
+function cleanReport(r) {
+  return { date: r.date, username: r.username, name: r.name, text: r.text, updatedOn: r.updatedOn }
+}
+
+/** What this person wrote today, or null if they have not submitted anything yet. */
+function reportToday(username, date) {
+  const r = findReport(username, date)
+  return r ? cleanReport(r) : null
+}
+
+/** An employee writes (or updates) today's report. One entry per person per day: submitting again replaces it. */
+function submitReport(user, req) {
+  if (user.role === 'owner') fail('The owner does not submit a daily report.')
+  const text = String(req.text || '').trim()
+  if (!text) fail('Please write what you worked on today.')
+  if (text.length > MAX_REPORT_CHARS) fail('That is too long (' + MAX_REPORT_CHARS + ' letters at most).')
+  const t = nowParts()
+  const sheet = reportsSheet()
+  const existing = findReport(user.username, t.date)
+  if (existing) {
+    sheet.getRange(existing.row, 4, 1, 2).setNumberFormat('@')
+    sheet.getRange(existing.row, 4, 1, 2).setValues([[text, nowStamp()]])
+  } else {
+    const row = sheet.getLastRow() + 1
+    sheet.getRange(row, 1, 1, REPORT_HEADERS.length).setNumberFormat('@')
+    sheet.getRange(row, 1, 1, REPORT_HEADERS.length).setValues([[t.date, user.username, user.name, text, nowStamp()]])
+  }
+  reportsMemo = null
+  return bootstrap(user)
+}
+
+/** Owner only: everyone's report for one date (defaults to today). */
+function teamReports(owner, req) {
+  if (owner.role !== 'owner') fail('Only the owner can see the team reports.')
+  const date = String(req.date || nowParts().date)
+  if (!isDate(date)) fail('Please choose a date.')
+  const list = readReports()
+    .filter(function (r) { return r.date === date })
+    .map(cleanReport)
+  return { ok: true, date: date, reports: list, staff: readStaff().filter(function (s) { return s.role !== 'owner' }).map(function (s) { return { username: s.username, name: s.name, active: s.active } }) }
 }

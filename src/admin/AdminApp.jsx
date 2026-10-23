@@ -5,7 +5,7 @@ import { AuthError, call, portalConfigured, readSession, saveSession, warmUp } f
 import { card, inputClass } from './format'
 import { ForgotOwner } from './Forgot'
 import { ApplyLeave, LeaveRequests } from './Leaves'
-import { AllRecords, MyAttendance, PasswordForm, StaffTab, TeamToday } from './Panels'
+import { AllRecords, MyAttendance, PasswordForm, StaffTab, TeamReports, TeamToday } from './Panels'
 
 const isFullReply = (data) => Array.isArray(data.rows) && Array.isArray(data.leaves)
 
@@ -135,6 +135,7 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
   const tabs = isOwner
     ? [
         { id: 'team', label: 'Team today' },
+        { id: 'reports', label: 'Daily reports' },
         { id: 'leaves', label: pending ? `Leave requests (${pending})` : 'Leave requests' },
         { id: 'records', label: 'All records' },
         { id: 'staff', label: 'Staff' },
@@ -171,6 +172,7 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
       {tab === 'leave' ? <ApplyLeave token={token} boot={boot} onBoot={onBoot} onAuthError={onSignOut} /> : null}
       {tab === 'leaves' ? <LeaveRequests token={token} boot={boot} onBoot={onBoot} onAuthError={onSignOut} /> : null}
       {tab === 'team' ? <TeamToday token={token} boot={boot} onBoot={onBoot} onAuthError={onSignOut} /> : null}
+      {tab === 'reports' ? <TeamReports token={token} boot={boot} onAuthError={onSignOut} /> : null}
       {tab === 'records' ? <AllRecords token={token} boot={boot} onAuthError={onSignOut} /> : null}
       {tab === 'staff' ? <StaffTab token={token} boot={boot} onBoot={onBoot} onAuthError={onSignOut} /> : null}
       {tab === 'password' ? <PasswordForm token={token} onAuthError={onSignOut} /> : null}

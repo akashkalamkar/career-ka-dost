@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { btnInk, btnPrimary } from '../config/ui'
 import { AuthError, call } from './api'
 import { CheckInTime, OnLeaveChip, StatusChip } from './Chips'
@@ -73,6 +73,57 @@ function Summary({ rows }) {
       <span className="mr-4 inline-block bg-[#d3f0d9] px-3 py-1 text-[#0f6b2a]">{onTime} on time</span>
       <span className="inline-block bg-[#f8c9c9] px-3 py-1 text-[#a40000]">{late} late</span>
     </p>
+  )
+}
+
+/** Employees: a box to write what you worked on today, submitted before you leave. The owner sees it by date. */
+function TodayReport({ token, boot, onBoot, onAuthError }) {
+  const run = useCaller(token, onAuthError)
+  const [text, setText] = useState(boot.myReport ? boot.myReport.text : '')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const [ok, setOk] = useState('')
+
+  async function submit(e) {
+    e.preventDefault()
+    setBusy(true)
+    setError('')
+    setOk('')
+    try {
+      const data = await run('submitReport', { text })
+      onBoot(data)
+      setOk('Saved.')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className={card}>
+      <h2 className="font-display text-2xl font-extrabold">Today&rsquo;s work done</h2>
+      <p className="mt-2 text-ink-soft">Write what you worked on today, then submit before you leave. Bharat Rai can see this by date.</p>
+      <form onSubmit={submit} className="mt-4 space-y-3">
+        <textarea
+          required
+          maxLength={4000}
+          rows={5}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="What did you work on today? You can type, or copy and paste."
+          className={`${inputClass} !h-auto resize-y`}
+        />
+        <div className="flex flex-wrap items-center gap-4">
+          <button type="submit" disabled={busy} className={`${btnPrimary} disabled:opacity-50`}>
+            {busy ? 'Saving...' : boot.myReport ? "Update today's report" : "Submit today's report"}
+          </button>
+          {boot.myReport ? <span className="text-sm font-semibold text-mute">Last saved {boot.myReport.updatedOn}</span> : null}
+        </div>
+        <Message>{error}</Message>
+        <Message kind="ok">{ok}</Message>
+      </form>
+    </div>
   )
 }
 
@@ -171,6 +222,8 @@ export function MyAttendance({ token, user, boot, onBoot, onAuthError }) {
         </div>
       </div>
 
+      <TodayReport token={token} boot={boot} onBoot={onBoot} onAuthError={onAuthError} />
+
       <div className={card}>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -265,6 +318,68 @@ export function TeamToday({ token, boot, onBoot, onAuthError }) {
             ))}
           </tbody>
         </table>
+      </div>
+    </div>
+  )
+}
+
+/** Owner: everyone's daily work report, by date (defaults to today). */
+export function TeamReports({ token, boot, onAuthError }) {
+  const run = useCaller(token, onAuthError)
+  const [date, setDate] = useState(boot.serverTime.date)
+  const [data, setData] = useState(null)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let alive = true
+    run('teamReports', { date })
+      .then((d) => {
+        if (!alive) return
+        setData(d)
+        setError('')
+      })
+      .catch((err) => alive && setError(err.message))
+    return () => {
+      alive = false
+    }
+  }, [date, run])
+
+  const loaded = data && data.date === date
+  const loading = !error && !loaded
+  const byUser = Object.fromEntries((loaded ? data.reports : []).map((r) => [r.username, r]))
+  const staff = (loaded ? data.staff : []).filter((s) => s.active)
+
+  return (
+    <div className={card}>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <h2 className="font-display text-2xl font-extrabold md:text-3xl">Daily reports</h2>
+        <label className="block text-sm font-bold">
+          Date
+          <input type="date" value={date} max={boot.serverTime.date} onChange={(e) => setDate(e.target.value)} className={`${inputClass} !mt-1 sm:w-48`} />
+        </label>
+      </div>
+      <div className="mt-5 space-y-4">
+        <Message>{error}</Message>
+        {loading ? <p className="font-semibold text-mute">Loading...</p> : null}
+        {!loading && !staff.length ? <p className="border border-dashed border-ink/25 px-4 py-6 text-center font-semibold text-mute">No employees yet.</p> : null}
+        {!loading
+          ? staff.map((s) => {
+              const r = byUser[s.username]
+              return (
+                <div key={s.username} className="border border-line p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="font-display text-lg font-extrabold">{s.name}</p>
+                    {r ? <span className="text-xs font-semibold text-mute">Saved {r.updatedOn}</span> : null}
+                  </div>
+                  {r ? (
+                    <p className="mt-2 whitespace-pre-wrap text-sm font-semibold text-ink">{r.text}</p>
+                  ) : (
+                    <p className="mt-2 text-sm font-semibold text-mute">No report submitted for this date.</p>
+                  )}
+                </div>
+              )
+            })
+          : null}
       </div>
     </div>
   )
