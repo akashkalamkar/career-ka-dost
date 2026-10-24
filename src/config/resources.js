@@ -59,7 +59,19 @@ export const RESOURCE_CLASSES = [
               ]),
             ],
           },
-          { id: 'standard', name: 'Maths Standard', files: [] },
+          {
+            id: 'standard',
+            name: 'Maths Standard',
+            files: [
+              file('5 Sample Papers', '(2027)', 'class-10', 'class-10-maths-standard-sample-papers.pdf', [
+                'For 2027 board exam students',
+                'Based on past year papers',
+                'Latest updated CBSE 2026-27 syllabus',
+                '5 full papers of 80 marks, latest 5-section pattern',
+                'MCQ, Assertion-Reason, Short Answer, Long Answer and Case Studies',
+              ]),
+            ],
+          },
         ],
       },
       {
@@ -119,6 +131,19 @@ export const RESOURCE_CLASSES = [
               ]),
             ],
           },
+        ],
+      },
+      {
+        id: 'information-technology',
+        name: 'Information Technology',
+        files: [
+          file('5 Sample Papers', '(2027)', 'class-10', 'class-10-it-sample-papers.pdf', [
+            'For 2027 board exam students',
+            'Based on past year papers',
+            'Latest updated CBSE 2026-27 syllabus',
+            '5 full papers of 50 marks, latest 2-section pattern (Code 402)',
+            'Objective Type and Subjective Type sections',
+          ]),
         ],
       },
     ],
