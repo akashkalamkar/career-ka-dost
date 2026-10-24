@@ -16,7 +16,7 @@ export const SITE = {
   /** Handle taken from the brochure ("CareerKaDost"). Please confirm it opens your channel. */
   youtubeUrl: 'https://www.youtube.com/@CareerKaDost',
   /** Add your LinkedIn page URL here and a LinkedIn icon appears in the footer and Contact page. */
-  linkedinUrl: '',
+  linkedinUrl: 'https://www.linkedin.com/company/careerkadost',
   /** The "Scan for psychometric test" QR code in the brochure points here. */
   addressLine:
     '2nd Floor, Buty Chambers, opposite Fortune Mall, Sitabuldi, Nagpur, Maharashtra 440012',

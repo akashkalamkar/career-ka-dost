@@ -385,6 +385,58 @@ export function TeamReports({ token, boot, onAuthError }) {
   )
 }
 
+/** One row per employee: how many days present, on time and late, for whichever rows are passed in. */
+function summarizeByEmployee(rows, staff) {
+  const map = {}
+  staff.forEach((s) => {
+    map[s.username] = { username: s.username, name: s.name, active: s.active, present: 0, onTime: 0, late: 0 }
+  })
+  rows.forEach((r) => {
+    const e = map[r.username]
+    if (!e) return
+    e.present++
+    if (r.status === 'On time') e.onTime++
+    else if (r.status === 'Late') e.late++
+  })
+  return Object.values(map)
+}
+
+/** Owner: days present / on time / late per employee for the selected month - a quick view for reviews. */
+function MonthSummary({ rows, staff }) {
+  const list = summarizeByEmployee(
+    rows,
+    staff.filter((s) => s.role !== 'owner'),
+  )
+  if (!list.length) return null
+  return (
+    <div className="overflow-x-auto border border-line">
+      <table className="w-full min-w-[28rem] text-left text-sm">
+        <thead className="bg-paper-2 text-xs font-extrabold uppercase tracking-wider">
+          <tr>
+            <th className="px-4 py-3">Name</th>
+            <th className="px-4 py-3">Present</th>
+            <th className="px-4 py-3">On time</th>
+            <th className="px-4 py-3">Late</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-line">
+          {list.map((e) => (
+            <tr key={e.username} className={e.active ? '' : 'bg-paper-2/60'}>
+              <td className="px-4 py-3 font-semibold">
+                {e.name}
+                {e.active ? '' : ' (discontinued)'}
+              </td>
+              <td className="px-4 py-3">{e.present}</td>
+              <td className="px-4 py-3">{e.onTime}</td>
+              <td className="px-4 py-3">{e.late}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 /** Owner: every record, by month and by person. The person filter works instantly (no waiting). */
 export function AllRecords({ token, boot, onAuthError }) {
   const run = useCaller(token, onAuthError)
@@ -423,36 +475,46 @@ export function AllRecords({ token, boot, onAuthError }) {
   }
 
   return (
-    <div className={card}>
-      <h2 className="font-display text-2xl font-extrabold md:text-3xl">All attendance records</h2>
-      <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end">
-        <label className="block text-sm font-bold">
-          Month
-          <input type="month" value={month} onChange={(e) => changeMonth(e.target.value)} className={`${inputClass} !mt-1 sm:w-48`} />
-        </label>
-        <label className="block text-sm font-bold">
-          Person
-          <select value={who} onChange={(e) => setWho(e.target.value)} className={`${inputClass} !mt-1 sm:w-64`}>
-            <option value="">Everyone</option>
-            {boot.staff
-              .filter((s) => s.role !== 'owner')
-              .map((s) => (
-                <option key={s.username} value={s.username}>
-                  {s.name}
-                  {s.active ? '' : ' (discontinued)'}
-                </option>
-              ))}
-          </select>
-        </label>
-        <button type="button" onClick={download} disabled={!rows.length} className={`${btnInk} !py-3 disabled:opacity-40`}>
-          Download CSV
-        </button>
+    <div className="space-y-8">
+      <div className={card}>
+        <h2 className="font-display text-2xl font-extrabold md:text-3xl">Monthly summary per employee</h2>
+        <p className="mt-2 text-ink-soft">Days present, on time and late for the month selected below - useful for reviews.</p>
+        <div className="mt-5">
+          <MonthSummary rows={all} staff={boot.staff} />
+        </div>
       </div>
-      <div className="mt-4 space-y-4">
-        <Message>{error}</Message>
-        {loading ? <p className="font-semibold text-mute">Loading...</p> : null}
-        <Summary rows={rows} />
-        <AttendanceTable rows={rows} showName />
+
+      <div className={card}>
+        <h2 className="font-display text-2xl font-extrabold md:text-3xl">All attendance records</h2>
+        <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end">
+          <label className="block text-sm font-bold">
+            Month
+            <input type="month" value={month} onChange={(e) => changeMonth(e.target.value)} className={`${inputClass} !mt-1 sm:w-48`} />
+          </label>
+          <label className="block text-sm font-bold">
+            Person
+            <select value={who} onChange={(e) => setWho(e.target.value)} className={`${inputClass} !mt-1 sm:w-64`}>
+              <option value="">Everyone</option>
+              {boot.staff
+                .filter((s) => s.role !== 'owner')
+                .map((s) => (
+                  <option key={s.username} value={s.username}>
+                    {s.name}
+                    {s.active ? '' : ' (discontinued)'}
+                  </option>
+                ))}
+            </select>
+          </label>
+          <button type="button" onClick={download} disabled={!rows.length} className={`${btnInk} !py-3 disabled:opacity-40`}>
+            Download CSV
+          </button>
+        </div>
+        <div className="mt-4 space-y-4">
+          <Message>{error}</Message>
+          {loading ? <p className="font-semibold text-mute">Loading...</p> : null}
+          <Summary rows={rows} />
+          <AttendanceTable rows={rows} showName />
+        </div>
       </div>
     </div>
   )

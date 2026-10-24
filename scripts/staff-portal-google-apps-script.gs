@@ -33,7 +33,7 @@
  *   - 5 wrong passwords lock that username for 15 minutes.
  */
 
-const SCRIPT_VERSION = 'portal-v9'
+const SCRIPT_VERSION = 'portal-v10'
 const TZ = 'Asia/Kolkata'
 const LATE_FROM_MINUTES = 10 * 60 + 10 // 10:10 AM
 const SESSION_HOURS = 12
@@ -1019,4 +1019,71 @@ function teamReports(owner, req) {
     .filter(function (r) { return r.date === date })
     .map(cleanReport)
   return { ok: true, date: date, reports: list, staff: readStaff().filter(function (s) { return s.role !== 'owner' }).map(function (s) { return { username: s.username, name: s.name, active: s.active } }) }
+}
+
+// ---------------------------------------------------------------------------------------------
+// Weekly summary email (owner's request, 24 Oct 2026)
+// ---------------------------------------------------------------------------------------------
+
+/** The 7 calendar days ending today (IST), oldest first, as 'yyyy-MM-dd' strings. */
+function last7Days() {
+  const t = nowParts()
+  const out = []
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(t.date + 'T12:00:00+05:30')
+    d.setUTCDate(d.getUTCDate() - i)
+    out.push(Utilities.formatDate(d, TZ, 'yyyy-MM-dd'))
+  }
+  return out
+}
+
+/** Each active employee's attendance, leave and daily-report summary for the past 7 days, as plain text. */
+function weeklySummaryText() {
+  const days = last7Days()
+  const from = days[0]
+  const to = days[days.length - 1]
+  const att = readAttendance().filter(function (r) { return r.date >= from && r.date <= to })
+  const leaves = readLeaves().filter(function (l) { return l.status === 'Accepted' && l.from <= to && l.to >= from })
+  const reports = readReports().filter(function (r) { return r.date >= from && r.date <= to })
+  const staff = readStaff().filter(function (s) { return s.role !== 'owner' && s.active })
+
+  const lines = ['Weekly team summary: ' + from + ' to ' + to, '']
+  if (!staff.length) lines.push('No employees yet.')
+  staff.forEach(function (s) {
+    const mine = att.filter(function (r) { return r.username === s.username })
+    const onTime = mine.filter(function (r) { return r.status === 'On time' }).length
+    const late = mine.filter(function (r) { return r.status === 'Late' }).length
+    const leaveDays = leaves.filter(function (l) { return l.username === s.username }).reduce(function (sum, l) { return sum + l.days }, 0)
+    const mineReports = reports
+      .filter(function (r) { return r.username === s.username })
+      .sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0 })
+    lines.push(s.name + ' (' + s.username + ')')
+    lines.push('  Present: ' + mine.length + ' day(s) - ' + onTime + ' on time, ' + late + ' late')
+    lines.push('  Leave: ' + leaveDays + ' day(s)')
+    lines.push('  Daily reports: ' + mineReports.length + ' of 7 days')
+    mineReports.forEach(function (r) { lines.push('    ' + r.date + ': ' + r.text) })
+    lines.push('')
+  })
+  return lines.join('\n')
+}
+
+/** Emails the weekly summary to the owner. Runs automatically every Saturday - see installWeeklySummaryTrigger. */
+function sendWeeklySummary() {
+  const days = last7Days()
+  MailApp.sendEmail(OWNER_EMAIL, 'Career Ka Dost - Weekly team summary (' + days[0] + ' to ' + days[6] + ')', weeklySummaryText())
+}
+
+/**
+ * Run this ONCE from the Apps Script editor to turn the weekly email on. Safe to re-run (it removes any
+ * trigger it made before, so running it again never sends two emails). First check the project's time zone
+ * is India - Project Settings (gear icon) > General settings > Time zone - otherwise "Saturday 11:59" will
+ * not mean 11:59 IST. Apps Script time-based triggers are not exact to the minute (usually within about
+ * 15 minutes of the time asked).
+ */
+function installWeeklySummaryTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === 'sendWeeklySummary') ScriptApp.deleteTrigger(t)
+  })
+  ScriptApp.newTrigger('sendWeeklySummary').timeBased().onWeekDay(ScriptApp.WeekDay.SATURDAY).atHour(11).nearMinute(59).create()
+  Logger.log('Weekly summary email turned on: every Saturday, sent to ' + OWNER_EMAIL + '.')
 }
