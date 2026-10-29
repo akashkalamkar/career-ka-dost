@@ -26,8 +26,11 @@ export async function downloadInvoicePdf(element, filename) {
   const imgHeight = (canvas.height * imgWidth) / canvas.width
 
   // Almost every bill fits on one page, but a long one (many services) spills onto a second page here
-  // rather than getting cut off.
-  let heightLeft = imgHeight
+  // rather than getting cut off. A few mm of overflow (font/antialiasing rounding, not real extra
+  // content) is absorbed into page one instead, so that alone never spawns an unwanted, near-blank
+  // second page.
+  const OVERFLOW_TOLERANCE_MM = 15
+  let heightLeft = imgHeight - OVERFLOW_TOLERANCE_MM
   let position = 0
   pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight)
   heightLeft -= pageHeight

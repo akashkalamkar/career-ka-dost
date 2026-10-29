@@ -105,61 +105,69 @@ function ItemsTable({ items, onRemove }) {
 // The printable invoice itself
 // ---------------------------------------------------------------------------------------------
 
-export function PrintableInvoice({ invoice }) {
+// `ref` as a plain prop (React 19) - it must land on this component's own root div, the one with the
+// A4 sizing classes, not on some wrapper around it, or a PDF capture of it comes out the wrapper's
+// (wider, unconstrained) width instead and the receipt ends up short and squashed into the top of the page.
+export function PrintableInvoice({ invoice, ref }) {
   return (
-    <div className="print-area mx-auto max-w-[210mm] border border-line bg-white p-8 text-ink shadow-sm print:border-0 print:shadow-none">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b-4 border-brand pb-5">
-        <div className="flex items-center gap-4">
-          <img src={SITE.logoUrl} alt="" className="h-14 w-14 object-contain" />
+    // A4 is 297mm tall; this targets noticeably less (280mm) so small rendering differences (fonts,
+    // antialiasing, the border, and - seen in testing - the off-screen hidden render used to re-download
+    // a past bill measuring a few mm taller than the normal on-screen one) never push the captured image
+    // past a full page and spill the signature onto an unwanted, mostly-blank second page. The footer is
+    // pushed to the bottom via mt-auto below, so the receipt still reads as filling the whole printed page.
+    <div ref={ref} className="print-area mx-auto flex min-h-[280mm] max-w-[210mm] flex-col border border-line bg-white p-12 text-ink shadow-sm print:border-0 print:shadow-none">
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b-4 border-brand pb-8">
+        <div className="flex items-center gap-5">
+          <img src={SITE.logoUrl} alt="" className="h-20 w-20 object-contain" />
           <div>
-            <p className="font-display text-xl font-extrabold">{SITE.name}</p>
-            <p className="text-xs font-semibold text-mute">{SITE.tagline}</p>
-            <p className="mt-1 max-w-xs text-xs text-ink-soft">{SITE.addressLine}</p>
-            <p className="text-xs text-ink-soft">
+            <p className="font-display text-3xl font-extrabold">{SITE.name}</p>
+            <p className="text-sm font-semibold text-mute">{SITE.tagline}</p>
+            <p className="mt-2 max-w-xs text-sm text-ink-soft">{SITE.addressLine}</p>
+            <p className="text-sm text-ink-soft">
               {SITE.phoneDisplay} &middot; {SITE.email}
             </p>
           </div>
         </div>
         <div className="text-right">
-          <p className="font-display text-lg font-extrabold uppercase tracking-wide">Receipt</p>
-          <p className="mt-1 text-sm font-bold">{invoice.invoiceNo}</p>
-          <p className="text-xs text-ink-soft">{invoice.date}</p>
-          <p className="text-xs text-ink-soft">{invoice.time}</p>
+          <p className="font-display text-2xl font-extrabold uppercase tracking-wide">Receipt</p>
+          <p className="mt-2 text-lg font-bold">{invoice.invoiceNo}</p>
+          <p className="text-sm text-ink-soft">{invoice.date}</p>
+          <p className="text-sm text-ink-soft">{invoice.time}</p>
         </div>
       </div>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+      <div className="mt-16 grid gap-4 sm:grid-cols-2">
         <div>
-          <p className="text-xs font-extrabold uppercase tracking-wider text-mute">Billed to</p>
-          <p className="mt-1 font-bold">{invoice.studentName}</p>
-          <p className="text-sm text-ink-soft">{invoice.phone}</p>
-          {invoice.classOrCourse ? <p className="text-sm text-ink-soft">{invoice.classOrCourse}</p> : null}
-          {invoice.city ? <p className="text-sm text-ink-soft">{invoice.city}</p> : null}
+          <p className="text-sm font-extrabold uppercase tracking-wider text-mute">Billed to</p>
+          <p className="mt-2 text-xl font-bold">{invoice.studentName}</p>
+          <p className="mt-1 text-base text-ink-soft">{invoice.phone}</p>
+          {invoice.classOrCourse ? <p className="text-base text-ink-soft">{invoice.classOrCourse}</p> : null}
+          {invoice.city ? <p className="text-base text-ink-soft">{invoice.city}</p> : null}
         </div>
         <div className="sm:text-right">
-          <p className="text-xs font-extrabold uppercase tracking-wider text-mute">Received by</p>
-          <p className="mt-1 font-bold">{invoice.createdByName}</p>
+          <p className="text-sm font-extrabold uppercase tracking-wider text-mute">Received by</p>
+          <p className="mt-2 text-xl font-bold">{invoice.createdByName}</p>
         </div>
       </div>
 
-      <table className="mt-6 w-full text-left text-sm">
-        <thead className="border-b-2 border-ink/15 text-xs font-extrabold uppercase tracking-wider">
+      <table className="mt-16 w-full text-left">
+        <thead className="border-b-2 border-ink/15 text-sm font-extrabold uppercase tracking-wider">
           <tr>
-            <th className="py-2">Service</th>
-            <th className="py-2 text-right">Amount</th>
+            <th className="py-4">Service</th>
+            <th className="py-4 text-right">Amount</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-line">
+        <tbody className="divide-y divide-line text-base">
           {invoice.items.map((it, i) => (
             <tr key={i}>
-              <td className="py-2">{it.name}</td>
-              <td className="py-2 text-right">{money(it.price)}</td>
+              <td className="py-4">{it.name}</td>
+              <td className="py-4 text-right">{money(it.price)}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <div className="mt-4 ml-auto w-full max-w-xs space-y-1.5 text-sm">
+      <div className="mt-10 ml-auto w-full max-w-sm space-y-3 text-base">
         <div className="flex justify-between">
           <span className="text-ink-soft">Subtotal</span>
           <span className="font-semibold">{money(invoice.subtotal)}</span>
@@ -170,7 +178,7 @@ export function PrintableInvoice({ invoice }) {
             <span className="font-semibold">- {money(invoice.discountAmount)}</span>
           </div>
         ) : null}
-        <div className="flex justify-between border-t-2 border-ink/20 pt-1.5 text-base font-extrabold">
+        <div className="flex justify-between border-t-2 border-ink/20 pt-3 text-2xl font-extrabold">
           <span>Total</span>
           <span>{money(invoice.total)}</span>
         </div>
@@ -188,9 +196,9 @@ export function PrintableInvoice({ invoice }) {
         ) : null}
       </div>
 
-      <p className="mt-4 text-sm font-semibold italic">{amountInWords(invoice.total)}</p>
+      <p className="mt-10 text-lg font-semibold italic">{amountInWords(invoice.total)}</p>
 
-      <div className="mt-3 flex flex-wrap gap-x-8 gap-y-1 text-sm">
+      <div className="mt-10 flex flex-wrap gap-x-10 gap-y-2 text-base">
         <p>
           <span className="font-bold">Payment mode:</span> {invoice.paymentMode}
         </p>
@@ -199,14 +207,16 @@ export function PrintableInvoice({ invoice }) {
         </p>
       </div>
 
-      {invoice.notes ? <p className="mt-3 text-sm text-ink-soft">Note: {invoice.notes}</p> : null}
+      {invoice.notes ? <p className="mt-6 text-base text-ink-soft">Note: {invoice.notes}</p> : null}
 
-      <div className="mt-12 flex items-end justify-between gap-6">
-        <p className="max-w-xs text-xs text-mute">{INVOICE.footerNote}</p>
+      {/* mt-auto: whatever room is left on the page (there is always some, a bill is short) collects
+          here, so this block sits at the bottom of the page rather than right under the note above. */}
+      <div className="mt-auto flex items-end justify-between gap-6 border-t border-line pt-10">
+        <p className="max-w-xs text-sm text-mute">{INVOICE.footerNote}</p>
         <div className="text-center">
-          <img src={INVOICE.signatureUrl} alt="" className="mx-auto h-16 object-contain" />
-          <p className="mt-1 border-t border-ink/30 pt-1 text-sm font-bold">{INVOICE.signatureName}</p>
-          <p className="text-xs text-mute">{INVOICE.signatureRole}</p>
+          <img src={INVOICE.signatureUrl} alt="" className="mx-auto h-20 object-contain" />
+          <p className="mt-2 border-t border-ink/30 pt-2 text-base font-bold">{INVOICE.signatureName}</p>
+          <p className="text-sm text-mute">{INVOICE.signatureRole}</p>
         </div>
       </div>
     </div>
@@ -336,9 +346,7 @@ export function GenerateBill({ token, onAuthError }) {
             </div>
           </div>
         </div>
-        <div ref={invoiceRef}>
-          <PrintableInvoice invoice={invoice} />
-        </div>
+        <PrintableInvoice ref={invoiceRef} invoice={invoice} />
       </div>
     )
   }
@@ -591,11 +599,13 @@ export function InvoiceLog({ token, onAuthError }) {
             </table>
           </div>
         ) : null}
+        {/* An explicit width on the hidden box below matters: without one, this fixed, off-screen box
+            shrinks to fit its content instead of giving the receipt (max-w-[210mm], centred) room to
+            reach its full width, and everything inside renders narrower (and so, wrongly, taller once
+            scaled to a PDF page) than the normal on-screen version. */}
         {downloadTarget ? (
-          <div style={{ position: 'fixed', top: 0, left: '-9999px' }} aria-hidden>
-            <div ref={hiddenRef}>
-              <PrintableInvoice invoice={downloadTarget} />
-            </div>
+          <div style={{ position: 'fixed', top: 0, left: '-9999px', width: '1000px' }} aria-hidden>
+            <PrintableInvoice ref={hiddenRef} invoice={downloadTarget} />
           </div>
         ) : null}
       </div>
