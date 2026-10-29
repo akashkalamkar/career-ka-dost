@@ -1,33 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { btnInk, btnPrimary } from '../config/ui'
-import { AuthError, call } from './api'
 import { CheckInTime, OnLeaveChip, StatusChip } from './Chips'
 import { card, dateLabel, inputClass, time12 } from './format'
-
-/** Runs a portal request and turns "log in again" errors into a sign-out. */
-function useCaller(token, onAuthError) {
-  return useCallback(
-    async (action, payload) => {
-      try {
-        return await call(action, payload, token)
-      } catch (err) {
-        if (err instanceof AuthError) onAuthError()
-        throw err
-      }
-    },
-    [token, onAuthError],
-  )
-}
-
-function Message({ kind = 'error', children }) {
-  if (!children) return null
-  const style = kind === 'error' ? 'border-[#a40000] bg-[#fdecec] text-[#7a0000]' : 'border-[#0f6b2a] bg-[#e5f6e9] text-[#0b4f1f]'
-  return (
-    <p role={kind === 'error' ? 'alert' : 'status'} className={`border-l-4 px-4 py-3 text-sm font-bold ${style}`}>
-      {children}
-    </p>
-  )
-}
+import { Message } from './Shared'
+import { useCaller } from './useCaller'
 
 function AttendanceTable({ rows, showName }) {
   if (!rows.length) return <p className="border border-dashed border-ink/25 px-4 py-6 text-center font-semibold text-mute">No records for this month yet.</p>

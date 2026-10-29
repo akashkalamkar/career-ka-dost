@@ -46,3 +46,20 @@ body {
     scroll-behavior: auto;
   }
 }
+
+/* Printing a bill (see Invoice.jsx): hide the whole site around it, print only the invoice itself. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}

@@ -33,7 +33,7 @@
  *   - 5 wrong passwords lock that username for 15 minutes.
  */
 
-const SCRIPT_VERSION = 'portal-v10'
+const SCRIPT_VERSION = 'portal-v11'
 const TZ = 'Asia/Kolkata'
 const LATE_FROM_MINUTES = 10 * 60 + 10 // 10:10 AM
 const SESSION_HOURS = 12
@@ -53,6 +53,21 @@ const MAX_LEAVE_DAYS = 60
 const REPORT_SHEET = 'DailyReports'
 const REPORT_HEADERS = ['Date', 'Username', 'Name', 'Report', 'Updated on']
 const MAX_REPORT_CHARS = 4000
+
+// Bill / invoice generator (added 29 Oct 2026): any logged-in staff member can create one. Every invoice is
+// logged here for the record - who made it, for whom, what was charged, and what discount was given. The
+// money is always recalculated on the server from the raw numbers sent (service prices, discount), never
+// just trusted from the browser, so the sheet cannot show a total that does not actually add up. No GST:
+// Career Ka Dost is not GST-registered, so a bill is just the services minus the discount.
+const INVOICE_SHEET = 'Invoices'
+const INVOICE_HEADERS = [
+  'Invoice No', 'Date', 'Time', 'Created by (username)', 'Created by (name)',
+  'Student name', 'Phone', 'Class / Course', 'City',
+  'Services', 'Subtotal', 'Discount %', 'Discount amount', 'Total',
+  'Payment mode', 'Payment status', 'Amount paid', 'Balance due', 'Notes',
+]
+const INVOICE_PREFIX = 'CKD'
+const MAX_INVOICE_ITEMS = 20
 
 // Forgot password (owner only): a 6-digit code is emailed to the company address below.
 // The owner is the person whose role is "owner" in the Staff tab, whatever username he chose.
@@ -82,7 +97,7 @@ let attendanceMemo = null
 let leavesMemo = null
 let reportsMemo = null
 // Only these change data, so only these wait for the lock. Reading and logging in do not.
-const WRITE_ACTIONS = { checkin: 1, checkout: 1, changePassword: 1, resetPassword: 1, forgotStart: 1, forgotConfirm: 1, addStaff: 1, setActive: 1, applyLeave: 1, cancelLeave: 1, decideLeave: 1, submitReport: 1 }
+const WRITE_ACTIONS = { checkin: 1, checkout: 1, changePassword: 1, resetPassword: 1, forgotStart: 1, forgotConfirm: 1, addStaff: 1, setActive: 1, applyLeave: 1, cancelLeave: 1, decideLeave: 1, submitReport: 1, createInvoice: 1 }
 
 /**
  * Only the owner is created automatically. He adds every employee himself from the Staff tab in the
@@ -274,6 +289,8 @@ function route(req) {
     case 'decideLeave': return decideLeave(user, req)
     case 'submitReport': return submitReport(user, req)
     case 'teamReports': return teamReports(user, req)
+    case 'createInvoice': return createInvoice(user, req)
+    case 'listInvoices': return listInvoices(user, req)
     default: fail('Unknown request.')
   }
 }
@@ -1086,4 +1103,161 @@ function installWeeklySummaryTrigger() {
   })
   ScriptApp.newTrigger('sendWeeklySummary').timeBased().onWeekDay(ScriptApp.WeekDay.SATURDAY).atHour(11).nearMinute(59).create()
   Logger.log('Weekly summary email turned on: every Saturday, sent to ' + OWNER_EMAIL + '.')
+}
+
+// ---------------------------------------------------------------------------------------------
+// Bill / invoice generator (29 Oct 2026)
+// ---------------------------------------------------------------------------------------------
+
+function invoicesSheet() {
+  return getOrCreateSheet(SpreadsheetApp.getActiveSpreadsheet(), INVOICE_SHEET, INVOICE_HEADERS)
+}
+
+/** Rounds to paise (2 decimal places) so money never shows long floating-point tails. */
+function round2_(n) {
+  return Math.round((Number(n) || 0) * 100) / 100
+}
+
+/** CKD-0001, CKD-0002, ... One shared counter, kept outside the sheet so it is correct even if old rows are
+ * ever deleted. Only called while createInvoice holds the script lock, so two staff members saving at the
+ * same moment can never be given the same number. */
+function nextInvoiceNumber_() {
+  const props = PropertiesService.getScriptProperties()
+  const seq = Number(props.getProperty('invoiceSeq') || '0') + 1
+  props.setProperty('invoiceSeq', String(seq))
+  return INVOICE_PREFIX + '-' + ('0000' + seq).slice(-4)
+}
+
+/**
+ * Any logged-in staff member (owner or employee) can create a bill. The server recomputes every number
+ * itself from the raw services/discount sent - it never just trusts a total typed in the browser -
+ * then logs the finished invoice as a new row and hands back the same numbers to print immediately.
+ */
+function createInvoice(user, req) {
+  const studentName = String(req.studentName || '').trim()
+  const phone = String(req.phone || '').trim()
+  if (!studentName) fail('Please enter the student name.')
+  if (!phone) fail('Please enter a phone number.')
+
+  const itemsIn = Array.isArray(req.items) ? req.items : []
+  if (!itemsIn.length) fail('Please add at least one service.')
+  if (itemsIn.length > MAX_INVOICE_ITEMS) fail('Too many services on one bill.')
+  const items = itemsIn.map(function (it) {
+    const name = String((it && it.name) || '').trim()
+    const price = Number(it && it.price)
+    if (!name) fail('Each service needs a name.')
+    if (!isFinite(price) || price < 0) fail('Each service needs a valid price.')
+    return { name: name, price: round2_(price) }
+  })
+  const subtotal = round2_(items.reduce(function (sum, it) { return sum + it.price }, 0))
+
+  // Discount: the browser keeps a percent box and a rupee box in sync as the person types in either one.
+  // Whichever one they actually typed last (discountMode) is the number the server trusts; the other is
+  // always recalculated here, so a stale pair sent by mistake can never produce a wrong total.
+  let discountAmount
+  let discountPercent
+  if (String(req.discountMode) === 'amount') {
+    discountAmount = round2_(Number(req.discountAmount))
+    if (!isFinite(discountAmount) || discountAmount < 0) fail('Please enter a valid discount amount.')
+    if (discountAmount > subtotal) fail('Discount cannot be more than the subtotal.')
+    discountPercent = subtotal > 0 ? round2_((discountAmount / subtotal) * 100) : 0
+  } else {
+    discountPercent = Number(req.discountPercent)
+    if (!isFinite(discountPercent) || discountPercent < 0) discountPercent = 0
+    if (discountPercent > 100) fail('Discount cannot be more than 100%.')
+    discountAmount = round2_((subtotal * discountPercent) / 100)
+  }
+  // No GST: Career Ka Dost is not GST-registered, so the taxable amount is simply the total.
+  const total = round2_(subtotal - discountAmount)
+
+  const paymentMode = String(req.paymentMode || 'Cash').trim() || 'Cash'
+  const paymentStatus = String(req.paymentStatus || 'Paid in full').trim() || 'Paid in full'
+  let amountPaid = total
+  let balanceDue = 0
+  if (paymentStatus === 'Partially paid') {
+    amountPaid = round2_(Number(req.amountPaid))
+    if (!isFinite(amountPaid) || amountPaid < 0) fail('Please enter a valid amount paid.')
+    if (amountPaid > total) amountPaid = total
+    balanceDue = round2_(total - amountPaid)
+  }
+
+  const classOrCourse = String(req.classOrCourse || '').trim()
+  const city = String(req.city || '').trim()
+  const notes = String(req.notes || '').trim()
+
+  const t = nowParts()
+  const invoiceNo = nextInvoiceNumber_()
+  const sheet = invoicesSheet()
+  const row = sheet.getLastRow() + 1
+  const servicesText = items.map(function (it) { return it.name + ' (Rs ' + it.price + ')' }).join('; ')
+  sheet.getRange(row, 1, 1, INVOICE_HEADERS.length).setNumberFormat('@')
+  sheet.getRange(row, 1, 1, INVOICE_HEADERS.length).setValues([[
+    invoiceNo, t.date, t.time, user.username, user.name,
+    studentName, phone, classOrCourse, city,
+    servicesText, subtotal, discountPercent, discountAmount, total,
+    paymentMode, paymentStatus, amountPaid, balanceDue, notes,
+  ]])
+
+  return {
+    ok: true,
+    invoice: {
+      invoiceNo: invoiceNo,
+      date: t.date,
+      time: t.time,
+      createdByUsername: user.username,
+      createdByName: user.name,
+      studentName: studentName,
+      phone: phone,
+      classOrCourse: classOrCourse,
+      city: city,
+      items: items,
+      subtotal: subtotal,
+      discountPercent: discountPercent,
+      discountAmount: discountAmount,
+      total: total,
+      paymentMode: paymentMode,
+      paymentStatus: paymentStatus,
+      amountPaid: amountPaid,
+      balanceDue: balanceDue,
+      notes: notes,
+    },
+  }
+}
+
+function readInvoices_() {
+  const sheet = invoicesSheet()
+  if (sheet.getLastRow() < 2) return []
+  const rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, INVOICE_HEADERS.length).getValues()
+  return rows
+    .map(function (r) {
+      return {
+        invoiceNo: String(r[0]),
+        date: String(r[1]),
+        time: String(r[2]),
+        createdByUsername: String(r[3]),
+        createdByName: String(r[4]),
+        studentName: String(r[5]),
+        phone: String(r[6]),
+        classOrCourse: String(r[7]),
+        city: String(r[8]),
+        services: String(r[9]),
+        subtotal: Number(r[10]),
+        discountPercent: Number(r[11]),
+        discountAmount: Number(r[12]),
+        total: Number(r[13]),
+        paymentMode: String(r[14]),
+        paymentStatus: String(r[15]),
+        amountPaid: Number(r[16]),
+        balanceDue: Number(r[17]),
+        notes: String(r[18]),
+      }
+    })
+    .filter(function (r) { return r.invoiceNo })
+}
+
+/** The owner sees every invoice. An employee sees only the ones they personally created (to reprint, say). */
+function listInvoices(user) {
+  const all = readInvoices_().reverse()
+  const mine = user.role === 'owner' ? all : all.filter(function (r) { return r.createdByUsername === user.username })
+  return { ok: true, invoices: mine, isOwner: user.role === 'owner' }
 }
