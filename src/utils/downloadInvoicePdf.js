@@ -8,9 +8,32 @@ import jsPDF from 'jspdf'
  * Turns the printable invoice element into a PDF file that downloads in one click - no browser print
  * dialog, so there is no "Headers and footers" setting to remember to turn off.
  */
+// html2canvas renders from a copy of the page, and that copy re-downloads the site's stylesheet. Right after
+// a new deploy, a tab opened earlier still points at the old stylesheet file, which no longer exists, so
+// the copy came out unstyled. Using the styles this tab already has in memory avoids that download.
+function inlineLoadedStyles(clonedDoc) {
+  const readable = []
+  for (const sheet of document.styleSheets) {
+    if (!sheet.href) continue
+    try {
+      readable.push({ href: sheet.href, css: Array.from(sheet.cssRules, (r) => r.cssText).join('\n') })
+    } catch {
+      // Another site's stylesheet (e.g. Google Fonts) cannot be read; leave its link in place.
+    }
+  }
+  for (const link of clonedDoc.querySelectorAll('link[rel="stylesheet"]')) {
+    const match = readable.find((s) => s.href === link.href)
+    if (!match) continue
+    const style = clonedDoc.createElement('style')
+    style.textContent = match.css
+    link.replaceWith(style)
+  }
+  return clonedDoc.fonts ? clonedDoc.fonts.ready : undefined
+}
+
 export async function downloadInvoicePdf(element, filename) {
   const canvas = await Promise.race([
-    html2canvas(element, { scale: 2, backgroundColor: '#ffffff', useCORS: true }),
+    html2canvas(element, { scale: 2, backgroundColor: '#ffffff', useCORS: true, onclone: inlineLoadedStyles }),
     // So a stuck render shows a clear error instead of leaving the button saying "Preparing..." forever.
     new Promise((_, reject) => setTimeout(() => reject(new Error('Timed out making the PDF.')), 20000)),
   ])

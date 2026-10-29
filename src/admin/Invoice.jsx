@@ -322,7 +322,7 @@ export function GenerateBill({ token, onAuthError }) {
       const { downloadInvoicePdf } = await import('../utils/downloadInvoicePdf')
       await downloadInvoicePdf(invoiceRef.current, `${invoice.invoiceNo}.pdf`)
     } catch {
-      setError('Could not create the PDF. Please try again.')
+      setError('Could not create the PDF. Please refresh the page (Ctrl + F5) and try again - the website may have just been updated.')
     } finally {
       setDownloading(false)
     }
@@ -532,7 +532,7 @@ export function InvoiceLog({ token, onAuthError }) {
         const { downloadInvoicePdf } = await import('../utils/downloadInvoicePdf')
         if (!cancelled && hiddenRef.current) await downloadInvoicePdf(hiddenRef.current, `${downloadTarget.invoiceNo}.pdf`)
       } catch {
-        if (!cancelled) setError('Could not create the PDF. Please try again.')
+        if (!cancelled) setError('Could not create the PDF. Please refresh the page (Ctrl + F5) and try again - the website may have just been updated.')
       } finally {
         if (!cancelled) {
           setDownloadTarget(null)
