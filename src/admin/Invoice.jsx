@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { btnInk, btnPrimary } from '../config/ui'
 import { INVOICE, PAYMENT_MODES, SERVICES } from '../config/billing'
 import { SITE } from '../config/site'
@@ -238,6 +238,8 @@ export function GenerateBill({ token, onAuthError }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [invoice, setInvoice] = useState(null)
+  const [downloading, setDownloading] = useState(false)
+  const invoiceRef = useRef(null)
 
   const subtotal = round2(items.reduce((sum, it) => sum + it.price, 0))
   const discountPercent = discountMode === 'percent' ? Number(discountPercentInput) || 0 : subtotal > 0 ? round2(((Number(discountAmountInput) || 0) / subtotal) * 100) : 0
@@ -300,6 +302,21 @@ export function GenerateBill({ token, onAuthError }) {
     }
   }
 
+  async function downloadPdf() {
+    if (!invoiceRef.current) return
+    setDownloading(true)
+    try {
+      // Loaded only now, not on every page view: jsPDF + html2canvas are only needed by staff
+      // generating a bill, not by every visitor to the public website.
+      const { downloadInvoicePdf } = await import('../utils/downloadInvoicePdf')
+      await downloadInvoicePdf(invoiceRef.current, `${invoice.invoiceNo}.pdf`)
+    } catch {
+      setError('Could not create the PDF. Please try again, or use Print instead.')
+    } finally {
+      setDownloading(false)
+    }
+  }
+
   if (invoice) {
     return (
       <div className="space-y-5">
@@ -307,11 +324,14 @@ export function GenerateBill({ token, onAuthError }) {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="font-display text-2xl font-extrabold">Bill ready: {invoice.invoiceNo}</h2>
-              <p className="mt-1 text-ink-soft">Check it below, then print it or save it as a PDF.</p>
+              <p className="mt-1 text-ink-soft">Check it below, then download it as a PDF, or print it on paper.</p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <button type="button" onClick={() => window.print()} className={`${btnPrimary} !px-5 !py-2.5`}>
-                Print / Save as PDF
+              <button type="button" onClick={downloadPdf} disabled={downloading} className={`${btnPrimary} !px-5 !py-2.5 disabled:opacity-50`}>
+                {downloading ? 'Preparing PDF...' : 'Download PDF'}
+              </button>
+              <button type="button" onClick={() => window.print()} className={`${btnInk} !px-5 !py-2.5`}>
+                Print
               </button>
               <button type="button" onClick={reset} className={`${btnInk} !px-5 !py-2.5`}>
                 Create another bill
@@ -319,7 +339,9 @@ export function GenerateBill({ token, onAuthError }) {
             </div>
           </div>
         </div>
-        <PrintableInvoice invoice={invoice} />
+        <div ref={invoiceRef}>
+          <PrintableInvoice invoice={invoice} />
+        </div>
       </div>
     )
   }
