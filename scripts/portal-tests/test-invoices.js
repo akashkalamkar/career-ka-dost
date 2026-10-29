@@ -119,6 +119,18 @@ async function loginAs(u, first, next) {
   t('kalpak sees only the invoices he made himself', r.ok && r.isOwner === false && r.invoices.every((inv) => inv.createdByUsername === 'kalpak'), r.invoices)
   t('newest invoice is listed first', r.ok && r.invoices[0].studentName === 'Partial Payer', r.invoices[0])
 
+  // a listed invoice carries its services as structured items too, not just the printed text summary,
+  // so a past bill can be rebuilt and re-downloaded exactly (not just read)
+  const amanInvoice = r.invoices.find((inv) => inv.studentName === 'Aman Gupta')
+  t(
+    'a listed invoice carries structured items (name + price), not just the text summary',
+    Array.isArray(amanInvoice.items) &&
+      amanInvoice.items.length === 2 &&
+      amanInvoice.items.some((it) => it.name === 'DMIT (Test & Report Counselling)' && it.price === 3500) &&
+      amanInvoice.items.some((it) => it.name === 'Future Blueprint Session' && it.price === 2000),
+    amanInvoice,
+  )
+
   console.log(`\n${pass} passed, ${bad} failed`)
   process.exit(bad ? 1 : 0)
 })()

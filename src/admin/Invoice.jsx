@@ -311,7 +311,7 @@ export function GenerateBill({ token, onAuthError }) {
       const { downloadInvoicePdf } = await import('../utils/downloadInvoicePdf')
       await downloadInvoicePdf(invoiceRef.current, `${invoice.invoiceNo}.pdf`)
     } catch {
-      setError('Could not create the PDF. Please try again, or use Print instead.')
+      setError('Could not create the PDF. Please try again.')
     } finally {
       setDownloading(false)
     }
@@ -324,14 +324,11 @@ export function GenerateBill({ token, onAuthError }) {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="font-display text-2xl font-extrabold">Bill ready: {invoice.invoiceNo}</h2>
-              <p className="mt-1 text-ink-soft">Check it below, then download it as a PDF, or print it on paper.</p>
+              <p className="mt-1 text-ink-soft">Check it below, then download it as a PDF (A4 size, ready to print).</p>
             </div>
             <div className="flex flex-wrap gap-3">
               <button type="button" onClick={downloadPdf} disabled={downloading} className={`${btnPrimary} !px-5 !py-2.5 disabled:opacity-50`}>
                 {downloading ? 'Preparing PDF...' : 'Download PDF'}
-              </button>
-              <button type="button" onClick={() => window.print()} className={`${btnInk} !px-5 !py-2.5`}>
-                Print
               </button>
               <button type="button" onClick={reset} className={`${btnInk} !px-5 !py-2.5`}>
                 Create another bill
@@ -498,6 +495,9 @@ export function InvoiceLog({ token, onAuthError }) {
   const run = useCaller(token, onAuthError)
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
+  const [downloadTarget, setDownloadTarget] = useState(null)
+  const [downloadingNo, setDownloadingNo] = useState('')
+  const hiddenRef = useRef(null)
 
   useEffect(() => {
     let alive = true
@@ -512,6 +512,29 @@ export function InvoiceLog({ token, onAuthError }) {
       alive = false
     }
   }, [run])
+
+  // Re-downloading a past bill (if the customer lost it): the row is rendered off-screen in exactly the
+  // same layout as a fresh bill, using its original date and time, then turned into the same PDF.
+  useEffect(() => {
+    if (!downloadTarget) return undefined
+    let cancelled = false
+    ;(async () => {
+      try {
+        const { downloadInvoicePdf } = await import('../utils/downloadInvoicePdf')
+        if (!cancelled && hiddenRef.current) await downloadInvoicePdf(hiddenRef.current, `${downloadTarget.invoiceNo}.pdf`)
+      } catch {
+        if (!cancelled) setError('Could not create the PDF. Please try again.')
+      } finally {
+        if (!cancelled) {
+          setDownloadTarget(null)
+          setDownloadingNo('')
+        }
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [downloadTarget])
 
   const loaded = Boolean(data) || Boolean(error)
   const rows = data ? data.invoices : []
@@ -536,6 +559,7 @@ export function InvoiceLog({ token, onAuthError }) {
                   <th className="px-4 py-3">Total</th>
                   <th className="px-4 py-3">Status</th>
                   {data.isOwner ? <th className="px-4 py-3">By</th> : null}
+                  <th className="px-4 py-3"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line">
@@ -548,10 +572,30 @@ export function InvoiceLog({ token, onAuthError }) {
                     <td className="whitespace-nowrap px-4 py-3 font-semibold">{money(r.total)}</td>
                     <td className="whitespace-nowrap px-4 py-3">{r.paymentStatus}</td>
                     {data.isOwner ? <td className="whitespace-nowrap px-4 py-3">{r.createdByName}</td> : null}
+                    <td className="whitespace-nowrap px-4 py-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDownloadingNo(r.invoiceNo)
+                          setDownloadTarget(r)
+                        }}
+                        disabled={downloadingNo === r.invoiceNo}
+                        className="text-xs font-extrabold text-brass underline underline-offset-4 disabled:opacity-50"
+                      >
+                        {downloadingNo === r.invoiceNo ? 'Preparing...' : 'Download'}
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+        ) : null}
+        {downloadTarget ? (
+          <div style={{ position: 'fixed', top: 0, left: '-9999px' }} aria-hidden>
+            <div ref={hiddenRef}>
+              <PrintableInvoice invoice={downloadTarget} />
+            </div>
           </div>
         ) : null}
       </div>
