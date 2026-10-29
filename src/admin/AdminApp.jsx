@@ -26,7 +26,7 @@ function useNoIndex() {
 
 function Shell({ children }) {
   return (
-    <section className="min-h-[60svh] bg-paper-2 py-14 md:py-20">
+    <section className="min-h-[60svh] bg-paper-2 py-14 print:min-h-0 print:bg-white print:py-0 md:py-20">
       <div className={container}>{children}</div>
     </section>
   )
@@ -155,7 +155,7 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
 
   return (
     <Shell>
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-8 flex flex-col gap-4 print:hidden sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-brass">{isOwner ? 'Owner' : 'Staff'} portal</p>
           <h1 className="font-display text-3xl font-extrabold md:text-4xl">{user.name}</h1>
@@ -165,7 +165,7 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
         </button>
       </div>
 
-      <div className="mb-8 flex flex-wrap gap-3" role="tablist" aria-label="Portal sections">
+      <div className="mb-8 flex flex-wrap gap-3 print:hidden" role="tablist" aria-label="Portal sections">
         {tabs.map((t) => (
           <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)} className={tabClass(tab === t.id)}>
             {t.label}

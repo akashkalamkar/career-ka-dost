@@ -7,7 +7,7 @@ export function FloatingActions() {
 
   return (
     <>
-      <div className="fixed bottom-5 right-5 z-50 md:bottom-6 md:right-6">
+      <div className="fixed bottom-5 right-5 z-50 print:hidden md:bottom-6 md:right-6">
         <button
           type="button"
           aria-label="Chat on WhatsApp"
@@ -17,7 +17,7 @@ export function FloatingActions() {
           <WhatsAppIcon className="h-7 w-7" />
         </button>
       </div>
-      <div className="fixed bottom-5 left-5 z-50 md:hidden">
+      <div className="fixed bottom-5 left-5 z-50 print:hidden md:hidden">
         <a
           href={`tel:${SITE.phoneTel}`}
           aria-label={`Call ${SITE.name}`}

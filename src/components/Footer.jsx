@@ -42,7 +42,7 @@ function Row({ icon: Icon, iconClass = '', href, external, onClick, children }) 
 
 export function Footer() {
   return (
-    <footer className="bg-paper-2 font-bold text-ink">
+    <footer className="bg-paper-2 font-bold text-ink print:hidden">
       <div className="h-1.5 bg-brand" aria-hidden />
       <div className={`${container} grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-12`}>
         <div className="lg:col-span-4">
