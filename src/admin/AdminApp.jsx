@@ -7,6 +7,8 @@ import { ForgotOwner } from './Forgot'
 import { ApplyLeave, LeaveRequests } from './Leaves'
 import { GenerateBill, InvoiceLog } from './Invoice'
 import { PaymentsDue } from './Payments'
+import { Expenses } from './Expenses'
+import { Holidays } from './Holidays'
 import { AllRecords, MyAttendance, PasswordForm, StaffTab, TeamReports, TeamToday } from './Panels'
 
 const isFullReply = (data) => Array.isArray(data.rows) && Array.isArray(data.leaves)
@@ -143,6 +145,8 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
         { id: 'billing', label: 'Generate bill' },
         { id: 'invoices', label: 'All invoices' },
         { id: 'payments', label: 'Payments due' },
+        { id: 'expenses', label: 'Expenses' },
+        { id: 'holidays', label: 'Holidays' },
         { id: 'staff', label: 'Staff' },
         { id: 'password', label: 'Change password' },
       ]
@@ -152,6 +156,8 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
         { id: 'billing', label: 'Generate bill' },
         { id: 'invoices', label: 'My invoices' },
         { id: 'payments', label: 'Payments due' },
+        { id: 'expenses', label: 'My expenses' },
+        { id: 'holidays', label: 'Holidays' },
         { id: 'password', label: 'Change password' },
       ]
   const [tab, setTab] = useState(isOwner ? 'team' : 'me')
@@ -167,6 +173,12 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
           Log out
         </button>
       </div>
+
+      {boot.holidayToday ? (
+        <p role="status" className="mb-6 border-l-4 border-brand bg-white px-4 py-3 text-sm font-bold print:hidden">
+          Today is a holiday ({boot.holidayToday}). No need to check in.
+        </p>
+      ) : null}
 
       <div className="mb-8 flex flex-wrap gap-3 print:hidden" role="tablist" aria-label="Portal sections">
         {tabs.map((t) => (
@@ -188,6 +200,8 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
       {tab === 'billing' ? <GenerateBill token={token} onAuthError={onSignOut} /> : null}
       {tab === 'invoices' ? <InvoiceLog token={token} onAuthError={onSignOut} /> : null}
       {tab === 'payments' ? <PaymentsDue token={token} onAuthError={onSignOut} /> : null}
+      {tab === 'expenses' ? <Expenses token={token} boot={boot} onAuthError={onSignOut} /> : null}
+      {tab === 'holidays' ? <Holidays token={token} boot={boot} onBoot={onBoot} onAuthError={onSignOut} /> : null}
       {tab === 'staff' ? <StaffTab token={token} boot={boot} onBoot={onBoot} onAuthError={onSignOut} /> : null}
       {tab === 'password' ? <PasswordForm token={token} onAuthError={onSignOut} /> : null}
     </Shell>

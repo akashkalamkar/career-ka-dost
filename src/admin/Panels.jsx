@@ -377,8 +377,25 @@ function summarizeByEmployee(rows, staff) {
   return Object.values(map)
 }
 
+/**
+ * Days in the month that are not holidays (Sundays, national and owner-added holidays), counting only up
+ * to today for the current month. null when the portal script is older and sends no holiday list.
+ */
+function workingDays(month, holidays, today) {
+  if (!Array.isArray(holidays)) return null
+  const [y, m] = month.split('-').map(Number)
+  const days = new Date(Date.UTC(y, m, 0)).getUTCDate()
+  const off = new Set(holidays.map((h) => h.date))
+  let count = 0
+  for (let d = 1; d <= days; d++) {
+    const date = `${month}-${String(d).padStart(2, '0')}`
+    if (date <= today && !off.has(date)) count++
+  }
+  return count
+}
+
 /** Owner: days present / on time / late per employee for the selected month - a quick view for reviews. */
-function MonthSummary({ rows, staff }) {
+function MonthSummary({ rows, staff, working }) {
   const list = summarizeByEmployee(
     rows,
     staff.filter((s) => s.role !== 'owner'),
@@ -390,6 +407,7 @@ function MonthSummary({ rows, staff }) {
         <thead className="bg-paper-2 text-xs font-extrabold uppercase tracking-wider">
           <tr>
             <th className="px-4 py-3">Name</th>
+            {working !== null ? <th className="px-4 py-3">Working days</th> : null}
             <th className="px-4 py-3">Present</th>
             <th className="px-4 py-3">On time</th>
             <th className="px-4 py-3">Late</th>
@@ -402,6 +420,7 @@ function MonthSummary({ rows, staff }) {
                 {e.name}
                 {e.active ? '' : ' (discontinued)'}
               </td>
+              {working !== null ? <td className="px-4 py-3">{working}</td> : null}
               <td className="px-4 py-3">{e.present}</td>
               <td className="px-4 py-3">{e.onTime}</td>
               <td className="px-4 py-3">{e.late}</td>
@@ -423,6 +442,8 @@ export function AllRecords({ token, boot, onAuthError }) {
   const [error, setError] = useState('')
 
   const all = month === boot.month ? boot.rows : fetched && fetched.month === month ? fetched.rows : []
+  const holidays = month === boot.month ? boot.monthHolidays : fetched && fetched.month === month ? fetched.monthHolidays : undefined
+  const working = month ? workingDays(month, holidays, boot.serverTime.date) : null
   const rows = who ? all.filter((r) => r.username === who) : all
 
   async function changeMonth(m) {
@@ -454,9 +475,12 @@ export function AllRecords({ token, boot, onAuthError }) {
     <div className="space-y-8">
       <div className={card}>
         <h2 className="font-display text-2xl font-extrabold md:text-3xl">Monthly summary per employee</h2>
-        <p className="mt-2 text-ink-soft">Days present, on time and late for the month selected below - useful for reviews.</p>
+        <p className="mt-2 text-ink-soft">
+          Days present, on time and late for the month selected below - useful for reviews.
+          {working !== null ? ' Working days leave out Sundays and holidays, and count only up to today.' : ''}
+        </p>
         <div className="mt-5">
-          <MonthSummary rows={all} staff={boot.staff} />
+          <MonthSummary rows={all} staff={boot.staff} working={working} />
         </div>
       </div>
 

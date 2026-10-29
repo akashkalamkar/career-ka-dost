@@ -33,7 +33,7 @@
  *   - 5 wrong passwords lock that username for 15 minutes.
  */
 
-const SCRIPT_VERSION = 'portal-v13'
+const SCRIPT_VERSION = 'portal-v14'
 const TZ = 'Asia/Kolkata'
 const LATE_FROM_MINUTES = 10 * 60 + 10 // 10:10 AM
 const SESSION_HOURS = 12
@@ -99,7 +99,7 @@ let attendanceMemo = null
 let leavesMemo = null
 let reportsMemo = null
 // Only these change data, so only these wait for the lock. Reading and logging in do not.
-const WRITE_ACTIONS = { checkin: 1, checkout: 1, changePassword: 1, resetPassword: 1, forgotStart: 1, forgotConfirm: 1, addStaff: 1, setActive: 1, applyLeave: 1, cancelLeave: 1, decideLeave: 1, submitReport: 1, createInvoice: 1, recordPayment: 1 }
+const WRITE_ACTIONS = { checkin: 1, checkout: 1, changePassword: 1, resetPassword: 1, forgotStart: 1, forgotConfirm: 1, addStaff: 1, setActive: 1, applyLeave: 1, cancelLeave: 1, decideLeave: 1, submitReport: 1, createInvoice: 1, recordPayment: 1, addExpense: 1, deleteExpense: 1, markExpensesPaidBack: 1, addHoliday: 1, removeHoliday: 1 }
 
 /**
  * Only the owner is created automatically. He adds every employee himself from the Staff tab in the
@@ -294,6 +294,13 @@ function route(req) {
     case 'createInvoice': return createInvoice(user, req)
     case 'listInvoices': return listInvoices(user, req)
     case 'recordPayment': return recordPayment(user, req)
+    case 'addExpense': return addExpense(user, req)
+    case 'listExpenses': return listExpenses(user, req)
+    case 'deleteExpense': return deleteExpense(user, req)
+    case 'markExpensesPaidBack': return markExpensesPaidBack(user, req)
+    case 'listHolidays': return listHolidays(user, req)
+    case 'addHoliday': return addHoliday(user, req)
+    case 'removeHoliday': return removeHoliday(user, req)
     default: fail('Unknown request.')
   }
 }
@@ -742,6 +749,8 @@ function bootstrap(user) {
     rows: (isOwner ? all : all.filter(function (r) { return r.username === user.username })).map(clean),
     leaves: leavesFor(user, t.date.slice(0, 4)).map(cleanLeave),
     myReport: isOwner ? null : reportToday(user.username, t.date),
+    holidayToday: holidayOn_(t.date) || null,
+    monthHolidays: holidaysInMonth_(month),
   }
   if (isOwner) {
     const todays = all.filter(function (r) { return r.date === t.date })
@@ -804,7 +813,7 @@ function attendance(user, req) {
     const who = String(req.username).toLowerCase()
     rows = rows.filter(function (r) { return r.username === who })
   }
-  return { ok: true, month: month, rows: rows.map(clean) }
+  return { ok: true, month: month, rows: rows.map(clean), monthHolidays: isMonth_(month) ? holidaysInMonth_(month) : [] }
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -1342,4 +1351,323 @@ function recordPayment(user, req) {
   updated.balanceDue = balanceDue
   updated.payments = payments
   return { ok: true, invoice: updated }
+}
+
+// ---------------------------------------------------------------------------------------------
+// Shared helpers for expenses and holidays (29 Oct 2026)
+// ---------------------------------------------------------------------------------------------
+
+/** 'yyyy-MM-dd' that is a real calendar date (so '2026-02-31' is refused, unlike isDate). */
+function realDate_(v) {
+  if (!isDate(v)) return false
+  const p = v.split('-').map(Number)
+  const d = new Date(Date.UTC(p[0], p[1] - 1, p[2]))
+  return d.getUTCFullYear() === p[0] && d.getUTCMonth() === p[1] - 1 && d.getUTCDate() === p[2]
+}
+
+function isMonth_(v) {
+  return /^\d{4}-(0[1-9]|1[0-2])$/.test(String(v))
+}
+
+/** Only the write actions create a new tab (they hold the lock); reads just see an empty list. */
+function existingSheet_(name) {
+  return SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name)
+}
+
+function newTextRow_(sheet, width, values) {
+  const row = sheet.getLastRow() + 1
+  sheet.getRange(row, 1, 1, width).setNumberFormat('@')
+  sheet.getRange(row, 1, 1, width).setValues([values])
+  return row
+}
+
+function requireOwner_(user) {
+  if (user.role !== 'owner') fail('Only Bharat Rai can do this.')
+}
+
+// ---------------------------------------------------------------------------------------------
+// Staff expenses (29 Oct 2026): every staff member logs what they spent for the office. Each person sees
+// only their own entries and amounts; only the owner sees everyone's, the totals per person and the grand
+// total. The portal shows only money still to be paid back: when the owner clicks "Paid back" for a
+// person's month, those entries leave the portal for everyone and stay in the Expenses tab of the Sheet
+// as "Paid back" (green). Unpaid rows show "Not paid yet" (red), deleted ones "Deleted" (grey). Nothing is
+// ever erased from the Sheet.
+// ---------------------------------------------------------------------------------------------
+
+const EXPENSE_SHEET = 'Expenses'
+const EXPENSE_HEADERS = ['ID', 'Date', 'Username', 'Name', 'Category', 'Description', 'Amount', 'Added on', 'Status', 'Paid back on', 'Paid back by']
+const EXPENSE_CATEGORIES = ['Travel', 'Food', 'Printing & stationery', 'Office supplies', 'Phone & internet', 'Other']
+const MAX_EXPENSE_AMOUNT = 100000
+const EXPENSE_MAX_AGE_DAYS = 92
+const EXPENSE_UNPAID = 'Not paid yet'
+const EXPENSE_PAID = 'Paid back'
+const EXPENSE_DELETED = 'Deleted'
+
+/** The Expenses tab, created on the first save, with whole rows coloured by their Status. */
+function expensesSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet()
+  let sheet = ss.getSheetByName(EXPENSE_SHEET)
+  if (sheet) return sheet
+  sheet = ss.insertSheet(EXPENSE_SHEET)
+  sheet.getRange(1, 1, 1, EXPENSE_HEADERS.length).setValues([EXPENSE_HEADERS])
+  sheet.getRange(1, 1, 1, EXPENSE_HEADERS.length).setFontWeight('bold').setBackground('#ffb81c')
+  sheet.setFrozenRows(1)
+  const range = sheet.getRange(2, 1, sheet.getMaxRows() - 1, EXPENSE_HEADERS.length)
+  sheet.setConditionalFormatRules([
+    SpreadsheetApp.newConditionalFormatRule().whenFormulaSatisfied('=$I2="' + EXPENSE_PAID + '"').setBackground('#d3f0d9').setFontColor('#0f6b2a').setRanges([range]).build(),
+    SpreadsheetApp.newConditionalFormatRule().whenFormulaSatisfied('=$I2="' + EXPENSE_UNPAID + '"').setBackground('#f8c9c9').setFontColor('#a40000').setRanges([range]).build(),
+    SpreadsheetApp.newConditionalFormatRule().whenFormulaSatisfied('=$I2="' + EXPENSE_DELETED + '"').setBackground('#eeeeee').setFontColor('#777777').setRanges([range]).build(),
+  ])
+  return sheet
+}
+
+function readExpenses_() {
+  const sheet = existingSheet_(EXPENSE_SHEET)
+  if (!sheet || sheet.getLastRow() < 2) return []
+  return sheet.getRange(2, 1, sheet.getLastRow() - 1, EXPENSE_HEADERS.length).getValues()
+    .map(function (r, i) {
+      const paidBackOn = String(r[9] || '')
+      let status = String(r[8] || '')
+      if (status !== EXPENSE_DELETED) status = paidBackOn ? EXPENSE_PAID : EXPENSE_UNPAID
+      return {
+        row: i + 2,
+        id: String(r[0]),
+        date: dayText(r[1]),
+        username: String(r[2]).toLowerCase(),
+        name: String(r[3]),
+        category: String(r[4]),
+        description: String(r[5]),
+        amount: round2_(r[6]),
+        addedOn: String(r[7]),
+        status: status,
+        paidBackOn: paidBackOn,
+        paidBackBy: String(r[10] || ''),
+      }
+    })
+    .filter(function (e) { return e.id })
+}
+
+function publicExpense_(e) {
+  return { id: e.id, date: e.date, username: e.username, name: e.name, category: e.category, description: e.description, amount: e.amount, addedOn: e.addedOn }
+}
+
+function addExpense(user, req) {
+  const t = nowParts()
+  const date = String(req.date || t.date).trim()
+  if (!realDate_(date)) fail('Please pick a valid date.')
+  if (date > t.date) fail('The date cannot be in the future.')
+  if (dayNumber(t.date) - dayNumber(date) > EXPENSE_MAX_AGE_DAYS) fail('Only expenses from the last 3 months can be added.')
+  const category = String(req.category || '').trim()
+  if (EXPENSE_CATEGORIES.indexOf(category) === -1) fail('Please pick a category.')
+  const description = String(req.description || '').trim()
+  if (!description) fail('Please write what the expense was for.')
+  if (description.length > 300) fail('Please keep the description under 300 characters.')
+  const amount = round2_(req.amount)
+  if (!isFinite(Number(req.amount)) || !(amount > 0)) fail('Please enter the amount spent.')
+  if (amount > MAX_EXPENSE_AMOUNT) fail('That amount is too large for one expense. Please check it.')
+
+  const id = 'E' + Utilities.getUuid().replace(/-/g, '').slice(0, 10).toUpperCase()
+  const stamp = nowStamp()
+  newTextRow_(expensesSheet_(), EXPENSE_HEADERS.length, [id, date, user.username, user.name, category, description, amount, stamp, EXPENSE_UNPAID, '', ''])
+  return { ok: true, expense: { id: id, date: date, username: user.username, name: user.name, category: category, description: description, amount: amount, addedOn: stamp } }
+}
+
+/**
+ * One month, only what is still to be paid back. A staff member gets only their own entries and their own
+ * total. The owner gets everyone's, a total per person and the grand total.
+ */
+function listExpenses(user, req) {
+  const month = String(req.month || nowParts().date.slice(0, 7))
+  if (!isMonth_(month)) fail('Please pick a valid month.')
+  const unpaid = readExpenses_()
+    .filter(function (e) { return e.status === EXPENSE_UNPAID && e.date.slice(0, 7) === month })
+    .sort(function (a, b) { return a.date === b.date ? (a.addedOn < b.addedOn ? 1 : -1) : a.date < b.date ? 1 : -1 })
+
+  if (user.role !== 'owner') {
+    const mine = unpaid.filter(function (e) { return e.username === user.username })
+    return { ok: true, month: month, isOwner: false, categories: EXPENSE_CATEGORIES, expenses: mine.map(publicExpense_), myTotal: round2_(mine.reduce(function (s, e) { return s + e.amount }, 0)) }
+  }
+
+  const byPerson = {}
+  unpaid.forEach(function (e) {
+    const p = byPerson[e.username] || (byPerson[e.username] = { username: e.username, name: e.name, count: 0, total: 0 })
+    p.count++
+    p.total = round2_(p.total + e.amount)
+  })
+  const people = Object.keys(byPerson).map(function (k) { return byPerson[k] }).sort(function (a, b) { return a.name < b.name ? -1 : 1 })
+  return {
+    ok: true,
+    month: month,
+    isOwner: true,
+    categories: EXPENSE_CATEGORIES,
+    expenses: unpaid.map(publicExpense_),
+    people: people,
+    total: round2_(unpaid.reduce(function (s, e) { return s + e.amount }, 0)),
+  }
+}
+
+/** A person can delete their own unpaid expense, the owner anyone's. Paid-back ones are no longer in the portal. */
+function deleteExpense(user, req) {
+  const id = String(req.id || '')
+  const e = readExpenses_().filter(function (x) { return x.id === id && x.status !== EXPENSE_DELETED })[0]
+  if (!e || (user.role !== 'owner' && e.username !== user.username)) fail('Expense not found.')
+  if (e.status === EXPENSE_PAID) fail('This expense has already been paid back, so it cannot be deleted.')
+  existingSheet_(EXPENSE_SHEET).getRange(e.row, 9).setValue(EXPENSE_DELETED)
+  return listExpenses(user, { month: e.date.slice(0, 7) })
+}
+
+/**
+ * Owner: after giving a person their money, marks all their unpaid expenses of that month "Paid back".
+ * They leave the portal (for him and for the employee) and stay in the Sheet, in green.
+ */
+function markExpensesPaidBack(user, req) {
+  requireOwner_(user)
+  const username = String(req.username || '').toLowerCase()
+  const month = String(req.month || '')
+  if (!isMonth_(month)) fail('Please pick a valid month.')
+  const due = readExpenses_().filter(function (e) {
+    return e.status === EXPENSE_UNPAID && e.username === username && e.date.slice(0, 7) === month
+  })
+  if (!due.length) fail('Nothing is left to pay back for this person in this month.')
+  const sheet = existingSheet_(EXPENSE_SHEET)
+  const stamp = nowStamp()
+  due.forEach(function (e) {
+    sheet.getRange(e.row, 9, 1, 3).setNumberFormat('@')
+    sheet.getRange(e.row, 9, 1, 3).setValues([[EXPENSE_PAID, stamp, user.name]])
+  })
+  const out = listExpenses(user, { month: month })
+  out.paidCount = due.length
+  out.paidAmount = round2_(due.reduce(function (s, e) { return s + e.amount }, 0))
+  return out
+}
+
+// ---------------------------------------------------------------------------------------------
+// Holidays (29 Oct 2026): every Sunday and the three national holidays are holidays automatically, with
+// nothing to enter. The owner adds any other holiday (a festival, an office closure) from the portal and
+// can remove the ones he added. A removed holiday is marked "Removed", not erased.
+// ---------------------------------------------------------------------------------------------
+
+const HOLIDAY_SHEET = 'Holidays'
+const HOLIDAY_HEADERS = ['Date', 'Name', 'Added by', 'Added on', 'Status']
+const NATIONAL_HOLIDAYS = [
+  { md: '01-26', name: 'Republic Day' },
+  { md: '08-15', name: 'Independence Day' },
+  { md: '10-02', name: 'Gandhi Jayanti' },
+]
+
+function isSunday_(date) {
+  return ((dayNumber(date) % 7) + 7 + 4) % 7 === 0
+}
+
+function nationalHoliday_(date) {
+  const md = date.slice(5)
+  for (let i = 0; i < NATIONAL_HOLIDAYS.length; i++) if (NATIONAL_HOLIDAYS[i].md === md) return NATIONAL_HOLIDAYS[i].name
+  return ''
+}
+
+function readHolidays_() {
+  const sheet = existingSheet_(HOLIDAY_SHEET)
+  if (!sheet || sheet.getLastRow() < 2) return []
+  return sheet.getRange(2, 1, sheet.getLastRow() - 1, HOLIDAY_HEADERS.length).getValues()
+    .map(function (r, i) {
+      return { row: i + 2, date: dayText(r[0]), name: String(r[1]), addedBy: String(r[2]), addedOn: String(r[3]), status: String(r[4] || 'Active') }
+    })
+    .filter(function (h) { return h.date && h.status !== 'Removed' })
+}
+
+/** The holiday's name if that date is a holiday ('Sunday' for an ordinary Sunday), otherwise ''. */
+function holidayOn_(date, custom) {
+  const list = custom || readHolidays_()
+  for (let i = 0; i < list.length; i++) if (list[i].date === date) return list[i].name
+  return nationalHoliday_(date) || (isSunday_(date) ? 'Sunday' : '')
+}
+
+/** Every holiday date in a month ('yyyy-MM'), Sundays included, oldest first. */
+function holidaysInMonth_(month) {
+  const custom = readHolidays_()
+  const p = month.split('-').map(Number)
+  const days = new Date(Date.UTC(p[0], p[1], 0)).getUTCDate()
+  const out = []
+  for (let d = 1; d <= days; d++) {
+    const date = month + '-' + ('0' + d).slice(-2)
+    const name = holidayOn_(date, custom)
+    if (name) out.push({ date: date, name: name })
+  }
+  return out
+}
+
+function listHolidays(user, req) {
+  const year = String(req.year || nowParts().date.slice(0, 4))
+  if (!/^\d{4}$/.test(year)) fail('Please pick a valid year.')
+  const custom = readHolidays_()
+    .filter(function (h) { return h.date.slice(0, 4) === year })
+    .sort(function (a, b) { return a.date < b.date ? -1 : 1 })
+    .map(function (h) { return { date: h.date, name: h.name, addedBy: h.addedBy } })
+  const national = NATIONAL_HOLIDAYS.map(function (n) { return { date: year + '-' + n.md, name: n.name } })
+  return { ok: true, year: year, national: national, custom: custom, canEdit: user.role === 'owner' }
+}
+
+function addHoliday(user, req) {
+  requireOwner_(user)
+  const date = String(req.date || '').trim()
+  if (!realDate_(date)) fail('Please pick a valid date.')
+  const name = String(req.name || '').trim()
+  if (!name) fail('Please give the holiday a name.')
+  if (name.length > 80) fail('Please keep the name under 80 characters.')
+  const already = holidayOn_(date)
+  if (already) fail(date + ' is already a holiday (' + already + ').')
+  const sheet = getOrCreateSheet(SpreadsheetApp.getActiveSpreadsheet(), HOLIDAY_SHEET, HOLIDAY_HEADERS)
+  newTextRow_(sheet, HOLIDAY_HEADERS.length, [date, name, user.name, nowStamp(), 'Active'])
+  return listHolidays(user, { year: date.slice(0, 4) })
+}
+
+/** Only holidays the owner added can be removed; Sundays and the national holidays always stay. */
+function removeHoliday(user, req) {
+  requireOwner_(user)
+  const date = String(req.date || '').trim()
+  const h = readHolidays_().filter(function (x) { return x.date === date })[0]
+  if (!h) fail(nationalHoliday_(date) || (realDate_(date) && isSunday_(date)) ? 'Sundays and national holidays are always holidays and cannot be removed.' : 'Holiday not found.')
+  existingSheet_(HOLIDAY_SHEET).getRange(h.row, 5).setValue('Removed')
+  return listHolidays(user, { year: date.slice(0, 4) })
+}
+
+// ---------------------------------------------------------------------------------------------
+// Weekly backup (29 Oct 2026): a full copy of this whole Google Sheet (every tab) is saved into a
+// "Career Ka Dost - Staff Portal Backups" folder in the owner's Google Drive, every Sunday night. The
+// newest 26 copies (about six months) are kept; older copies go to the Drive bin. Turn it on once by
+// running installBackupTrigger from the Apps Script editor (Google will ask permission to use Drive).
+// ---------------------------------------------------------------------------------------------
+
+const BACKUP_FOLDER = 'Career Ka Dost - Staff Portal Backups'
+const BACKUPS_TO_KEEP = 26
+
+function backupFolder_() {
+  const found = DriveApp.getFoldersByName(BACKUP_FOLDER)
+  return found.hasNext() ? found.next() : DriveApp.createFolder(BACKUP_FOLDER)
+}
+
+/** Makes one backup copy now. Also what the weekly trigger runs. Safe to run by hand any time. */
+function backupNow() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet()
+  const folder = backupFolder_()
+  const name = ss.getName() + ' - backup ' + Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd HH-mm')
+  DriveApp.getFileById(ss.getId()).makeCopy(name, folder)
+
+  const files = []
+  const it = folder.getFiles()
+  while (it.hasNext()) files.push(it.next())
+  files.sort(function (a, b) { return b.getDateCreated().getTime() - a.getDateCreated().getTime() })
+  files.slice(BACKUPS_TO_KEEP).forEach(function (f) { f.setTrashed(true) })
+  Logger.log('Backup saved to Google Drive > ' + BACKUP_FOLDER + ': ' + name)
+  return name
+}
+
+/** Run this ONCE from the Apps Script editor to turn the weekly backup on. Safe to re-run. */
+function installBackupTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === 'backupNow') ScriptApp.deleteTrigger(t)
+  })
+  ScriptApp.newTrigger('backupNow').timeBased().onWeekDay(ScriptApp.WeekDay.SUNDAY).atHour(23).create()
+  backupNow()
+  Logger.log('Weekly backup turned on: every Sunday night, into Google Drive > ' + BACKUP_FOLDER + '. A first copy was made just now.')
 }

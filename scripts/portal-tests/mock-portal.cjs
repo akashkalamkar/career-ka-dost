@@ -30,14 +30,26 @@ class Sheet {
   getRange(r, c, nr = 1, nc = 1) { return new Range(this, r, c, nr, nc) }
   appendRow(vals) { this.rows.push(vals.slice()) }
   setFrozenRows() {}
-  setConditionalFormatRules() {}
+  setConditionalFormatRules(r) { this.rules = r }
 }
 const sheets = {}
 const ss = {
   getSheetByName: (n) => sheets[n] || null,
-  insertSheet: (n) => (sheets[n] = new Sheet(n)),
+  insertSheet: (n) => { if (sheets[n]) throw new Error('A sheet with the name "' + n + '" already exists.'); return (sheets[n] = new Sheet(n)) },
+  getId: () => 'SHEET-ID',
+  getName: () => 'CKD Staff Portal',
 }
-const rule = { whenFormulaSatisfied() { return this }, setBackground() { return this }, setFontColor() { return this }, setRanges() { return this }, build() { return {} } }
+
+// ---- fake Drive (backups) and triggers ----
+const drive = { folders: [] }
+const iter = (list) => { let i = 0; return { hasNext: () => i < list.length, next: () => list[i++] } }
+const makeFolder = (name) => {
+  const folder = { name, files: [], getFiles: () => iter(folder.files.filter((x) => !x.trashed)) }
+  drive.folders.push(folder)
+  return folder
+}
+const triggers = []
+const rule = { whenFormulaSatisfied(f) { this.f = f; return this }, setBackground(c) { this.bg = c; return this }, setFontColor(c) { this.color = c; return this }, setRanges() { return this }, build() { return { formula: this.f, background: this.bg, color: this.color } } }
 
 // ---- fake clock (IST) ----
 let fakeNow = null
@@ -66,6 +78,24 @@ const ctx = {
     put: (k, v, ttl) => { cacheStore[k] = { v, exp: ttl ? nowMs() + ttl * 1000 : Infinity } },
     remove: (k) => { delete cacheStore[k] },
   }) },
+  DriveApp: {
+    getFoldersByName: (n) => iter(drive.folders.filter((x) => x.name === n)),
+    createFolder: (n) => makeFolder(n),
+    getFileById: (id) => ({
+      makeCopy: (name, folder) => {
+        const file = { name, sheetsCopy: JSON.stringify(Object.fromEntries(Object.entries(sheets).map(([k, s]) => [k, s.rows]))), created: nowMs() + folder.files.length, trashed: false,
+          getName() { return this.name }, getDateCreated() { return new Date(this.created) }, setTrashed(v) { this.trashed = v } }
+        folder.files.push(file)
+        return file
+      },
+    }),
+  },
+  ScriptApp: {
+    WeekDay: { SUNDAY: 'SUNDAY', SATURDAY: 'SATURDAY' },
+    getProjectTriggers: () => triggers.slice(),
+    deleteTrigger: (t) => { triggers.splice(triggers.indexOf(t), 1) },
+    newTrigger: (fn) => { const t = { fn, getHandlerFunction: () => fn }; const b = { timeBased: () => b, onWeekDay: (d) => { t.day = d; return b }, atHour: (h) => { t.hour = h; return b }, nearMinute: () => b, create: () => { triggers.push(t); return t } }; return b },
+  },
   MailApp: { sendEmail: (to, subject, body) => { outbox.push({ to, subject, body }) } },
   ContentService: { MimeType: { JSON: 'json' }, createTextOutput: (t) => ({ text: t, setMimeType() { return this } }) },
   Utilities: {
@@ -95,6 +125,7 @@ http.createServer((req, res) => {
     res.writeHead(200); return res.end('clock ' + (fakeNow ? new Date(fakeNow).toISOString() : 'real'))
   }
   if (req.url.startsWith('/__eval')) { const code = new URL(req.url, 'http://x').searchParams.get('code'); let out; try { out = vm.runInContext(code, ctx) } catch (e) { out = 'ERROR: ' + e.message } res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify(out === undefined ? null : out)) }
+  if (req.url.startsWith('/__drive')) { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ folders: drive.folders.map((x) => ({ name: x.name, files: x.files.map((y) => ({ name: y.name, trashed: y.trashed, tabs: Object.keys(JSON.parse(y.sheetsCopy)) })) })), triggers: triggers.map((t) => ({ fn: t.fn, day: t.day, hour: t.hour })) })) }
   if (req.url.startsWith('/__mail')) { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify(outbox)) }
   if (req.url.startsWith('/__sheet')) {
     res.writeHead(200, { 'Content-Type': 'application/json' })

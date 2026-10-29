@@ -5,7 +5,7 @@ const path = require('path')
 
 const here = __dirname
 const gs = path.join(here, '..', 'staff-portal-google-apps-script.gs')
-const suites = ['test-core.js', 'test-leave.js', 'test-forgot.js', 'test-staff.js', 'test-fixed.js', 'test-reports.js', 'test-weekly-summary.js', 'test-invoices.js']
+const suites = ['test-core.js', 'test-leave.js', 'test-forgot.js', 'test-staff.js', 'test-fixed.js', 'test-reports.js', 'test-weekly-summary.js', 'test-invoices.js', 'test-expenses.js']
 const wait = (ms) => new Promise((r) => setTimeout(r, ms))
 
 // setupPortal() now only creates the owner (Bharat Rai adds every employee himself from the Staff tab).

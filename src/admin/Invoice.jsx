@@ -5,6 +5,7 @@ import { SITE } from '../config/site'
 import { amountInWords } from '../utils/numberWords'
 import { card, inputClass } from './format'
 import { Message } from './Shared'
+import { downloadCsv } from './csv'
 import { useCaller } from './useCaller'
 
 const round2 = (n) => Math.round((Number(n) || 0) * 100) / 100
@@ -527,6 +528,8 @@ export function InvoiceLog({ token, onAuthError }) {
   const [error, setError] = useState('')
   const [downloadTarget, setDownloadTarget] = useState(null)
   const [downloadingNo, setDownloadingNo] = useState('')
+  const [query, setQuery] = useState('')
+  const [month, setMonth] = useState('')
   const hiddenRef = useRef(null)
 
   useEffect(() => {
@@ -570,7 +573,29 @@ export function InvoiceLog({ token, onAuthError }) {
   }, [downloadTarget])
 
   const loaded = Boolean(data) || Boolean(error)
-  const rows = data ? data.invoices : []
+  const all = data ? data.invoices : []
+  const q = query.trim().toLowerCase()
+  const qDigits = q.replace(/\D/g, '')
+  const rows = all.filter((r) => {
+    if (month && !String(r.date).startsWith(month)) return false
+    if (!q) return true
+    const text = `${r.invoiceNo} ${r.studentName} ${r.phone} ${r.classOrCourse} ${r.city} ${r.services}`.toLowerCase()
+    return text.includes(q) || (qDigits.length >= 4 && String(r.phone).replace(/\D/g, '').includes(qDigits))
+  })
+
+  function downloadExcel() {
+    downloadCsv(
+      `bills${month ? `-${month}` : ''}${q ? '-search' : ''}.csv`,
+      ['Invoice No', 'Date', 'Time', 'Student', 'Phone', 'Class / Course', 'City', 'Services', 'Subtotal', 'Discount %', 'Discount (Rs)', 'Total (Rs)', 'Payment mode', 'Status', 'Amount paid (Rs)', 'Balance due (Rs)', 'Later payments', 'Created by', 'Notes'],
+      rows.map((r) => [
+        r.invoiceNo, r.date, r.time, r.studentName, r.phone, r.classOrCourse, r.city, r.services,
+        round2(r.subtotal).toFixed(2), r.discountPercent, round2(r.discountAmount).toFixed(2), round2(r.total).toFixed(2),
+        r.paymentMode, r.paymentStatus, round2(r.amountPaid).toFixed(2), round2(r.balanceDue).toFixed(2),
+        (r.payments || []).map((p) => `${p.date} Rs ${round2(p.amount).toFixed(2)} ${p.mode} (${p.by})`).join('; '),
+        r.createdByName, r.notes,
+      ]),
+    )
+  }
 
   return (
     <div className={card}>
@@ -578,8 +603,34 @@ export function InvoiceLog({ token, onAuthError }) {
       <p className="mt-2 text-ink-soft">{data && data.isOwner ? 'Every bill created by the whole team.' : 'Bills you have created yourself.'}</p>
       <div className="mt-5 space-y-4">
         <Message>{error}</Message>
+        {all.length ? (
+          <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end">
+            <label className="block text-sm font-bold sm:w-80">
+              Search
+              <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Student name, phone or bill number" className={`${inputClass} !mt-1`} />
+            </label>
+            <label className="block text-sm font-bold">
+              Month
+              <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className={`${inputClass} !mt-1 sm:w-48`} />
+            </label>
+            {month ? (
+              <button type="button" onClick={() => setMonth('')} className="h-12 px-2 text-sm font-bold underline underline-offset-4">
+                All months
+              </button>
+            ) : null}
+            <button type="button" onClick={downloadExcel} disabled={!rows.length} className={`${btnInk} !py-3 disabled:opacity-40`}>
+              Download for Excel
+            </button>
+          </div>
+        ) : null}
+        {all.length && (q || month) ? (
+          <p className="text-sm font-semibold text-ink-soft">
+            Showing {rows.length} of {all.length} bills.
+          </p>
+        ) : null}
         {!loaded ? <p className="font-semibold text-mute">Loading...</p> : null}
-        {loaded && !rows.length ? <p className="border border-dashed border-ink/25 px-4 py-6 text-center font-semibold text-mute">No bills yet.</p> : null}
+        {loaded && !all.length ? <p className="border border-dashed border-ink/25 px-4 py-6 text-center font-semibold text-mute">No bills yet.</p> : null}
+        {loaded && all.length && !rows.length ? <p className="border border-dashed border-ink/25 px-4 py-6 text-center font-semibold text-mute">No bills match this search.</p> : null}
         {loaded && rows.length ? (
           <div className="overflow-x-auto border border-line">
             <table className="w-full min-w-[50rem] text-left text-sm">
