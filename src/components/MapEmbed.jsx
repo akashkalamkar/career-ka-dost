@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { SITE } from '../config/site'
 import { btnInk } from '../config/ui'
 import { PinIcon } from './icons'
+import { useT } from '../i18n'
 
 /** Live, interactive Google Map of the office (drag, zoom, switch to satellite). */
 export function MapEmbed() {
+  const t = useT()
   const [loaded, setLoaded] = useState(false)
 
   return (
@@ -15,13 +17,13 @@ export function MapEmbed() {
           <span className="flex h-14 w-14 items-center justify-center bg-brand text-ink shadow-[0_4px_0_0_#b97f00]">
             <PinIcon className="h-7 w-7" />
           </span>
-          <p className="font-semibold">Loading map&hellip;</p>
+          <p className="font-semibold">{t('Loading map…')}</p>
           <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-ink underline decoration-brand decoration-2 underline-offset-4">
-            Or open it in Google Maps
+            {t('Or open it in Google Maps')}
           </a>
         </div>
         <iframe
-          title={`${SITE.name} on Google Maps`}
+          title={t('{site} on Google Maps', { site: SITE.name })}
           src={SITE.mapEmbedUrl}
           loading="lazy"
           allowFullScreen
@@ -36,7 +38,7 @@ export function MapEmbed() {
           {SITE.addressLine}
         </p>
         <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer" className={`${btnInk} shrink-0`}>
-          Get directions
+          {t('Get directions')}
         </a>
       </div>
     </div>

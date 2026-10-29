@@ -6,6 +6,7 @@ import { card, inputClass } from './format'
 import { ForgotOwner } from './Forgot'
 import { ApplyLeave, LeaveRequests } from './Leaves'
 import { GenerateBill, InvoiceLog } from './Invoice'
+import { PaymentsDue } from './Payments'
 import { AllRecords, MyAttendance, PasswordForm, StaffTab, TeamReports, TeamToday } from './Panels'
 
 const isFullReply = (data) => Array.isArray(data.rows) && Array.isArray(data.leaves)
@@ -141,6 +142,7 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
         { id: 'records', label: 'All records' },
         { id: 'billing', label: 'Generate bill' },
         { id: 'invoices', label: 'All invoices' },
+        { id: 'payments', label: 'Payments due' },
         { id: 'staff', label: 'Staff' },
         { id: 'password', label: 'Change password' },
       ]
@@ -149,6 +151,7 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
         { id: 'leave', label: 'Apply for leave' },
         { id: 'billing', label: 'Generate bill' },
         { id: 'invoices', label: 'My invoices' },
+        { id: 'payments', label: 'Payments due' },
         { id: 'password', label: 'Change password' },
       ]
   const [tab, setTab] = useState(isOwner ? 'team' : 'me')
@@ -184,6 +187,7 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
       {tab === 'records' ? <AllRecords token={token} boot={boot} onAuthError={onSignOut} /> : null}
       {tab === 'billing' ? <GenerateBill token={token} onAuthError={onSignOut} /> : null}
       {tab === 'invoices' ? <InvoiceLog token={token} onAuthError={onSignOut} /> : null}
+      {tab === 'payments' ? <PaymentsDue token={token} onAuthError={onSignOut} /> : null}
       {tab === 'staff' ? <StaffTab token={token} boot={boot} onBoot={onBoot} onAuthError={onSignOut} /> : null}
       {tab === 'password' ? <PasswordForm token={token} onAuthError={onSignOut} /> : null}
     </Shell>

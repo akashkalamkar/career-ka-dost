@@ -131,6 +131,52 @@ async function loginAs(u, first, next) {
     amanInvoice,
   )
 
+  // recording money received later against a bill with a balance due
+  const partial = r.invoices.find((inv) => inv.studentName === 'Partial Payer')
+  t('a listed invoice does not expose the internal sheet row', partial && !('row' in partial), partial)
+  t('a new bill starts with no later payments', Array.isArray(partial.payments) && partial.payments.length === 0, partial)
+  r = await post({ action: 'recordPayment', token: k, invoiceNo: partial.invoiceNo, amount: 0 })
+  t('a zero payment is rejected', !r.ok, r)
+  r = await post({ action: 'recordPayment', token: k, invoiceNo: partial.invoiceNo, amount: -100 })
+  t('a negative payment is rejected', !r.ok, r)
+  r = await post({ action: 'recordPayment', token: k, invoiceNo: partial.invoiceNo, amount: 3000.01 })
+  t('a payment bigger than the balance due is rejected', !r.ok && /balance/i.test(r.error), r)
+  r = await post({ action: 'recordPayment', token: k, invoiceNo: 'CKD-9999', amount: 100 })
+  t('an unknown bill is rejected', !r.ok && /not found/i.test(r.error), r)
+  r = await post({ action: 'recordPayment', token: k, invoiceNo: 'CKD-0002', amount: 100 })
+  t("an employee cannot record a payment on someone else's bill", !r.ok && /not found/i.test(r.error), r)
+  r = await post({ action: 'recordPayment', token: k, invoiceNo: 'CKD-0001', amount: 100 })
+  t('a bill already paid in full is rejected', !r.ok && /no balance/i.test(r.error), r)
+
+  r = await post({ action: 'recordPayment', token: k, invoiceNo: partial.invoiceNo, amount: 1000, mode: 'Cash' })
+  t('a part of the balance is recorded', r.ok && r.invoice.amountPaid === 3000 && r.invoice.balanceDue === 2000 && r.invoice.paymentStatus === 'Partially paid', r)
+  t('the payment is logged with who took it', r.ok && r.invoice.payments.length === 1 && r.invoice.payments[0].amount === 1000 && r.invoice.payments[0].by === 'Kalpak Dorlikar', r.invoice)
+  t('the bill keeps its own number, date and time', r.ok && r.invoice.invoiceNo === partial.invoiceNo && r.invoice.date === partial.date && r.invoice.time === partial.time, r.invoice)
+
+  await clock('2026-10-29T18:30:00')
+  r = await post({ action: 'recordPayment', token: k, invoiceNo: partial.invoiceNo, amount: 2000, mode: 'UPI' })
+  t('paying the rest makes the bill Paid in full', r.ok && r.invoice.amountPaid === 5000 && r.invoice.balanceDue === 0 && r.invoice.paymentStatus === 'Paid in full', r)
+  t('both later payments are kept, with their own date and mode', r.ok && r.invoice.payments.length === 2 && r.invoice.payments[1].mode === 'UPI' && r.invoice.payments[1].date === '2026-10-29' && r.invoice.payments[1].time === '18:30:00', r.invoice)
+  r = await post({ action: 'recordPayment', token: k, invoiceNo: partial.invoiceNo, amount: 1 })
+  t('nothing more can be recorded once it is paid in full', !r.ok, r)
+
+  r = await post({ action: 'listInvoices', token: k })
+  const after = r.invoices.find((inv) => inv.invoiceNo === partial.invoiceNo)
+  t('the saved bill shows the new totals when listed again', after.amountPaid === 5000 && after.balanceDue === 0 && after.paymentStatus === 'Paid in full' && after.payments.length === 2, after)
+  t('the rest of the saved bill is unchanged', after.total === 5000 && after.studentName === 'Partial Payer' && after.items.length === 1, after)
+
+  // the owner can record a payment on an employee's bill
+  r = await post({
+    action: 'createInvoice', token: k,
+    studentName: 'Owner Collects', phone: '2222222222',
+    items: [{ name: 'DMIT (Test & Report Counselling)', price: 3500 }],
+    discountMode: 'percent', discountPercent: 0,
+    paymentMode: 'Cash', paymentStatus: 'Partially paid', amountPaid: 0,
+  })
+  t('a bill with nothing paid yet has the whole total due', r.ok && r.invoice.amountPaid === 0 && r.invoice.balanceDue === 3500, r)
+  r = await post({ action: 'recordPayment', token: o, invoiceNo: r.invoice.invoiceNo, amount: 3500, mode: 'Card' })
+  t("the owner can record a payment on an employee's bill", r.ok && r.invoice.balanceDue === 0 && r.invoice.payments[0].by === 'Bharat Rai', r)
+
   console.log(`\n${pass} passed, ${bad} failed`)
   process.exit(bad ? 1 : 0)
 })()

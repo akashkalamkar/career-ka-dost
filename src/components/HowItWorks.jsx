@@ -1,6 +1,7 @@
 import { container } from '../config/ui'
 import { SectionHeading } from './SectionHeading'
 import { Tilt } from './Tilt'
+import { useT } from '../i18n'
 
 const steps = [
   { step: '01', title: 'Get in touch', desc: 'Message us on WhatsApp, call, or fill in the form. We reply quickly.' },
@@ -10,13 +11,14 @@ const steps = [
 ]
 
 export function HowItWorks() {
+  const t = useT()
   return (
     <section id="how-it-works" className="scroll-mt-20 bg-paper-2 py-20 md:py-28">
       <div className={container}>
         <SectionHeading
-          eyebrow="Process"
-          title="Four steps from confusion to a confident choice."
-          subtitle="Simple on mobile, clear for parents, and paced for a busy admission season."
+          eyebrow={t('Process')}
+          title={t('Four steps from confusion to a confident choice.')}
+          subtitle={t('Simple on mobile, clear for parents, and paced for a busy admission season.')}
         />
         <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {steps.map((s) => (
@@ -24,8 +26,8 @@ export function HowItWorks() {
               <span className="flex h-14 w-14 items-center justify-center bg-brand font-display text-xl font-extrabold shadow-[0_4px_0_0_#b97f00] [transform:translateZ(44px)]">
                 {s.step}
               </span>
-              <h3 className="mt-7 font-display text-2xl font-extrabold leading-tight [transform:translateZ(28px)]">{s.title}</h3>
-              <p className="mt-3 leading-relaxed text-ink-soft [transform:translateZ(14px)]">{s.desc}</p>
+              <h3 className="mt-7 font-display text-2xl font-extrabold leading-tight [transform:translateZ(28px)]">{t(s.title)}</h3>
+              <p className="mt-3 leading-relaxed text-ink-soft [transform:translateZ(14px)]">{t(s.desc)}</p>
             </Tilt>
           ))}
         </ol>

@@ -33,7 +33,7 @@
  *   - 5 wrong passwords lock that username for 15 minutes.
  */
 
-const SCRIPT_VERSION = 'portal-v11'
+const SCRIPT_VERSION = 'portal-v13'
 const TZ = 'Asia/Kolkata'
 const LATE_FROM_MINUTES = 10 * 60 + 10 // 10:10 AM
 const SESSION_HOURS = 12
@@ -65,6 +65,8 @@ const INVOICE_HEADERS = [
   'Student name', 'Phone', 'Class / Course', 'City',
   'Services', 'Subtotal', 'Discount %', 'Discount amount', 'Total',
   'Payment mode', 'Payment status', 'Amount paid', 'Balance due', 'Notes',
+  'Items (JSON)', // the same services, as data (name+price), so a past bill can be rebuilt and re-downloaded exactly
+  'Later payments (JSON)', // balance paid after the bill was made: [{date, time, amount, mode, by}]
 ]
 const INVOICE_PREFIX = 'CKD'
 const MAX_INVOICE_ITEMS = 20
@@ -97,7 +99,7 @@ let attendanceMemo = null
 let leavesMemo = null
 let reportsMemo = null
 // Only these change data, so only these wait for the lock. Reading and logging in do not.
-const WRITE_ACTIONS = { checkin: 1, checkout: 1, changePassword: 1, resetPassword: 1, forgotStart: 1, forgotConfirm: 1, addStaff: 1, setActive: 1, applyLeave: 1, cancelLeave: 1, decideLeave: 1, submitReport: 1, createInvoice: 1 }
+const WRITE_ACTIONS = { checkin: 1, checkout: 1, changePassword: 1, resetPassword: 1, forgotStart: 1, forgotConfirm: 1, addStaff: 1, setActive: 1, applyLeave: 1, cancelLeave: 1, decideLeave: 1, submitReport: 1, createInvoice: 1, recordPayment: 1 }
 
 /**
  * Only the owner is created automatically. He adds every employee himself from the Staff tab in the
@@ -291,6 +293,7 @@ function route(req) {
     case 'teamReports': return teamReports(user, req)
     case 'createInvoice': return createInvoice(user, req)
     case 'listInvoices': return listInvoices(user, req)
+    case 'recordPayment': return recordPayment(user, req)
     default: fail('Unknown request.')
   }
 }
@@ -1110,7 +1113,13 @@ function installWeeklySummaryTrigger() {
 // ---------------------------------------------------------------------------------------------
 
 function invoicesSheet() {
-  return getOrCreateSheet(SpreadsheetApp.getActiveSpreadsheet(), INVOICE_SHEET, INVOICE_HEADERS)
+  const sheet = getOrCreateSheet(SpreadsheetApp.getActiveSpreadsheet(), INVOICE_SHEET, INVOICE_HEADERS)
+  // A sheet made by an older version has fewer header cells; add the missing column titles once.
+  const last = INVOICE_HEADERS.length
+  if (String(sheet.getRange(1, last).getValue() || '') !== INVOICE_HEADERS[last - 1]) {
+    sheet.getRange(1, 1, 1, last).setValues([INVOICE_HEADERS])
+  }
+  return sheet
 }
 
 /** Rounds to paise (2 decimal places) so money never shows long floating-point tails. */
@@ -1196,6 +1205,8 @@ function createInvoice(user, req) {
     studentName, phone, classOrCourse, city,
     servicesText, subtotal, discountPercent, discountAmount, total,
     paymentMode, paymentStatus, amountPaid, balanceDue, notes,
+    JSON.stringify(items),
+    '',
   ]])
 
   return {
@@ -1220,7 +1231,19 @@ function createInvoice(user, req) {
       amountPaid: amountPaid,
       balanceDue: balanceDue,
       notes: notes,
+      payments: [],
     },
+  }
+}
+
+/** Turns the stored "Items (JSON)" cell back into [{name, price}, ...]. Blank or broken -> []. */
+function parseInvoiceItems_(raw) {
+  try {
+    const arr = JSON.parse(String(raw || '[]'))
+    if (!Array.isArray(arr)) return []
+    return arr.map(function (it) { return { name: String((it && it.name) || ''), price: Number(it && it.price) || 0 } })
+  } catch (err) {
+    return []
   }
 }
 
@@ -1229,8 +1252,9 @@ function readInvoices_() {
   if (sheet.getLastRow() < 2) return []
   const rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, INVOICE_HEADERS.length).getValues()
   return rows
-    .map(function (r) {
+    .map(function (r, i) {
       return {
+        row: i + 2,
         invoiceNo: String(r[0]),
         date: String(r[1]),
         time: String(r[2]),
@@ -1250,14 +1274,72 @@ function readInvoices_() {
         amountPaid: Number(r[16]),
         balanceDue: Number(r[17]),
         notes: String(r[18]),
+        items: parseInvoiceItems_(r[19]),
+        payments: parsePayments_(r[20]),
       }
     })
     .filter(function (r) { return r.invoiceNo })
+}
+
+/** The stored "Later payments (JSON)" cell as [{date, time, amount, mode, by}]. Blank or broken -> []. */
+function parsePayments_(raw) {
+  try {
+    const arr = JSON.parse(String(raw || '[]'))
+    if (!Array.isArray(arr)) return []
+    return arr.map(function (p) {
+      return { date: String(p.date || ''), time: String(p.time || ''), amount: Number(p.amount) || 0, mode: String(p.mode || ''), by: String(p.by || '') }
+    })
+  } catch (err) {
+    return []
+  }
+}
+
+function publicInvoice_(r) {
+  const out = {}
+  Object.keys(r).forEach(function (k) { if (k !== 'row') out[k] = r[k] })
+  return out
 }
 
 /** The owner sees every invoice. An employee sees only the ones they personally created (to reprint, say). */
 function listInvoices(user) {
   const all = readInvoices_().reverse()
   const mine = user.role === 'owner' ? all : all.filter(function (r) { return r.createdByUsername === user.username })
-  return { ok: true, invoices: mine, isOwner: user.role === 'owner' }
+  return { ok: true, invoices: mine.map(publicInvoice_), isOwner: user.role === 'owner' }
+}
+
+/**
+ * Records money received later against a bill that still has a balance due (for example the rest of a
+ * partial payment). The owner can do this for any bill, an employee only for bills they made - the same
+ * rule as listInvoices. The amount can never be more than the balance, so a bill can never show more
+ * paid than its total. When the balance reaches zero the bill becomes "Paid in full". The bill's own
+ * number, date and time never change.
+ */
+function recordPayment(user, req) {
+  const invoiceNo = String(req.invoiceNo || '').trim()
+  const inv = readInvoices_().filter(function (r) { return r.invoiceNo === invoiceNo })[0]
+  if (!inv || (user.role !== 'owner' && inv.createdByUsername !== user.username)) fail('Bill not found.')
+  if (!(inv.balanceDue > 0)) fail('This bill has no balance due.')
+
+  const amount = round2_(Number(req.amount))
+  if (!isFinite(amount) || amount <= 0) fail('Please enter the amount received.')
+  if (amount > inv.balanceDue) fail('That is more than the balance due (Rs ' + inv.balanceDue.toFixed(2) + ').')
+  const mode = String(req.mode || 'Cash').trim() || 'Cash'
+
+  const amountPaid = round2_(inv.amountPaid + amount)
+  const balanceDue = round2_(inv.total - amountPaid)
+  const status = balanceDue > 0 ? 'Partially paid' : 'Paid in full'
+  const t = nowParts()
+  const payments = inv.payments.concat([{ date: t.date, time: t.time, amount: amount, mode: mode, by: user.name }])
+
+  const sheet = invoicesSheet()
+  sheet.getRange(inv.row, 16, 1, 3).setValues([[status, amountPaid, balanceDue]])
+  sheet.getRange(inv.row, 21).setNumberFormat('@')
+  sheet.getRange(inv.row, 21).setValue(JSON.stringify(payments))
+
+  const updated = publicInvoice_(inv)
+  updated.paymentStatus = status
+  updated.amountPaid = amountPaid
+  updated.balanceDue = balanceDue
+  updated.payments = payments
+  return { ok: true, invoice: updated }
 }

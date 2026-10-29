@@ -6,6 +6,7 @@ import { MissionVision } from './MissionVision'
 import { WhyChooseUs } from './WhyChooseUs'
 import { SectionHeading } from './SectionHeading'
 import { Tilt } from './Tilt'
+import { useT } from '../i18n'
 
 const inclusive = [
   {
@@ -23,6 +24,7 @@ const inclusive = [
 ]
 
 export function About() {
+  const t = useT()
   return (
     <>
       <MissionVision />
@@ -33,29 +35,29 @@ export function About() {
             <Tilt max={6} lift={1.03} glare={false} className="mx-auto max-w-md">
               <img
                 src={FOUNDER.photo}
-                alt={`${FOUNDER.name}, founder of ${SITE.name}`}
+                alt={t('{name}, founder of {site}', { name: FOUNDER.name, site: SITE.name })}
                 loading="lazy"
                 className="block w-full drop-shadow-[0_24px_24px_rgba(0,0,0,0.22)]"
               />
             </Tilt>
             <div className="mx-auto mt-2 max-w-md border-t-4 border-brand pt-4 text-center">
               <p className="font-display text-lg font-extrabold">{FOUNDER.name}</p>
-              <p className="text-sm text-ink-soft">{FOUNDER.role}</p>
+              <p className="text-sm text-ink-soft">{t(FOUNDER.role)}</p>
             </div>
           </div>
 
           <div className="lg:col-span-7">
-            <SectionHeading eyebrow="Meet the founder" title={`${FOUNDER.name}: an engineer and MBA who guides like a friend.`} />
-            <p className="-mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">{FOUNDER.summary}.</p>
+            <SectionHeading eyebrow={t('Meet the founder')} title={t('{name}: an engineer and MBA who guides like a friend.', { name: FOUNDER.name })} />
+            <p className="-mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">{t(FOUNDER.summary)}.</p>
             <ul className="mt-8 space-y-3">
               {FOUNDER.highlights.map((h) => (
                 <li key={h} className="flex gap-3 text-ink">
                   <span className="mt-2 h-2 w-2 shrink-0 bg-brand" aria-hidden />
-                  {h}
+                  {t(h)}
                 </li>
               ))}
             </ul>
-            <p className="mt-10 text-xs font-bold uppercase tracking-[0.2em]">Awards &amp; certifications</p>
+            <p className="mt-10 text-xs font-bold uppercase tracking-[0.2em]">{t('Awards & certifications')}</p>
             <ul className="mt-4 flex flex-wrap gap-2">
               {FOUNDER.awards.map((a) => (
                 <li
@@ -74,7 +76,7 @@ export function About() {
                 openWhatsApp({ phoneE164: SITE.whatsappE164, message: `Hi ${SITE.name}, I'd like to speak with ${FOUNDER.name} about counselling.` })
               }
             >
-              Talk to our team
+              {t('Talk to our team')}
             </button>
           </div>
         </div>
@@ -86,15 +88,15 @@ export function About() {
       <section className="py-20 md:py-28">
         <div className={container}>
           <SectionHeading
-            eyebrow="For every family"
-            title="Good guidance should never depend on how much you can spend."
+            eyebrow={t('For every family')}
+            title={t('Good guidance should never depend on how much you can spend.')}
           />
           <div className="grid gap-6 md:grid-cols-3">
             {inclusive.map((p, i) => (
               <Tilt key={p.title} as="article" className="border border-line border-t-4 border-t-brand bg-white p-8 hover:shadow-2xl">
                 <span className="font-display text-sm font-extrabold text-ink/40 [transform:translateZ(20px)]">0{i + 1}</span>
-                <h3 className="mt-6 font-display text-2xl font-extrabold leading-tight [transform:translateZ(30px)]">{p.title}</h3>
-                <p className="mt-3 leading-relaxed text-ink-soft [transform:translateZ(14px)]">{p.text}</p>
+                <h3 className="mt-6 font-display text-2xl font-extrabold leading-tight [transform:translateZ(30px)]">{t(p.title)}</h3>
+                <p className="mt-3 leading-relaxed text-ink-soft [transform:translateZ(14px)]">{t(p.text)}</p>
               </Tilt>
             ))}
           </div>

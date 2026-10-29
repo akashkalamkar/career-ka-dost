@@ -6,6 +6,7 @@ import { submitLead } from '../utils/submitLead'
 import { openWhatsApp } from '../utils/whatsapp'
 import { LeadFields } from './LeadFields'
 import { CapIcon, LockIcon } from './icons'
+import { useT } from '../i18n'
 
 /**
  * THE booking form. The same component is used for the pop-up and for the Contact page,
@@ -14,6 +15,7 @@ import { CapIcon, LockIcon } from './icons'
  * @param {{ source: 'lead-form' | 'lead-modal', idPrefix: string, onSubmitted?: () => void, onClose?: () => void, titleId?: string }} props
  */
 export function LeadCard({ source, idPrefix, onSubmitted, onClose, titleId }) {
+  const t = useT()
   const [values, setValues] = useState(EMPTY_LEAD)
   const [submitted, setSubmitted] = useState(false)
 
@@ -34,10 +36,9 @@ export function LeadCard({ source, idPrefix, onSubmitted, onClose, titleId }) {
     return (
       <div className="overflow-hidden rounded-2xl border border-line bg-white shadow-2xl" role="status">
         <div className="border-t-8 border-brand p-8 md:p-10">
-          <p id={titleId} className="font-display text-3xl font-extrabold">Thank you. You&rsquo;re all set.</p>
+          <p id={titleId} className="font-display text-3xl font-extrabold">{t('Thank you. You’re all set.')}</p>
           <p className="mt-4 max-w-md leading-relaxed text-ink-soft">
-            We&rsquo;ve opened WhatsApp with your details. If it didn&rsquo;t open, use the green WhatsApp button and our team will
-            respond shortly.
+            {t('We’ve opened WhatsApp with your details. If it didn’t open, use the green WhatsApp button and our team will respond shortly.')}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-5">
             <button
@@ -50,11 +51,11 @@ export function LeadCard({ source, idPrefix, onSubmitted, onClose, titleId }) {
                 })
               }
             >
-              Open WhatsApp again
+              {t('Open WhatsApp again')}
             </button>
             {onClose ? (
               <button type="button" className={btnPrimary} onClick={onClose}>
-                Close
+                {t('Close')}
               </button>
             ) : null}
           </div>
@@ -71,10 +72,10 @@ export function LeadCard({ source, idPrefix, onSubmitted, onClose, titleId }) {
         </span>
         <div>
           <p id={titleId} className="font-display text-xl font-extrabold leading-tight md:text-2xl">
-            Book counselling
+            {t('Book counselling')}
           </p>
           <p className="mt-0.5 text-sm leading-snug text-ink-soft">
-            Career guidance for every student: Class 9 to 12, engineering, medical, Law, BBA, MBA, B.Sc, BCA and more.
+            {t('Career guidance for every student: Class 9 to 12, engineering, medical, Law, BBA, MBA, B.Sc, BCA and more.')}
           </p>
         </div>
       </div>
@@ -82,11 +83,11 @@ export function LeadCard({ source, idPrefix, onSubmitted, onClose, titleId }) {
         <LeadFields idPrefix={idPrefix} values={values} onChange={handleChange} />
         <div>
           <button type="submit" className={`${btnPrimary} w-full !rounded-lg`}>
-            Book counselling
+            {t('Book counselling')}
           </button>
           <p className="mt-4 flex items-center gap-2 text-xs text-mute">
             <LockIcon className="h-4 w-4 shrink-0" />
-            All fields are required. By submitting, you agree to be contacted about counselling services.
+            {t('All fields are required. By submitting, you agree to be contacted about counselling services.')}
           </p>
         </div>
       </div>

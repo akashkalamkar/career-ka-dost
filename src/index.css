@@ -8,8 +8,8 @@
 @source '../index.html';
 
 @theme {
-  --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Figtree', 'Noto Sans Devanagari', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Figtree', 'Noto Sans Devanagari', ui-sans-serif, system-ui, sans-serif;
 
   --color-ink: #1b1b1b;
   --color-ink-soft: #434343;
@@ -26,6 +26,15 @@
 html {
   font-size: 106.25%;
   scroll-behavior: smooth;
+}
+
+/* Hindi and Marathi: Devanagari letters have marks above and below the line, so tight line heights
+   would make lines touch, and letter-spacing breaks joined letters apart. */
+html:is([lang='hi'], [lang='mr']) :is(h1, h2, h3, p, dt, dd, summary, span, a, button, label, li) {
+  letter-spacing: normal;
+}
+html:is([lang='hi'], [lang='mr']) :is(h1, h2, h3) {
+  line-height: 1.35;
 }
 
 body {

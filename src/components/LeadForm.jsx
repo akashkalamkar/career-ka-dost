@@ -8,6 +8,7 @@ import { MapEmbed } from './MapEmbed'
 import { SectionHeading } from './SectionHeading'
 import { SocialLinks } from './SocialLinks'
 import { Tilt } from './Tilt'
+import { useT } from '../i18n'
 
 const link = 'underline decoration-brand decoration-2 underline-offset-4 hover:bg-brand'
 
@@ -26,18 +27,19 @@ function InfoCard({ icon: Icon, label, children }) {
 }
 
 export function LeadForm() {
+  const t = useT()
   return (
     <section id="lead-form" className="scroll-mt-20 py-20 md:py-28">
       <div className={container}>
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-5">
             <SectionHeading
-              eyebrow="Contact us"
-              title="Book your counselling."
-              subtitle="Tell us a little about you and we'll reply on WhatsApp. No spam, just one focused conversation about your next step."
+              eyebrow={t('Contact us')}
+              title={t('Book your counselling.')}
+              subtitle={t("Tell us a little about you and we'll reply on WhatsApp. No spam, just one focused conversation about your next step.")}
             />
             <div className="space-y-4">
-              <InfoCard icon={PhoneIcon} label="Call">
+              <InfoCard icon={PhoneIcon} label={t('Call')}>
                 <a className={`${link} whitespace-nowrap`} href={`tel:${SITE.phoneTel}`}>
                   {SITE.phoneDisplay}
                 </a>
@@ -46,15 +48,15 @@ export function LeadForm() {
                   {SITE.phoneDisplay2}
                 </a>
               </InfoCard>
-              <InfoCard icon={MailIcon} label="Email">
+              <InfoCard icon={MailIcon} label={t('Email')}>
                 <a className={link} href={mailtoUrl()} onClick={onEmailClick}>
                   {SITE.email}
                 </a>
               </InfoCard>
-              <InfoCard icon={PinIcon} label="Visit us">
+              <InfoCard icon={PinIcon} label={t('Visit us')}>
                 {SITE.addressLine}
               </InfoCard>
-              <InfoCard icon={InstagramIcon} label="Follow and message us">
+              <InfoCard icon={InstagramIcon} label={t('Follow and message us')}>
                 <SocialLinks className="mt-2" />
               </InfoCard>
             </div>
@@ -66,7 +68,7 @@ export function LeadForm() {
         </div>
 
         <div className="mt-20 md:mt-28">
-          <SectionHeading eyebrow="Find us" title="Visit our office in Sitabuldi, Nagpur." art={<PinArt className="max-w-[15rem]" />} />
+          <SectionHeading eyebrow={t('Find us')} title={t('Visit our office in Sitabuldi, Nagpur.')} art={<PinArt className="max-w-[15rem]" />} />
           <MapEmbed />
         </div>
       </div>

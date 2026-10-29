@@ -1,4 +1,5 @@
 import { CapIcon, ChatIcon, MailIcon, PhoneIcon, PinIcon, SchoolIcon, UserIcon } from './icons'
+import { useT } from '../i18n'
 
 const FIELDS = [
   { name: 'studentName', label: 'Student name', placeholder: 'Full name', autoComplete: 'name', icon: UserIcon, wide: true },
@@ -18,6 +19,7 @@ const inputBase =
  * Every field is required. Used by the one booking form that appears both as the pop-up and on the Contact page.
  */
 export function LeadFields({ idPrefix, values, onChange }) {
+  const t = useT()
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       {FIELDS.map((f) => {
@@ -30,7 +32,7 @@ export function LeadFields({ idPrefix, values, onChange }) {
           required: true,
           value: values[f.name],
           onChange,
-          placeholder: f.placeholder,
+          placeholder: t(f.placeholder),
         }
         return (
           <div key={f.name} className={`relative ${f.wide ? 'sm:col-span-2' : ''}`}>
@@ -45,7 +47,7 @@ export function LeadFields({ idPrefix, values, onChange }) {
                 f.textarea ? 'top-[1.65rem] -translate-y-1/2' : 'top-1/2 -translate-y-1/2'
               }`}
             >
-              {f.label}
+              {t(f.label)}
               <span className="text-brass" aria-hidden>
                 {' '}
                 *

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { About } from './components/About'
 import { Blog } from './components/Blog'
 import { BlogPost } from './components/BlogPost'
@@ -18,6 +18,7 @@ import { Results } from './components/Results'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
 import { AdminApp } from './admin/AdminApp'
 import { applyPendingJump } from './utils/jump'
+import { LangContext, saveLang, savedLang, translate } from './i18n'
 
 const withCta = (page) => (
   <>
@@ -51,6 +52,24 @@ const REDIRECTS = {
   '/stories': '/results',
 }
 
+const SITE_TITLE = 'Career Ka Dost - Career Counselling & Admission Guidance in Nagpur'
+
+/** The browser-tab title for each page. Pages not listed (home, a blog post) keep the main title. */
+const TITLES = {
+  '/about': 'About us',
+  '/pricing': 'Services & pricing',
+  '/career-test': 'Career test',
+  '/results': 'Results & testimonials',
+  '/resources': 'Free resources',
+  '/blog': 'Blog',
+  '/faq': 'FAQ',
+  '/contact': 'Book counselling',
+  '/refund-policy': 'Refund policy',
+  '/terms': 'Terms and conditions',
+  '/privacy': 'Privacy policy',
+  '/admin': 'Staff portal',
+}
+
 function resolve() {
   let path = window.location.hash.replace(/^#/, '') || '/'
   if (REDIRECTS[path]) path = REDIRECTS[path]
@@ -60,6 +79,23 @@ function resolve() {
 
 function App() {
   const [route, setRoute] = useState(resolve)
+  const [lang, setLangState] = useState(savedLang)
+  const langValue = useMemo(
+    () => ({
+      lang,
+      setLang: (next) => {
+        saveLang(next)
+        setLangState(next)
+      },
+    }),
+    [lang],
+  )
+
+  // The staff portal (and its printed bills) is English-only, so it keeps English spacing rules too.
+  const pageLang = route.key === '/admin' ? 'en' : lang
+  useEffect(() => {
+    document.documentElement.lang = pageLang
+  }, [pageLang])
 
   useEffect(() => {
     function onChange() {
@@ -74,9 +110,15 @@ function App() {
     applyPendingJump()
   }, [route])
 
+  useEffect(() => {
+    const isPost = window.location.hash.startsWith('#/blog/')
+    document.title = TITLES[route.key] && !isPost ? `${translate(lang, TITLES[route.key])} | Career Ka Dost` : translate(lang, SITE_TITLE)
+  }, [route, lang])
+
   const { Page } = route
 
   return (
+    <LangContext.Provider value={langValue}>
     <div className="min-h-svh bg-paper text-ink antialiased">
       <LeadGateModal />
       <Header path={route.key} />
@@ -86,6 +128,7 @@ function App() {
       <Footer />
       <FloatingActions />
     </div>
+    </LangContext.Provider>
   )
 }
 

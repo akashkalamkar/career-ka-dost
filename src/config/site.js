@@ -13,7 +13,7 @@ export const SITE = {
   email: 'careerkadost@gmail.com',
   websiteDisplay: 'www.careerkadost.com',
   instagramUrl: 'https://www.instagram.com/careerkadost',
-  /** Handle taken from the brochure ("CareerKaDost"). Please confirm it opens your channel. */
+  /** Confirmed by the owner (29 Oct 2026) to open the Career Ka Dost channel. */
   youtubeUrl: 'https://www.youtube.com/@CareerKaDost',
   /** Add your LinkedIn page URL here and a LinkedIn icon appears in the footer and Contact page. */
   linkedinUrl: 'https://www.linkedin.com/company/careerkadost',

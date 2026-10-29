@@ -2,6 +2,8 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { OPEN_LEAD_EVENT } from '../utils/leadForm'
 import { LeadCard } from './LeadCard'
+import { useT } from '../i18n'
+import { LangButtons } from './LangButtons'
 
 const STORAGE_KEY = 'ckd_lead_gate_done'
 
@@ -26,6 +28,7 @@ function persistDismissed() {
  * "Book counselling" button opens it again. It shows exactly the same form card as the Contact page.
  */
 export function LeadGateModal() {
+  const t = useT()
   const titleId = useId()
   const closeRef = useRef(null)
   // The staff login page never shows the visitor pop-up on its own.
@@ -72,20 +75,21 @@ export function LeadGateModal() {
       className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto overscroll-contain p-3 sm:items-center sm:p-6"
       role="presentation"
     >
-      <button type="button" className="fixed inset-0 bg-[#5c3b00]/40 backdrop-blur-sm" aria-label="Close dialog" onClick={dismiss} />
+      <button type="button" className="fixed inset-0 bg-[#5c3b00]/40 backdrop-blur-sm" aria-label={t('Close dialog')} onClick={dismiss} />
 
       <div role="dialog" aria-modal="true" aria-labelledby={titleId} className="relative z-[101] my-auto w-full max-w-2xl">
         <button
           ref={closeRef}
           type="button"
           onClick={dismiss}
-          aria-label="Close"
-          className="absolute right-3 top-5 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-ink shadow transition hover:bg-white"
+          aria-label={t('Close')}
+          className="absolute right-3 top-[3.25rem] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-ink shadow transition hover:bg-white"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
             <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
           </svg>
         </button>
+        <LangButtons className="mb-2 justify-end rounded-full bg-white/90 px-2 py-1 shadow sm:ml-auto sm:w-fit" />
         <LeadCard key={session} source="lead-modal" idPrefix="gate-" titleId={titleId} onSubmitted={persistDismissed} onClose={dismiss} />
       </div>
     </div>,
