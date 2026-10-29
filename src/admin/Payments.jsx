@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { PAYMENT_MODES } from '../config/billing'
-import { SITE } from '../config/site'
 import { whatsappLink, whatsappNumber } from '../utils/whatsapp'
+import { reminderText } from '../utils/whatsappBill'
 import { card, dateLabel, inputClass } from './format'
 import { Message } from './Shared'
 import { useCaller } from './useCaller'
@@ -15,22 +15,6 @@ function daysSince(isoDate) {
   const now = new Date()
   const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
   return Math.max(0, Math.round((today - Date.UTC(y, m - 1, d)) / 86400000))
-}
-
-function reminderText(inv) {
-  return [
-    'Namaste! This is a friendly reminder from Career Ka Dost.',
-    '',
-    `Student: ${inv.studentName}`,
-    `Bill: ${inv.invoiceNo} (${dateLabel(inv.date)})`,
-    `Total: ${money(inv.total)}`,
-    `Paid: ${money(inv.amountPaid)}`,
-    `Balance due: ${money(inv.balanceDue)}`,
-    '',
-    'You can pay by cash, UPI or card at our office, or reply here if you have any question.',
-    'Thank you!',
-    `Career Ka Dost, ${SITE.phoneDisplay}`,
-  ].join('\n')
 }
 
 function RecordPaymentForm({ inv, run, onSaved, onCancel }) {

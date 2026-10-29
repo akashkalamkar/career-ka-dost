@@ -3,7 +3,6 @@ import { StepsArt } from './Art3D'
 import { EyeIcon, TargetIcon } from './icons'
 import { SectionHeading } from './SectionHeading'
 import { Tilt } from './Tilt'
-import { useT } from '../i18n'
 
 /** Top edge of the stepped wall (viewBox 1100 x 340). */
 const WALK = 'M0 316 L170 316 L290 262 L420 262 L540 208 L670 208 L790 154 L920 154 L1040 100'
@@ -67,9 +66,8 @@ function Pair() {
 
 /** Still picture: a teacher and a student on the climb toward the goal. */
 function Journey() {
-  const t = useT()
   return (
-    <svg viewBox="0 0 1100 340" className="block h-auto w-full" role="img" aria-label={t('A teacher and a student holding hands and climbing steps toward a flag')}>
+    <svg viewBox="0 0 1100 340" className="block h-auto w-full" role="img" aria-label="A teacher and a student holding hands and climbing steps toward a flag">
       <path d={WALL} fill="#ffe7a3" />
       <path d={WALK} fill="none" stroke="#ffb81c" strokeWidth="12" strokeLinejoin="miter" />
       <g>
@@ -84,14 +82,13 @@ function Journey() {
 }
 
 export function MissionVision() {
-  const t = useT()
   return (
     <section id="about" className="scroll-mt-20 py-20 md:py-28">
       <div className={container}>
         <SectionHeading
-          eyebrow={t('Our vision and mission')}
-          title={t('Clarity, confidence and the right direction.')}
-          subtitle={t('We help students choose a career based on aptitude, interests and real opportunities, not pressure or trends.')}
+          eyebrow="Our vision and mission"
+          title="Clarity, confidence and the right direction."
+          subtitle="We help students choose a career based on aptitude, interests and real opportunities, not pressure or trends."
           art={<StepsArt />}
         />
 
@@ -100,9 +97,10 @@ export function MissionVision() {
             <span className="flex h-12 w-12 items-center justify-center bg-brand text-ink shadow-[0_4px_0_0_#b97f00] transition-colors group-hover/tilt:bg-white group-hover/tilt:text-brass group-hover/tilt:shadow-[0_4px_0_0_#a86400] [transform:translateZ(40px)]">
               <EyeIcon className="h-6 w-6" />
             </span>
-            <h3 className="mt-8 font-display text-3xl font-extrabold tracking-tight md:text-4xl [transform:translateZ(28px)]">{t('Our Vision')}</h3>
+            <h3 className="mt-8 font-display text-3xl font-extrabold tracking-tight md:text-4xl [transform:translateZ(28px)]">Our Vision</h3>
             <p className="mt-4 text-lg leading-relaxed text-ink-soft transition-colors group-hover/tilt:text-ink [transform:translateZ(18px)]">
-              {t('To become a trusted career guidance partner for every student, ensuring that no career decision is made in confusion, pressure or lack of awareness.')}
+              To become a trusted career guidance partner for every student, ensuring that no career decision is made in
+              confusion, pressure or lack of awareness.
             </p>
           </Tilt>
 
@@ -110,20 +108,21 @@ export function MissionVision() {
             <span className="flex h-12 w-12 items-center justify-center bg-brand text-ink shadow-[0_4px_0_0_#b97f00] transition-colors group-hover/tilt:bg-white group-hover/tilt:text-brass group-hover/tilt:shadow-[0_4px_0_0_#a86400] [transform:translateZ(40px)]">
               <TargetIcon className="h-6 w-6" />
             </span>
-            <h3 className="mt-8 font-display text-3xl font-extrabold tracking-tight md:text-4xl [transform:translateZ(28px)]">{t('Our Mission')}</h3>
+            <h3 className="mt-8 font-display text-3xl font-extrabold tracking-tight md:text-4xl [transform:translateZ(28px)]">Our Mission</h3>
             <p className="mt-4 text-lg leading-relaxed text-ink-soft transition-colors group-hover/tilt:text-ink [transform:translateZ(18px)]">
-              {t('To guide students towards the right career through clarity, confidence and correct direction, based on aptitude, interests and real opportunities, not pressure or trends.')}
+              To guide students towards the right career through clarity, confidence and correct direction, based on aptitude,
+              interests and real opportunities, not pressure or trends.
             </p>
-            <p className="mt-4 font-bold [transform:translateZ(12px)]">{t('We guide both students and parents at every step.')}</p>
+            <p className="mt-4 font-bold [transform:translateZ(12px)]">We guide both students and parents at every step.</p>
           </Tilt>
         </div>
 
         <Tilt max={3} lift={1.01} glare={false} className="mt-8 overflow-hidden border border-line bg-paper-2 shadow-lg">
           <div className="grid items-end gap-6 p-6 md:grid-cols-12 md:p-10">
             <div className="md:col-span-4">
-              <p className="text-xs font-bold uppercase tracking-[0.2em]">{t('Hand in hand')}</p>
-              <p className="mt-3 font-display text-2xl font-extrabold leading-tight">{t('From the first question to the final decision.')}</p>
-              <p className="mt-3 text-ink-soft">{t('We walk every step with the student, and with the parents too.')}</p>
+              <p className="text-xs font-bold uppercase tracking-[0.2em]">Hand in hand</p>
+              <p className="mt-3 font-display text-2xl font-extrabold leading-tight">From the first question to the final decision.</p>
+              <p className="mt-3 text-ink-soft">We walk every step with the student, and with the parents too.</p>
             </div>
             <div className="md:col-span-8">
               <Journey />

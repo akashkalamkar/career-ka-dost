@@ -40,7 +40,7 @@ function capture(element, inlineStyles) {
   ])
 }
 
-export async function downloadInvoicePdf(element, filename) {
+async function makePdf(element) {
   let canvas
   try {
     canvas = await capture(element, true)
@@ -75,5 +75,16 @@ export async function downloadInvoicePdf(element, filename) {
     heightLeft -= pageHeight
   }
 
+  return pdf
+}
+
+export async function downloadInvoicePdf(element, filename) {
+  const pdf = await makePdf(element)
   pdf.save(filename)
+}
+
+/** The same A4 PDF as a file, for the phone's Share menu (e.g. to send it on WhatsApp). */
+export async function invoicePdfFile(element, filename) {
+  const pdf = await makePdf(element)
+  return new File([pdf.output('blob')], filename, { type: 'application/pdf' })
 }

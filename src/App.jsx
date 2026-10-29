@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { About } from './components/About'
 import { Blog } from './components/Blog'
 import { BlogPost } from './components/BlogPost'
@@ -18,7 +18,6 @@ import { Results } from './components/Results'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
 import { AdminApp } from './admin/AdminApp'
 import { applyPendingJump } from './utils/jump'
-import { LangContext, saveLang, savedLang, translate } from './i18n'
 
 const withCta = (page) => (
   <>
@@ -79,23 +78,6 @@ function resolve() {
 
 function App() {
   const [route, setRoute] = useState(resolve)
-  const [lang, setLangState] = useState(savedLang)
-  const langValue = useMemo(
-    () => ({
-      lang,
-      setLang: (next) => {
-        saveLang(next)
-        setLangState(next)
-      },
-    }),
-    [lang],
-  )
-
-  // The staff portal (and its printed bills) is English-only, so it keeps English spacing rules too.
-  const pageLang = route.key === '/admin' ? 'en' : lang
-  useEffect(() => {
-    document.documentElement.lang = pageLang
-  }, [pageLang])
 
   useEffect(() => {
     function onChange() {
@@ -112,13 +94,12 @@ function App() {
 
   useEffect(() => {
     const isPost = window.location.hash.startsWith('#/blog/')
-    document.title = TITLES[route.key] && !isPost ? `${translate(lang, TITLES[route.key])} | Career Ka Dost` : translate(lang, SITE_TITLE)
-  }, [route, lang])
+    document.title = TITLES[route.key] && !isPost ? `${TITLES[route.key]} | Career Ka Dost` : SITE_TITLE
+  }, [route])
 
   const { Page } = route
 
   return (
-    <LangContext.Provider value={langValue}>
     <div className="min-h-svh bg-paper text-ink antialiased">
       <LeadGateModal />
       <Header path={route.key} />
@@ -128,7 +109,6 @@ function App() {
       <Footer />
       <FloatingActions />
     </div>
-    </LangContext.Provider>
   )
 }
 

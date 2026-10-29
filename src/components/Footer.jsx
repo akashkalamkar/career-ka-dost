@@ -4,7 +4,6 @@ import { mailtoUrl, onEmailClick } from '../utils/email'
 import { Brand } from './Brand'
 import { SocialLinks } from './SocialLinks'
 import { GmailIcon, InstagramColorIcon, PhoneIcon, PinColorIcon, WhatsAppIcon } from './icons'
-import { useT } from '../i18n'
 
 const link = 'whitespace-nowrap underline-offset-4 transition hover:text-ink hover:underline'
 const head = 'text-xs font-bold uppercase tracking-[0.2em] text-brass'
@@ -42,27 +41,26 @@ function Row({ icon: Icon, iconClass = '', href, external, onClick, children }) 
 }
 
 export function Footer() {
-  const t = useT()
   return (
     <footer className="bg-paper-2 font-bold text-ink print:hidden">
       <div className="h-1.5 bg-brand" aria-hidden />
       <div className={`${container} grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-12`}>
         <div className="lg:col-span-4">
           <Brand size="lg" showTagline={false} />
-          <p className="mt-5 font-display text-lg font-bold uppercase tracking-wide text-ink">{t(SITE.tagline)}</p>
+          <p className="mt-5 font-display text-lg font-bold uppercase tracking-wide text-ink">{SITE.tagline}</p>
           <p className="mt-3 max-w-sm text-sm font-bold leading-relaxed">
-            {t('Career guidance, counselling and admissions support for students and parents.')}
+            Career guidance, counselling and admissions support for students and parents.
           </p>
           <SocialLinks className="mt-6" />
         </div>
 
         <div className="lg:col-span-2">
-          <p className={head}>{t('Explore')}</p>
+          <p className={head}>Explore</p>
           <ul className="mt-5 space-y-3 text-sm">
             {EXPLORE.map((l) => (
               <li key={l.href}>
                 <a className={link} href={l.href}>
-                  {t(l.label)}
+                  {l.label}
                 </a>
               </li>
             ))}
@@ -70,7 +68,7 @@ export function Footer() {
         </div>
 
         <div className="lg:col-span-3">
-          <p className={head}>{t('Contact')}</p>
+          <p className={head}>Contact</p>
           <ul className="mt-5 space-y-4 text-sm">
             <li className="flex items-start gap-3">
               <span className={iconWrap}>
@@ -87,7 +85,7 @@ export function Footer() {
               </span>
             </li>
             <Row icon={WhatsAppIcon} iconClass="text-[#25d366]" href={`https://wa.me/${SITE.whatsappE164}`} external>
-              {t('Chat on WhatsApp')}
+              Chat on WhatsApp
             </Row>
             <Row icon={GmailIcon} href={mailtoUrl()} onClick={onEmailClick}>
               {SITE.email}
@@ -99,7 +97,7 @@ export function Footer() {
         </div>
 
         <div className="lg:col-span-3">
-          <p className={head}>{t('Visit')}</p>
+          <p className={head}>Visit</p>
           <ul className="mt-5 space-y-4 text-sm">
             <Row icon={PinColorIcon} href={SITE.mapsUrl} external>
               {SITE.addressLine}
@@ -107,7 +105,7 @@ export function Footer() {
           </ul>
           <div className="group relative mt-6 overflow-hidden border border-line">
             <iframe
-              title={t('{site} on Google Maps', { site: SITE.name })}
+              title={`${SITE.name} on Google Maps`}
               src={SITE.mapEmbedUrl}
               loading="lazy"
               tabIndex={-1}
@@ -119,10 +117,10 @@ export function Footer() {
               href={SITE.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={t('Open Career Ka Dost in Google Maps')}
+              aria-label="Open Career Ka Dost in Google Maps"
               className="absolute inset-0 flex items-end justify-end bg-brand/0 p-3 transition group-hover:bg-brand/20"
             >
-              <span className="bg-brand px-3 py-1.5 text-xs font-bold text-ink shadow">{t('Open in Google Maps')}</span>
+              <span className="bg-brand px-3 py-1.5 text-xs font-bold text-ink shadow">Open in Google Maps</span>
             </a>
           </div>
         </div>
@@ -131,13 +129,13 @@ export function Footer() {
       <div className="border-t border-line">
         <div className={`${container} flex flex-col gap-4 pb-24 pt-6 text-xs font-bold text-ink-soft md:flex-row md:items-center md:justify-between md:pb-6`}>
           <p>
-            &copy; {SITE.copyrightYear} {SITE.name}. {t('All rights reserved.')}
+            &copy; {SITE.copyrightYear} {SITE.name}. All rights reserved.
           </p>
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
             {LEGAL.map((l) => (
               <li key={l.href}>
                 <a className="underline-offset-4 transition hover:text-ink hover:underline" href={l.href}>
-                  {t(l.label)}
+                  {l.label}
                 </a>
               </li>
             ))}

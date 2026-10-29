@@ -1,7 +1,6 @@
 import { container } from '../config/ui'
 import { SectionHeading } from './SectionHeading'
 import { Tilt } from './Tilt'
-import { useT } from '../i18n'
 
 const reasons = [
   { title: 'We treat students like friends', desc: 'We listen, understand and guide like a true friend who cares.' },
@@ -13,21 +12,20 @@ const reasons = [
 ]
 
 export function WhyChooseUs() {
-  const t = useT()
   return (
     <section id="why-us" className="scroll-mt-20 py-20 md:py-28">
       <div className={container}>
         <SectionHeading
-          eyebrow={t('Why Career Ka Dost')}
-          title={t('Guidance you can trust, because this decision shapes decades.')}
-          subtitle={t('We combine proven assessments with a personal approach, so no career decision is made in confusion or under pressure.')}
+          eyebrow="Why Career Ka Dost"
+          title="Guidance you can trust, because this decision shapes decades."
+          subtitle="We combine proven assessments with a personal approach, so no career decision is made in confusion or under pressure."
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {reasons.map((r, i) => (
             <Tilt key={r.title} as="article" className="bg-paper-2 p-8 transition-colors hover:bg-brand hover:shadow-2xl md:p-10">
               <span className="block font-display text-5xl font-extrabold text-brand-deep/80 [transform:translateZ(44px)]">0{i + 1}</span>
-              <h3 className="mt-6 font-display text-2xl font-extrabold leading-tight [transform:translateZ(28px)]">{t(r.title)}</h3>
-              <p className="mt-3 leading-relaxed text-ink-soft [transform:translateZ(14px)]">{t(r.desc)}</p>
+              <h3 className="mt-6 font-display text-2xl font-extrabold leading-tight [transform:translateZ(28px)]">{r.title}</h3>
+              <p className="mt-3 leading-relaxed text-ink-soft [transform:translateZ(14px)]">{r.desc}</p>
             </Tilt>
           ))}
         </div>

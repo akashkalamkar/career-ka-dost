@@ -1,7 +1,6 @@
 import { SITE } from '../config/site'
 import { mailtoUrl, onEmailClick } from '../utils/email'
 import { GmailIcon, InstagramIcon, LinkedInIcon, PhoneIcon, WhatsAppIcon, YouTubeIcon } from './icons'
-import { useT } from '../i18n'
 
 const INSTAGRAM_GRADIENT = 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%)'
 
@@ -22,7 +21,6 @@ function socialLinks() {
 
 /** Row of round-corner icon buttons in the original colours of each logo. */
 export function SocialLinks({ className = '' }) {
-  const t = useT()
   return (
     <ul className={`flex flex-wrap gap-3 ${className}`}>
       {socialLinks().map(({ label, href, icon: Icon, external, onClick, tile, style, big }) => (
@@ -30,8 +28,8 @@ export function SocialLinks({ className = '' }) {
           <a
             href={href}
             onClick={onClick}
-            aria-label={t(label)}
-            title={t(label)}
+            aria-label={label}
+            title={label}
             style={style}
             {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             className={`flex h-11 w-11 items-center justify-center rounded-xl shadow-md transition hover:-translate-y-1 hover:shadow-xl ${tile}`}

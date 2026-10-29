@@ -4,8 +4,6 @@ import { btnPrimary, container } from '../config/ui'
 import { bookProps, openLeadForm } from '../utils/leadForm'
 import { SearchPanel } from './SiteSearch'
 import { LockIcon, SearchIcon } from './icons'
-import { useT } from '../i18n'
-import { LangButtons } from './LangButtons'
 
 const nav = [
   { label: 'Home', href: '#/' },
@@ -19,25 +17,15 @@ const nav = [
   { label: 'Admin', href: '#/admin', icon: LockIcon }, // shown as a lock icon only
 ]
 
-function LangBar() {
-  return (
-    <div className="border-b border-line/70 bg-paper-2">
-      <LangButtons className={`${container} justify-end py-1`} />
-    </div>
-  )
-}
-
 export function Header({ path = '/' }) {
-  const t = useT()
   const [open, setOpen] = useState(false)
   const [searching, setSearching] = useState(false)
   const closeSearch = useCallback(() => setSearching(false), [])
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur-md print:hidden">
-      <LangBar />
       <div className={`${container} flex items-center justify-between gap-4 py-4`}>
-        <a href="#/" aria-label={t('Career Ka Dost home')} onClick={() => setOpen(false)}>
+        <a href="#/" aria-label="Career Ka Dost home" onClick={() => setOpen(false)}>
           <Brand />
         </a>
 
@@ -47,11 +35,11 @@ export function Header({ path = '/' }) {
               key={item.href}
               href={item.href}
               aria-current={item.href === `#${path}` ? 'page' : undefined}
-              aria-label={item.icon ? t(item.label) : undefined}
-              title={item.icon ? t(item.label) : undefined}
+              aria-label={item.icon ? item.label : undefined}
+              title={item.icon ? item.label : undefined}
               className={`border-b-2 py-1 text-sm font-semibold transition hover:text-ink ${item.href === `#${path}` ? 'border-brand text-ink' : 'border-transparent text-ink-soft'}`}
             >
-              {item.icon ? <item.icon className="h-5 w-5" /> : t(item.label)}
+              {item.icon ? <item.icon className="h-5 w-5" /> : item.label}
             </a>
           ))}
         </nav>
@@ -63,22 +51,22 @@ export function Header({ path = '/' }) {
               setOpen(false)
               setSearching((v) => !v)
             }}
-            aria-label={t('Search the website')}
+            aria-label="Search the website"
             aria-expanded={searching}
             className="flex h-10 items-center gap-2 rounded-full border-2 border-brand-deep bg-white px-3 text-sm font-bold text-ink transition hover:bg-brand"
           >
             <SearchIcon className="h-5 w-5" />
-            <span className="hidden 2xl:inline">{t('Search')}</span>
+            <span className="hidden 2xl:inline">Search</span>
           </button>
           <span className="hidden sm:block">
             <a {...bookProps} className={`${btnPrimary} whitespace-nowrap !px-5 !py-2.5`}>
-              {t('Book counselling')}
+              Book counselling
             </a>
           </span>
           <button
             type="button"
             className="flex h-10 w-10 items-center justify-center xl:hidden"
-            aria-label={open ? t('Close menu') : t('Open menu')}
+            aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             onClick={() => {
               setSearching(false)
@@ -102,10 +90,10 @@ export function Header({ path = '/' }) {
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                aria-label={item.icon ? t(item.label) : undefined}
+                aria-label={item.icon ? item.label : undefined}
                 className="border-b border-line/70 py-4 font-display text-xl font-semibold"
               >
-                {item.icon ? <item.icon className="h-6 w-6" /> : t(item.label)}
+                {item.icon ? <item.icon className="h-6 w-6" /> : item.label}
               </a>
             ))}
             <button
@@ -116,7 +104,7 @@ export function Header({ path = '/' }) {
                 openLeadForm()
               }}
             >
-              {t('Book counselling')}
+              Book counselling
             </button>
           </div>
         </nav>
