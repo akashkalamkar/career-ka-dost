@@ -22,15 +22,14 @@ export async function downloadInvoicePdf(element, filename) {
   const pdf = new jsPDF({ unit: 'mm', format: 'a4' })
   const pageWidth = pdf.internal.pageSize.getWidth()
   const pageHeight = pdf.internal.pageSize.getHeight()
+  // Always full page width - never shrink it to fit, that just leaves odd blank margins down both
+  // sides and makes even a correctly-sized page look wrong. A normal bill fits on one page at this
+  // width (see PrintableInvoice's own A4-height target). Only a genuinely long one (many services)
+  // runs past one page's height, and only then does it continue onto a second, still full-width page.
   const imgWidth = pageWidth
   const imgHeight = (canvas.height * imgWidth) / canvas.width
 
-  // Almost every bill fits on one page, but a long one (many services) spills onto a second page here
-  // rather than getting cut off. A few mm of overflow (font/antialiasing rounding, not real extra
-  // content) is absorbed into page one instead, so that alone never spawns an unwanted, near-blank
-  // second page.
-  const OVERFLOW_TOLERANCE_MM = 15
-  let heightLeft = imgHeight - OVERFLOW_TOLERANCE_MM
+  let heightLeft = imgHeight
   let position = 0
   pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight)
   heightLeft -= pageHeight
