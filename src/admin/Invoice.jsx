@@ -230,25 +230,6 @@ function pdfErrorText(err) {
   return `Could not create the PDF${reason}. Please refresh the page (Ctrl + F5) and try again - the website may have just been updated.`
 }
 
-/** What happened after "Send on WhatsApp", with a link to open the chat again. */
-function WhatsAppNote({ result, invoice }) {
-  if (!result || result.done === 'cancelled') return null
-  return (
-    <p role="status" className="border-l-4 border-[#0f6b2a] bg-[#e5f6e9] px-4 py-3 text-sm font-bold text-[#0b4f1f]">
-      {result.done === 'shared'
-        ? `${invoice.invoiceNo}.pdf was handed to WhatsApp. If you did not finish sending it, tap Send on WhatsApp again.`
-        : `${invoice.invoiceNo}.pdf has been downloaded, and WhatsApp is opening on ${invoice.phone} with a ready message. Attach the downloaded PDF in that chat (drag it in, or click the paperclip and pick it from Downloads), then press Send.`}{' '}
-      <a href={result.link} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
-        Open the WhatsApp chat
-      </a>
-    </p>
-  )
-}
-
-function sendErrorText(err) {
-  return err && err.code === 'phone' ? err.message : pdfErrorText(err)
-}
-
 /** Fetches the PDF tools in the background once a bill screen opens, so "Download" answers at once. */
 function usePreloadPdfTools() {
   useEffect(() => {
@@ -283,8 +264,6 @@ export function GenerateBill({ token, onAuthError }) {
   const [error, setError] = useState('')
   const [invoice, setInvoice] = useState(null)
   const [downloading, setDownloading] = useState(false)
-  const [sending, setSending] = useState(false)
-  const [sent, setSent] = useState(null)
   const invoiceRef = useRef(null)
 
   const subtotal = round2(items.reduce((sum, it) => sum + it.price, 0))
@@ -315,7 +294,6 @@ export function GenerateBill({ token, onAuthError }) {
     setNotes('')
     setInvoice(null)
     setError('')
-    setSent(null)
   }
 
   async function submit(e) {
@@ -365,21 +343,6 @@ export function GenerateBill({ token, onAuthError }) {
     }
   }
 
-  async function sendOnWhatsApp() {
-    if (!invoiceRef.current) return
-    setSending(true)
-    setError('')
-    setSent(null)
-    try {
-      const { sendBillOnWhatsApp } = await import('../utils/whatsappBill')
-      setSent(await sendBillOnWhatsApp(invoiceRef.current, invoice))
-    } catch (err) {
-      setError(sendErrorText(err))
-    } finally {
-      setSending(false)
-    }
-  }
-
   if (invoice) {
     return (
       <div className="space-y-5">
@@ -387,19 +350,11 @@ export function GenerateBill({ token, onAuthError }) {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="font-display text-2xl font-extrabold">Bill ready: {invoice.invoiceNo}</h2>
-              <p className="mt-1 text-ink-soft">Check it below, then download it as a PDF (A4 size, ready to print) or send it to the parent on WhatsApp.</p>
+              <p className="mt-1 text-ink-soft">Check it below, then download it as a PDF (A4 size, ready to print).</p>
             </div>
             <div className="flex flex-wrap gap-3">
               <button type="button" onClick={downloadPdf} disabled={downloading} className={`${btnPrimary} !px-5 !py-2.5 disabled:opacity-50`}>
                 {downloading ? 'Preparing PDF...' : 'Download PDF'}
-              </button>
-              <button
-                type="button"
-                onClick={sendOnWhatsApp}
-                disabled={sending}
-                className="border-2 border-[#1d9b4f] bg-[#e5f6e9] px-5 py-2.5 text-sm font-extrabold text-[#0b4f1f] transition hover:bg-[#c9eed3] disabled:opacity-50"
-              >
-                {sending ? 'Preparing...' : 'Send on WhatsApp'}
               </button>
               <button type="button" onClick={reset} className={`${btnInk} !px-5 !py-2.5`}>
                 Create another bill
@@ -409,11 +364,6 @@ export function GenerateBill({ token, onAuthError }) {
           {error ? (
             <div className="mt-4">
               <Message>{error}</Message>
-            </div>
-          ) : null}
-          {sent ? (
-            <div className="mt-4">
-              <WhatsAppNote result={sent} invoice={invoice} />
             </div>
           ) : null}
         </div>
@@ -576,9 +526,7 @@ export function InvoiceLog({ token, onAuthError }) {
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [downloadTarget, setDownloadTarget] = useState(null)
-  const [targetMode, setTargetMode] = useState('download') // 'download' or 'whatsapp'
   const [downloadingNo, setDownloadingNo] = useState('')
-  const [sent, setSent] = useState(null) // { result, invoice } after "WhatsApp"
   const hiddenRef = useRef(null)
 
   useEffect(() => {
@@ -602,20 +550,13 @@ export function InvoiceLog({ token, onAuthError }) {
     let cancelled = false
     ;(async () => {
       try {
-        if (targetMode === 'whatsapp') {
-          const { sendBillOnWhatsApp } = await import('../utils/whatsappBill')
-          if (cancelled) return
-          if (!hiddenRef.current) throw new Error('The bill was not ready yet.')
-          const result = await sendBillOnWhatsApp(hiddenRef.current, downloadTarget)
-          if (!cancelled) setSent({ result, invoice: downloadTarget })
-          return
-        }
         const { downloadInvoicePdf } = await import('../utils/downloadInvoicePdf')
         if (cancelled) return
         if (!hiddenRef.current) throw new Error('The bill was not ready yet.')
+        setError('')
         await downloadInvoicePdf(hiddenRef.current, `${downloadTarget.invoiceNo}.pdf`)
       } catch (err) {
-        if (!cancelled) setError(sendErrorText(err))
+        if (!cancelled) setError(pdfErrorText(err))
       } finally {
         if (!cancelled) {
           setDownloadTarget(null)
@@ -626,15 +567,7 @@ export function InvoiceLog({ token, onAuthError }) {
     return () => {
       cancelled = true
     }
-  }, [downloadTarget, targetMode])
-
-  function startJob(r, mode) {
-    setError('')
-    setSent(null)
-    setTargetMode(mode)
-    setDownloadingNo(r.invoiceNo)
-    setDownloadTarget(r)
-  }
+  }, [downloadTarget])
 
   const loaded = Boolean(data) || Boolean(error)
   const rows = data ? data.invoices : []
@@ -645,7 +578,6 @@ export function InvoiceLog({ token, onAuthError }) {
       <p className="mt-2 text-ink-soft">{data && data.isOwner ? 'Every bill created by the whole team.' : 'Bills you have created yourself.'}</p>
       <div className="mt-5 space-y-4">
         <Message>{error}</Message>
-        {sent ? <WhatsAppNote result={sent.result} invoice={sent.invoice} /> : null}
         {!loaded ? <p className="font-semibold text-mute">Loading...</p> : null}
         {loaded && !rows.length ? <p className="border border-dashed border-ink/25 px-4 py-6 text-center font-semibold text-mute">No bills yet.</p> : null}
         {loaded && rows.length ? (
@@ -676,19 +608,14 @@ export function InvoiceLog({ token, onAuthError }) {
                     <td className="whitespace-nowrap px-4 py-3">
                       <button
                         type="button"
-                        onClick={() => startJob(r, 'download')}
-                        disabled={Boolean(downloadingNo)}
+                        onClick={() => {
+                          setDownloadingNo(r.invoiceNo)
+                          setDownloadTarget(r)
+                        }}
+                        disabled={downloadingNo === r.invoiceNo}
                         className="text-xs font-extrabold text-brass underline underline-offset-4 disabled:opacity-50"
                       >
-                        {downloadingNo === r.invoiceNo && targetMode === 'download' ? 'Preparing...' : 'Download'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => startJob(r, 'whatsapp')}
-                        disabled={Boolean(downloadingNo)}
-                        className="ml-4 text-xs font-extrabold text-[#0b7a3b] underline underline-offset-4 disabled:opacity-50"
-                      >
-                        {downloadingNo === r.invoiceNo && targetMode === 'whatsapp' ? 'Preparing...' : 'WhatsApp'}
+                        {downloadingNo === r.invoiceNo ? 'Preparing...' : 'Download'}
                       </button>
                     </td>
                   </tr>

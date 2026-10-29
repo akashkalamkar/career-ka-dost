@@ -31,8 +31,22 @@ function inlineLoadedStyles(clonedDoc) {
 }
 
 function capture(element, inlineStyles) {
-  const options = { scale: 2, backgroundColor: '#ffffff', useCORS: true }
-  if (inlineStyles) options.onclone = inlineLoadedStyles
+  const options = {
+    scale: 2,
+    backgroundColor: '#ffffff',
+    useCORS: true,
+    // On a phone the bill on screen is only as wide as the phone, which would give a thin, stretched
+    // PDF over several pages. The copy is laid out in a desktop-width window at exactly A4 width
+    // instead, so a phone gets the same one-page A4 bill as a computer.
+    windowWidth: Math.max(window.innerWidth, 1280),
+    onclone: (clonedDoc, clonedElement) => {
+      if (inlineStyles) inlineLoadedStyles(clonedDoc)
+      if (clonedElement) {
+        clonedElement.style.width = '210mm'
+        clonedElement.style.maxWidth = '210mm'
+      }
+    },
+  }
   return Promise.race([
     html2canvas(element, options),
     // So a stuck render shows a clear error instead of leaving the button saying "Preparing..." forever.
@@ -40,7 +54,7 @@ function capture(element, inlineStyles) {
   ])
 }
 
-async function makePdf(element) {
+export async function downloadInvoicePdf(element, filename) {
   let canvas
   try {
     canvas = await capture(element, true)
@@ -75,16 +89,5 @@ async function makePdf(element) {
     heightLeft -= pageHeight
   }
 
-  return pdf
-}
-
-export async function downloadInvoicePdf(element, filename) {
-  const pdf = await makePdf(element)
   pdf.save(filename)
-}
-
-/** The same A4 PDF as a file, for the phone's Share menu (e.g. to send it on WhatsApp). */
-export async function invoicePdfFile(element, filename) {
-  const pdf = await makePdf(element)
-  return new File([pdf.output('blob')], filename, { type: 'application/pdf' })
 }
