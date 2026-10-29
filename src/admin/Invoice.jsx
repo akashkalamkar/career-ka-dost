@@ -224,12 +224,20 @@ export function PrintableInvoice({ invoice, ref }) {
   )
 }
 
+/** Fetches the PDF tools in the background once a bill screen opens, so "Download" answers at once. */
+function usePreloadPdfTools() {
+  useEffect(() => {
+    import('../utils/downloadInvoicePdf').catch(() => {})
+  }, [])
+}
+
 // ---------------------------------------------------------------------------------------------
 // Generate bill (everyone: owner and staff alike)
 // ---------------------------------------------------------------------------------------------
 
 export function GenerateBill({ token, onAuthError }) {
   const run = useCaller(token, onAuthError)
+  usePreloadPdfTools()
 
   const [studentName, setStudentName] = useState('')
   const [phone, setPhone] = useState('')
@@ -502,6 +510,7 @@ export function GenerateBill({ token, onAuthError }) {
 
 export function InvoiceLog({ token, onAuthError }) {
   const run = useCaller(token, onAuthError)
+  usePreloadPdfTools()
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [downloadTarget, setDownloadTarget] = useState(null)

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { btnPrimary, container } from '../config/ui'
 import { LockIcon } from '../components/icons'
-import { AuthError, call, portalConfigured, readSession, saveSession, warmUp } from './api'
+import { AuthError, call, portalConfigured, readSession, saveSession, warmUp, warmUpSoon } from './api'
 import { card, inputClass } from './format'
 import { ForgotOwner } from './Forgot'
 import { ApplyLeave, LeaveRequests } from './Leaves'
@@ -167,7 +167,10 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
 
       <div className="mb-8 flex flex-wrap gap-3 print:hidden" role="tablist" aria-label="Portal sections">
         {tabs.map((t) => (
-          <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)} className={tabClass(tab === t.id)}>
+          <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} onClick={() => {
+              warmUpSoon()
+              setTab(t.id)
+            }} className={tabClass(tab === t.id)}>
             {t.label}
           </button>
         ))}

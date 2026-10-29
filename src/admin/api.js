@@ -54,3 +54,13 @@ export async function call(action, payload = {}, token) {
 export function warmUp() {
   if (API) fetch(API).catch(() => {})
 }
+
+let lastWarm = 0
+
+/** Same, but at most once a minute, so it can be called on every tab switch. */
+export function warmUpSoon() {
+  const now = Date.now()
+  if (now - lastWarm < 60000) return
+  lastWarm = now
+  warmUp()
+}
