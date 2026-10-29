@@ -28,15 +28,26 @@ function inlineLoadedStyles(clonedDoc) {
     style.textContent = match.css
     link.replaceWith(style)
   }
-  return clonedDoc.fonts ? clonedDoc.fonts.ready : undefined
+}
+
+function capture(element, inlineStyles) {
+  const options = { scale: 2, backgroundColor: '#ffffff', useCORS: true }
+  if (inlineStyles) options.onclone = inlineLoadedStyles
+  return Promise.race([
+    html2canvas(element, options),
+    // So a stuck render shows a clear error instead of leaving the button saying "Preparing..." forever.
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Timed out making the PDF.')), 15000)),
+  ])
 }
 
 export async function downloadInvoicePdf(element, filename) {
-  const canvas = await Promise.race([
-    html2canvas(element, { scale: 2, backgroundColor: '#ffffff', useCORS: true, onclone: inlineLoadedStyles }),
-    // So a stuck render shows a clear error instead of leaving the button saying "Preparing..." forever.
-    new Promise((_, reject) => setTimeout(() => reject(new Error('Timed out making the PDF.')), 20000)),
-  ])
+  let canvas
+  try {
+    canvas = await capture(element, true)
+  } catch {
+    // Safety net: if copying the styles in ever fails, still try once the plain way.
+    canvas = await capture(element, false)
+  }
   // JPEG, not PNG: a receipt is almost entirely flat white with text, which PNG does not compress well
   // at this resolution (a plain PNG came out near 10 MB) - JPEG at high quality looks identical here
   // and is a small fraction of the size, so it is easy to email, WhatsApp or keep hundreds of.

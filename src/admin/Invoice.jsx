@@ -224,6 +224,12 @@ export function PrintableInvoice({ invoice, ref }) {
   )
 }
 
+/** The message shown when a PDF cannot be made, with the real reason so the problem can be traced. */
+function pdfErrorText(err) {
+  const reason = err && err.message ? ` (${err.message})` : ''
+  return `Could not create the PDF${reason}. Please refresh the page (Ctrl + F5) and try again - the website may have just been updated.`
+}
+
 /** Fetches the PDF tools in the background once a bill screen opens, so "Download" answers at once. */
 function usePreloadPdfTools() {
   useEffect(() => {
@@ -324,13 +330,14 @@ export function GenerateBill({ token, onAuthError }) {
   async function downloadPdf() {
     if (!invoiceRef.current) return
     setDownloading(true)
+    setError('')
     try {
       // Loaded only now, not on every page view: jsPDF + html2canvas are only needed by staff
       // generating a bill, not by every visitor to the public website.
       const { downloadInvoicePdf } = await import('../utils/downloadInvoicePdf')
       await downloadInvoicePdf(invoiceRef.current, `${invoice.invoiceNo}.pdf`)
-    } catch {
-      setError('Could not create the PDF. Please refresh the page (Ctrl + F5) and try again - the website may have just been updated.')
+    } catch (err) {
+      setError(pdfErrorText(err))
     } finally {
       setDownloading(false)
     }
@@ -354,6 +361,11 @@ export function GenerateBill({ token, onAuthError }) {
               </button>
             </div>
           </div>
+          {error ? (
+            <div className="mt-4">
+              <Message>{error}</Message>
+            </div>
+          ) : null}
         </div>
         <PrintableInvoice ref={invoiceRef} invoice={invoice} />
       </div>
@@ -539,9 +551,12 @@ export function InvoiceLog({ token, onAuthError }) {
     ;(async () => {
       try {
         const { downloadInvoicePdf } = await import('../utils/downloadInvoicePdf')
-        if (!cancelled && hiddenRef.current) await downloadInvoicePdf(hiddenRef.current, `${downloadTarget.invoiceNo}.pdf`)
-      } catch {
-        if (!cancelled) setError('Could not create the PDF. Please refresh the page (Ctrl + F5) and try again - the website may have just been updated.')
+        if (cancelled) return
+        if (!hiddenRef.current) throw new Error('The bill was not ready yet.')
+        setError('')
+        await downloadInvoicePdf(hiddenRef.current, `${downloadTarget.invoiceNo}.pdf`)
+      } catch (err) {
+        if (!cancelled) setError(pdfErrorText(err))
       } finally {
         if (!cancelled) {
           setDownloadTarget(null)
