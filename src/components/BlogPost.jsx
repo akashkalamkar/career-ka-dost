@@ -44,6 +44,10 @@ export function BlogPost({ slug }) {
                 <h2 key={i} className="!mt-10 font-display text-2xl font-extrabold text-ink md:text-3xl">
                   {b.text}
                 </h2>
+              ) : b.type === 'h3' ? (
+                <h3 key={i} className="!mt-8 font-display text-xl font-extrabold text-ink md:text-2xl">
+                  {b.text}
+                </h3>
               ) : b.type === 'ul' ? (
                 <ul key={i} className="space-y-3">
                   {b.items.map((it) => (

@@ -1,9 +1,49 @@
 /**
  * Blog posts. To add one, copy an entry and give it a unique `slug`.
- * `body` blocks: { type: 'h', text } heading, { type: 'p', text } paragraph, { type: 'ul', items: [...] } list.
+ * `body` blocks: { type: 'h', text } heading, { type: 'h3', text } sub-heading, { type: 'p', text } paragraph, { type: 'ul', items: [...] } list.
  * Please read each post and edit it to your own voice before publishing.
  */
 export const POSTS = [
+  {
+    slug: "career-options-after-12th-science-pcm-pcb",
+    title: "Career options after 12th Science: a complete guide for PCM and PCB students",
+    category: "Career guidance",
+    date: "2026-10-30",
+    readTime: "8 min read",
+    excerpt: "The main career options after 12th Science for PCM and PCB students: courses, entrance exams, options beyond engineering and medicine, and how to choose well.",
+    body: [
+      { type: 'p', text: "Class 12 Science opens far more doors than most families realise. Engineering and MBBS are the best-known paths, but they are only two of many. This guide sets out the main career options after 12th Science for PCM and PCB students, the entrance exams that lead to each one, and the options beyond JEE and NEET, so that students and parents can plan calmly instead of following the crowd." },
+      { type: 'h', text: "Start here: PCM, PCB or PCMB?" },
+      { type: 'ul', items: ["PCM (Physics, Chemistry, Maths): engineering, architecture, defence, pure sciences, computing, aviation and more.", "PCB (Physics, Chemistry, Biology): medicine and allied health, pharmacy, nursing, agriculture, veterinary science and the life sciences.", "PCMB: both sets of doors stay open, so it is worth keeping options from both lists in mind while preparing.", "Whatever the group, Science students can also choose law, management, design and many other courses that are open to every stream."] },
+      { type: 'h', text: "Career options after 12th PCM" },
+      { type: 'ul', items: ["Engineering (B.E. / B.Tech): through JEE Main, JEE Advanced for the IITs, and MHT-CET for colleges in Maharashtra. Popular branches include computer science, AI and data science, electronics, mechanical, civil and chemical engineering.", "Architecture (B.Arch): through NATA or JEE Main Paper 2.", "Defence: the NDA exam leads to the Army, Navy and Air Force; the Navy and Air Force wings require Maths and Physics in Class 12.", "Pure and applied sciences (B.Sc, BS or integrated BS-MS): physics, chemistry, mathematics, statistics and data science, through CUET UG, the IISER Aptitude Test or NEST.", "Computer applications (BCA) and other computing degrees.", "Merchant navy: marine engineering and nautical science through the IMU CET.", "Commercial pilot training: Physics and Maths in Class 12 are required, along with a DGCA medical and licence process."] },
+      { type: 'h', text: "Career options after 12th PCM other than engineering" },
+      { type: 'p', text: "Engineering is not the only route for a PCM student. Architecture, defence, research science, statistics, actuarial science, economics, computer applications, aviation and the merchant navy all build on Maths and Physics. Courses such as law, management and design are open to PCM students too. If a student enjoys Maths but not the idea of four years of engineering, these are worth a serious look." },
+      { type: 'h', text: "Career options after 12th PCB" },
+      { type: 'ul', items: ["MBBS and BDS: through NEET UG, with counselling by the MCC for the All India Quota and by the state for state quota seats (in Maharashtra, the State CET Cell).", "AYUSH courses (BAMS, BHMS, BUMS): also through NEET UG.", "Allied health: physiotherapy (BPTh), occupational therapy (BOTh), audiology and speech-language pathology (BASLP) and prosthetics and orthotics (BP&O). In Maharashtra these seats are filled through NEET-based state counselling.", "Nursing (B.Sc Nursing) and veterinary science (BVSc & AH).", "Pharmacy (B.Pharm).", "Agriculture and allied fields: B.Sc Agriculture, horticulture and food technology.", "Life sciences: biotechnology, microbiology, biochemistry, genetics, forensic science, and nutrition and dietetics.", "Psychology, which is open to students from every stream."] },
+      { type: 'h', text: "Career options after 12th PCB without NEET" },
+      { type: 'p', text: "Many good PCB courses do not need NEET at all. In Maharashtra, for example, B.Pharm and B.Sc Agriculture admissions run through MHT-CET, and many B.Sc programmes in the life sciences admit students on Class 12 marks or through CUET UG. Admission rules change from year to year, so always check the current official notice for each course before deciding." },
+      { type: 'h', text: "Courses after 12th Science that are open to every stream" },
+      { type: 'ul', items: ["Law (BA LLB, BBA LLB): through CLAT or the MH-CET Law exam in Maharashtra.", "Management (BBA, integrated management programmes): through IPMAT, CUET UG or college-level tests.", "Design (B.Des): through exams such as NID DAT, NIFT and UCEED.", "Hotel management: through NCHM JEE.", "Mass communication, chartered accountancy (CA) and company secretary (CS) courses."] },
+      { type: 'h', text: "High-salary courses after 12th Science: what really matters" },
+      { type: 'p', text: "Courses such as computer science and AI engineering, medicine, data science, aviation, the merchant navy and actuarial science are often described as high-salary options. They can be, but earnings depend far more on the student's skills, the quality of the college, internships, and how much they genuinely enjoy the work. Choosing a course only for its salary is one of the most common reasons students lose interest or switch courses later, so treat salary as one factor, not the only one." },
+      { type: 'h', text: "How to choose the right career option after 12th Science" },
+      { type: 'ul', items: ["List the subjects and activities the student genuinely enjoys and does well in, without pressure.", "Check eligibility and entrance exams early: many registrations open months before Class 12 ends.", "Work out the full budget, including hostel and living costs, and compare government, aided and private colleges.", "Keep a backup plan: one main goal and at least one realistic alternative.", "Use an aptitude or psychometric assessment as a starting point for discussion, not as the final answer.", "Decide as a family, with the student's own interests at the centre."] },
+      { type: 'h', text: "Important entrance exams after 12th Science at a glance" },
+      { type: 'ul', items: ["JEE Main and JEE Advanced: engineering, including the NITs and IITs.", "MHT-CET: engineering, pharmacy and agriculture in Maharashtra.", "NEET UG: MBBS, BDS, AYUSH and, in Maharashtra, allied health courses.", "NATA: architecture.", "NDA: the Army, Navy and Air Force.", "CUET UG: central and many other universities.", "IISER Aptitude Test and NEST: research-oriented science programmes.", "IMU CET: merchant navy.", "CLAT, IPMAT, NID DAT, NIFT, UCEED and NCHM JEE: law, management, design and hotel management."] },
+      { type: 'p', text: "Exam names, eligibility rules and dates can change each year, so confirm every detail on the official website of the exam or the counselling authority." },
+      { type: 'h', text: "Frequently asked questions" },
+      { type: 'h3', text: "What are the best career options after 12th Science?" },
+      { type: 'p', text: "There is no single best option for everyone. The right choice is the one that matches the student's aptitude and interests and is realistic for their exam results and family budget. A shortlist of two or three well-researched options is far better than one dream with no backup." },
+      { type: 'h3', text: "Can a PCM student take up medical courses?" },
+      { type: 'p', text: "MBBS and BDS need Biology in Class 12 for NEET eligibility. PCM students who are drawn to healthcare can look at options such as biomedical engineering, pharmacy (B.Pharm accepts PCM students in many states, including Maharashtra) or psychology." },
+      { type: 'h3', text: "Is career counselling after 12th worth it?" },
+      { type: 'p', text: "For most families, yes. A good counsellor helps the student understand their strengths, explains the admission process for each option, and helps build a sensible plan with backups, which saves time, money and stress during the admission season." },
+      { type: 'h3', text: "Where can I get career counselling in Nagpur?" },
+      { type: 'p', text: "Career Ka Dost offers one-to-one career and admission counselling at our office in Sitabuldi, Nagpur, as well as online. We guide students from Class 9 onwards, along with their parents, for engineering, medical, law, management and other courses." },
+      { type: 'p', text: "Not sure which path suits you after 12th Science? Book a counselling session with Career Ka Dost or message us on WhatsApp, and we will help you choose with clarity and confidence." },
+    ],
+  },
   {
     slug: 'josaa-counselling-explained-for-parents',
     title: 'JoSAA counselling explained for parents',

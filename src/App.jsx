@@ -15,6 +15,7 @@ import { LegalPage } from './components/LegalPage'
 import { Pricing } from './components/Pricing'
 import { Resources } from './components/Resources'
 import { Results } from './components/Results'
+import { POSTS } from './config/blog'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
 import { AdminApp } from './admin/AdminApp'
 import { applyPendingJump } from './utils/jump'
@@ -53,7 +54,7 @@ const REDIRECTS = {
 
 const SITE_TITLE = 'Career Ka Dost - Career Counselling & Admission Guidance in Nagpur'
 
-/** The browser-tab title for each page. Pages not listed (home, a blog post) keep the main title. */
+/** The browser-tab title for each page. Home keeps the main title; a blog post uses its own title. */
 const TITLES = {
   '/about': 'About us',
   '/pricing': 'Services & pricing',
@@ -93,8 +94,15 @@ function App() {
   }, [route])
 
   useEffect(() => {
-    const isPost = window.location.hash.startsWith('#/blog/')
-    document.title = TITLES[route.key] && !isPost ? `${TITLES[route.key]} | Career Ka Dost` : SITE_TITLE
+    const hash = window.location.hash
+    const post = hash.startsWith('#/blog/') ? POSTS.find((p) => hash === `#/blog/${p.slug}`) : null
+    document.title = post ? `${post.title} | Career Ka Dost` : TITLES[route.key] ? `${TITLES[route.key]} | Career Ka Dost` : SITE_TITLE
+    // Each blog post gets its own search-result snippet; every other page keeps the one from index.html.
+    const meta = document.querySelector('meta[name="description"]')
+    if (meta) {
+      meta.dataset.site ??= meta.content
+      meta.content = post ? post.excerpt : meta.dataset.site
+    }
   }, [route])
 
   const { Page } = route
