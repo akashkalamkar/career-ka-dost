@@ -244,7 +244,16 @@ export function PrintableInvoice({ invoice, ref }) {
       {/* mt-auto: whatever room is left on the page (there is always some, a bill is short) collects
           here, so this block sits at the bottom of the page rather than right under the note above. */}
       <div className="mt-auto flex items-end justify-between gap-6 border-t border-line pt-6">
-        <p className="max-w-xs text-xs text-mute">{INVOICE.footerNote}</p>
+        <div className="flex items-end gap-4">
+          <div className="shrink-0 text-center">
+            <img src={INVOICE.websiteQrUrl} alt={`QR code for ${INVOICE.websiteLabel}`} className="mx-auto h-20 w-20" />
+            <p className="mt-1 text-[10px] font-bold leading-tight">Scan to visit our website</p>
+          </div>
+          <div className="max-w-xs">
+            <p className="text-xs font-bold">{INVOICE.websiteLabel}</p>
+            <p className="mt-1 text-xs text-mute">{INVOICE.footerNote}</p>
+          </div>
+        </div>
         <div className="text-center">
           <img src={INVOICE.signatureUrl} alt="" className="mx-auto h-16 object-contain" />
           <p className="mt-1 border-t border-ink/30 pt-1 text-sm font-bold">{INVOICE.signatureName}</p>

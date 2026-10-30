@@ -54,6 +54,41 @@ function capture(element, inlineStyles) {
   ])
 }
 
+/** True when a row of the image is plain white (ignoring a few pixels at each edge for the bill's border). */
+function isBlankRow(ctx, width, y) {
+  const edge = 8
+  const data = ctx.getImageData(edge, y, width - edge * 2, 1).data
+  for (let i = 0; i < data.length; i += 4) {
+    if (data[i] < 240 || data[i + 1] < 240 || data[i + 2] < 240) return false
+  }
+  return true
+}
+
+/**
+ * Where to end a page that starts at row `start`: as close to a full page as possible, but moved up into
+ * the middle of the nearest blank gap so a line of text, the QR code or the signature is never cut in
+ * half and both pages keep some white space at the cut. Looks back at most a third of a page; falls back
+ * to any single blank row, then (very unlikely) to a cut at the full page.
+ */
+function pageEnd(ctx, width, height, start, pagePx) {
+  const full = start + pagePx
+  if (full >= height) return height
+  const limit = full - Math.floor(pagePx / 3)
+  const wanted = 24 // about 3 mm of white at this resolution
+  let run = 0
+  let firstBlank = -1
+  for (let y = full; y > limit; y--) {
+    if (isBlankRow(ctx, width, y)) {
+      run++
+      if (firstBlank === -1) firstBlank = y
+      if (run >= wanted) return y + Math.floor(run / 2)
+    } else {
+      run = 0
+    }
+  }
+  return firstBlank !== -1 ? firstBlank : full
+}
+
 export async function downloadInvoicePdf(element, filename) {
   let canvas
   try {
@@ -62,31 +97,34 @@ export async function downloadInvoicePdf(element, filename) {
     // Safety net: if copying the styles in ever fails, still try once the plain way.
     canvas = await capture(element, false)
   }
-  // JPEG, not PNG: a receipt is almost entirely flat white with text, which PNG does not compress well
-  // at this resolution (a plain PNG came out near 10 MB) - JPEG at high quality looks identical here
-  // and is a small fraction of the size, so it is easy to email, WhatsApp or keep hundreds of.
-  const imgData = canvas.toDataURL('image/jpeg', 0.92)
-
   const pdf = new jsPDF({ unit: 'mm', format: 'a4' })
   const pageWidth = pdf.internal.pageSize.getWidth()
   const pageHeight = pdf.internal.pageSize.getHeight()
   // Always full page width - never shrink it to fit, that just leaves odd blank margins down both
   // sides and makes even a correctly-sized page look wrong. A normal bill fits on one page at this
   // width (see PrintableInvoice's own A4-height target). Only a genuinely long one (many services)
-  // runs past one page's height, and only then does it continue onto a second, still full-width page.
-  const imgWidth = pageWidth
-  const imgHeight = (canvas.height * imgWidth) / canvas.width
+  // runs past one page's height, and only then does it continue onto a second, still full-width page,
+  // breaking at a blank line (pageEnd) rather than through the middle of the text or the QR code.
+  const width = canvas.width
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  // Pages after the first start 10 mm down, so their first line is not right at the paper's edge.
+  const nextTopMm = 10
+  const pxFor = (mm) => Math.floor((width * mm) / pageWidth)
 
-  let heightLeft = imgHeight
-  let position = 0
-  pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight)
-  heightLeft -= pageHeight
-
-  while (heightLeft > 0) {
-    position -= pageHeight
-    pdf.addPage()
-    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight)
-    heightLeft -= pageHeight
+  let start = 0
+  while (start < canvas.height) {
+    const topMm = start > 0 ? nextTopMm : 0
+    const end = pageEnd(ctx, width, canvas.height, start, pxFor(pageHeight - topMm))
+    const slice = document.createElement('canvas')
+    slice.width = width
+    slice.height = end - start
+    slice.getContext('2d').drawImage(canvas, 0, start, width, end - start, 0, 0, width, end - start)
+    if (start > 0) pdf.addPage()
+    // JPEG, not PNG: a receipt is almost entirely flat white with text, which PNG does not compress well
+    // at this resolution (a plain PNG came out near 10 MB) - JPEG at high quality looks identical here
+    // and is a small fraction of the size, so it is easy to email, WhatsApp or keep hundreds of.
+    pdf.addImage(slice.toDataURL('image/jpeg', 0.92), 'JPEG', 0, topMm, pageWidth, ((end - start) * pageWidth) / width)
+    start = end
   }
 
   pdf.save(filename)

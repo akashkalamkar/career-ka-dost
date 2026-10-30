@@ -24,6 +24,9 @@ export const INVOICE = {
   signatureName: 'Bharat Rai', // PLACEHOLDER signature image - replace public/images/signature.png with the real one later
   signatureRole: 'Founder, Career Ka Dost',
   footerNote: 'Thank you for choosing Career Ka Dost. This is a computer-generated receipt.',
+  // QR code printed on every bill; it opens https://www.careerkadost.com/ (made once, checked by scanning).
+  websiteQrUrl: '/images/website-qr.png',
+  websiteLabel: 'www.careerkadost.com',
 }
 
 export const PAYMENT_MODES = ['Cash', 'UPI', 'Card', 'Bank transfer']
