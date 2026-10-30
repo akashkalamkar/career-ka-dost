@@ -19,12 +19,17 @@ function ServicePicker({ onAdd }) {
   const [serviceId, setServiceId] = useState(SERVICES[0] ? SERVICES[0].id : 'custom')
   const [customName, setCustomName] = useState('')
   const [customPrice, setCustomPrice] = useState('')
+  const [hint, setHint] = useState('')
 
   function add() {
+    setHint('')
     if (serviceId === 'custom') {
       const name = customName.trim()
       const price = Number(customPrice)
-      if (!name || !isFinite(price) || price < 0) return
+      if (!name || customPrice === '' || !isFinite(price) || price < 0) {
+        setHint('Enter the service name and its price first.')
+        return
+      }
       onAdd({ name, price: round2(price) })
       setCustomName('')
       setCustomPrice('')
@@ -32,8 +37,21 @@ function ServicePicker({ onAdd }) {
     }
     const svc = SERVICES.find((s) => s.id === serviceId)
     if (!svc) return
+    if (svc.price === null) {
+      const price = Number(customPrice)
+      if (customPrice === '' || !isFinite(price) || price < 0) {
+        setHint('Enter the price for this student first.')
+        return
+      }
+      onAdd({ name: svc.name, price: round2(price) })
+      setCustomPrice('')
+      return
+    }
     onAdd({ name: svc.name, price: svc.price })
   }
+
+  const chosen = SERVICES.find((s) => s.id === serviceId)
+  const needsPrice = Boolean(chosen && chosen.price === null)
 
   return (
     // A plain div, not a form: this sits inside the bigger "Generate bill" form, and a form cannot
@@ -42,10 +60,15 @@ function ServicePicker({ onAdd }) {
     <div className="flex flex-wrap items-end gap-3 border border-dashed border-ink/25 p-4">
       <label className="block text-sm font-bold">
         Service
-        <select value={serviceId} onChange={(e) => setServiceId(e.target.value)} className={`${inputClass} sm:w-72`}>
+        <select
+          value={serviceId}
+          onChange={(e) => {
+            setServiceId(e.target.value)
+            setHint('')
+          }} className={`${inputClass} sm:w-72`}>
           {SERVICES.map((s) => (
             <option key={s.id} value={s.id}>
-              {s.name} - Rs {s.price.toLocaleString('en-IN')}
+              {s.name} - {s.price === null ? 'enter price' : `Rs ${s.price.toLocaleString('en-IN')}`}
             </option>
           ))}
           <option value="custom">Custom service...</option>
@@ -55,7 +78,7 @@ function ServicePicker({ onAdd }) {
         <>
           <label className="block text-sm font-bold">
             Service name
-            <input value={customName} onChange={(e) => setCustomName(e.target.value)} className={`${inputClass} sm:w-56`} placeholder="e.g. Resume review" />
+            <input value={customName} onChange={(e) => setCustomName(e.target.value)} className={`${inputClass} sm:w-56`} placeholder="e.g. CV review" />
           </label>
           <label className="block text-sm font-bold">
             Price (Rs)
@@ -63,9 +86,16 @@ function ServicePicker({ onAdd }) {
           </label>
         </>
       ) : null}
+      {needsPrice ? (
+        <label className="block text-sm font-bold">
+          Price for this student (Rs)
+          <input type="number" min="0" step="0.01" value={customPrice} onChange={(e) => setCustomPrice(e.target.value)} className={`${inputClass} sm:w-40`} />
+        </label>
+      ) : null}
       <button type="button" onClick={add} className={`${btnInk} !px-5 !py-2.5`}>
         + Add to bill
       </button>
+      {hint ? <p className="w-full text-sm font-bold text-[#a40000]">{hint}</p> : null}
     </div>
   )
 }

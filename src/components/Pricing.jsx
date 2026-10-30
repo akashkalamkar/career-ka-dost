@@ -78,11 +78,18 @@ function PlanCard({ plan }) {
         <div className="[transform:translateZ(30px)]">
           {hasPrice ? (
             <p className="font-display text-3xl font-extrabold">
+              {plan.originalPrice ? (
+                <>
+                  <span className="sr-only">Original price </span>
+                  <s className="mr-3 text-xl font-bold text-mute decoration-[#a40000] decoration-2">{plan.originalPrice}</s>
+                  <span className="sr-only">Offer price </span>
+                </>
+              ) : null}
               {plan.price}
               <span className="ml-2 text-sm font-semibold text-mute">{plan.unit}</span>
             </p>
           ) : (
-            <p className="font-display text-xl font-extrabold">Price on request</p>
+            <p className="font-display text-xl font-extrabold">{plan.priceText || 'Price on request'}</p>
           )}
         </div>
         <button type="button" onClick={() => quote(plan.note ? `${plan.name} ${plan.note}` : plan.name)} className={`${hasPrice ? btnPrimary : btnInk} mt-4 w-full`}>

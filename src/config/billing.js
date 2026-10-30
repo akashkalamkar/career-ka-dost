@@ -8,12 +8,13 @@
  * intentionally shows no numbers yet.
  */
 export const SERVICES = [
-  { id: 'future-blueprint', name: 'Future Blueprint Session', price: 2000 },
-  { id: 'dmit', name: 'DMIT (Test & Report Counselling)', price: 3500 },
-  { id: 'engineering-counselling', name: 'Engineering Counselling (JoSAA / MHT-CET)', price: 5000 },
-  { id: 'medical-counselling', name: 'Medical Counselling (MCC / State CET)', price: 5000 },
-  { id: 'admission-guidance', name: 'Admission Guidance (Law / BBA / MBA / B.Sc / BCA)', price: 3000 },
-  { id: 'school-session', name: 'School Awareness Session', price: 10000 },
+  { id: 'future-blueprint', name: 'Future Blueprint Session', price: 214 },
+  { id: 'dmit', name: 'DMIT (Test & Report Counselling)', price: 2000 },
+  { id: 'engineering-counselling', name: 'Engineering Counselling (JoSAA / MHT-CET)', price: 15000 },
+  { id: 'medical-counselling', name: 'Medical Counselling (MCC / State CET)', price: 15000 },
+  // No fixed price (depends on course, college and admission quota / on the school): staff type the amount on each bill.
+  { id: 'admission-guidance', name: 'Admission Guidance (Law / BBA / MBA / B.Sc / BCA)', price: null },
+  { id: 'school-session', name: 'School Awareness Session', price: null },
 ]
 
 /** Shown on the printed invoice footer. */

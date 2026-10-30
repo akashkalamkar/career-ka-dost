@@ -10,7 +10,7 @@ const CATEGORIES = ['Travel', 'Food', 'Printing & stationery', 'Office supplies'
 
 function monthLabel(month) {
   const [y, m] = month.split('-').map(Number)
-  return new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString('en-IN', { month: 'long', year: 'numeric', timeZone: 'UTC' })
+  return new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' })
 }
 
 /** An older portal script answers "Unknown request." for the new actions: say what to do instead. */

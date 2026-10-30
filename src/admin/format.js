@@ -8,7 +8,7 @@ export function time12(t) {
 /** "2026-10-19" -> "Mon, 19 Oct 2026" */
 export function dateLabel(d) {
   const [y, m, day] = d.split('-').map(Number)
-  return new Date(Date.UTC(y, m - 1, day)).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
+  return new Date(Date.UTC(y, m - 1, day)).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
 }
 
 /** Green: on time (before 10:10 AM). Red: late (10:10 AM or after). */

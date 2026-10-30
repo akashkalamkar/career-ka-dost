@@ -2,8 +2,10 @@
  * Services and pricing, shown on the Pricing page.
  *
  * HOW TO ADD A PRICE: set `price` to a string such as '₹1,500' (and `unit` such as 'per session').
- * While `price` is empty the card shows "Price on request" and a "Get a quote" button, so no wrong
- * number is ever published. Service names and details come from the Career Ka Dost brochure.
+ * To show an offer, also set `originalPrice` (e.g. '₹1,000'): it appears crossed out before `price`.
+ * For a service with no fixed price, leave `price` empty and set `priceText` (shown instead, with a
+ * "Get a quote" button). With neither, the card shows "Price on request", so no wrong number is published.
+ * Service names and details come from the Career Ka Dost brochure.
  */
 export const PRICING_CATEGORIES = [
   {
@@ -16,7 +18,8 @@ export const PRICING_CATEGORIES = [
         for: 'Class 9 to 12 students and parents',
         text: 'A one-on-one strategic session to plan your future, set goals and map the right career path.',
         includes: ['One-on-one strategic session', 'Goal setting', 'A clear career path map'],
-        price: '',
+        originalPrice: '₹1,000',
+        price: '₹214',
         unit: 'per session',
       },
       {
@@ -25,7 +28,8 @@ export const PRICING_CATEGORIES = [
         for: 'Students who want a scientific starting point',
         text: 'Expert counselling based on your DMIT report, to align your career with your innate potential.',
         includes: ['DMIT assessment report', 'Expert counselling on the report', 'Career aligned to your potential'],
-        price: '',
+        originalPrice: '₹4,000',
+        price: '₹2,000',
         unit: 'per student',
       },
     ],
@@ -41,7 +45,8 @@ export const PRICING_CATEGORIES = [
         for: 'JEE and CET students',
         text: 'Guidance for engineering admission through JoSAA and MHT-CET.',
         includes: ['JoSAA guidance', 'MHT-CET counselling guidance', 'Branch and college shortlisting'],
-        price: '',
+        originalPrice: '₹25,000',
+        price: '₹15,000',
         unit: 'per student',
       },
       {
@@ -50,7 +55,8 @@ export const PRICING_CATEGORIES = [
         for: 'NEET students',
         text: 'Guidance for medical admission through MCC and state CET.',
         includes: ['MCC counselling guidance', 'State CET counselling guidance', 'College and quota shortlisting'],
-        price: '',
+        originalPrice: '₹25,000',
+        price: '₹15,000',
         unit: 'per student',
       },
       {
@@ -60,6 +66,7 @@ export const PRICING_CATEGORIES = [
         text: 'Complete admission support for Law, BBA, MBA, B.Sc and BCA courses.',
         includes: ['Law, BBA, MBA', 'B.Sc and BCA', 'End-to-end admission support'],
         price: '',
+        priceText: 'Price depends on course, college and admission quota',
         unit: 'per student',
       },
     ],
@@ -75,6 +82,7 @@ export const PRICING_CATEGORIES = [
         text: 'Career awareness and future-decision sessions for schools.',
         includes: ['Career awareness session', 'Future-decision guidance', 'Delivered for your students'],
         price: '',
+        priceText: 'N/A',
         unit: 'per session',
       },
     ],
