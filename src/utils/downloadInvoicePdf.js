@@ -3,6 +3,7 @@
 // the page, and hangs instead of failing cleanly. This fork fixes that.
 import html2canvas from 'html2canvas-pro'
 import jsPDF from 'jspdf'
+import { buildVectorPdf } from './vectorPdf'
 
 /**
  * Turns the printable invoice element into a PDF file that downloads in one click - no browser print
@@ -90,6 +91,20 @@ function pageEnd(ctx, width, height, start, pagePx) {
 }
 
 export async function downloadInvoicePdf(element, filename) {
+  // First choice: a PDF made of real text and the original images, sharp at any zoom (vectorPdf.js).
+  // If that ever fails (e.g. a name typed in a script the font does not have), the picture-style PDF
+  // below is made instead, so a bill can always be downloaded.
+  try {
+    const pdf = await buildVectorPdf(element)
+    pdf.save(filename)
+    return
+  } catch (err) {
+    console.warn('Sharp PDF not possible, using the picture version instead:', err)
+  }
+  await downloadPicturePdf(element, filename)
+}
+
+async function downloadPicturePdf(element, filename) {
   let canvas
   try {
     canvas = await capture(element, true)

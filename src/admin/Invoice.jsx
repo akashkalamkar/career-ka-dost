@@ -246,7 +246,7 @@ export function PrintableInvoice({ invoice, ref }) {
       <div className="mt-auto flex items-end justify-between gap-6 border-t border-line pt-6">
         <div className="flex items-end gap-4">
           <div className="shrink-0 text-center">
-            <img src={INVOICE.websiteQrUrl} alt={`QR code for ${INVOICE.websiteLabel}`} className="mx-auto h-20 w-20" />
+            <img src={INVOICE.websiteQrUrl} data-pdf="qr" alt={`QR code for ${INVOICE.websiteLabel}`} className="mx-auto h-20 w-20" />
             <p className="mt-1 text-[10px] font-bold leading-tight">Scan to visit our website</p>
           </div>
           <div className="max-w-xs">
