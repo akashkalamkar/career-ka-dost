@@ -164,20 +164,28 @@ const evalGs = (code) => fetch(B + '/__eval?code=' + encodeURIComponent(code)).t
   r = await post({ action: 'addHoliday', token: o, date: '2026-11-09', name: 'Diwali' })
   t('a removed holiday can be added again', r.ok && r.custom.length === 1, r)
 
-  // ---------------- backup ----------------
+  // ---------------- backup (daily, nothing ever deleted, one sub-folder per month) ----------------
+  await clock('2026-11-10T23:00:00')
   await evalGs('backupNow()')
   let d = await driveDump()
-  const folder = d.folders.find((f) => f.name === 'Career Ka Dost - Staff Portal Backups')
-  t('a backup folder is created in Drive', d.folders.length === 1 && folder, d)
-  t('the backup is a copy of the whole sheet, every tab', folder.files.length === 1 && ['Staff', 'Attendance', 'Expenses', 'Holidays'].every((tab) => folder.files[0].tabs.includes(tab)), folder.files)
+  const main = d.folders.find((f) => f.name === 'Career Ka Dost - Staff Portal Backups')
+  t('a backup folder is created in Drive', d.folders.length === 1 && main, d)
+  const nov = main && main.folders.find((f) => f.name === '2026-11')
+  t("the backup goes into that month's sub-folder", nov && nov.files.length === 1 && /2026-11-10 23-00/.test(nov.files[0].name), main)
+  t('the backup is a copy of the whole sheet, every tab', nov && ['Staff', 'Attendance', 'Expenses', 'Holidays'].every((tab) => nov.files[0].tabs.includes(tab)), nov && nov.files)
   await evalGs('installBackupTrigger()')
   await evalGs('installBackupTrigger()')
   d = await driveDump()
-  t('installing the weekly backup twice still leaves exactly one trigger', d.triggers.filter((x) => x.fn === 'backupNow').length === 1 && d.triggers[0].day === 'SUNDAY', d.triggers)
-  t('the folder is reused, not created again', d.folders.length === 1 && d.folders[0].files.length === 3, d.folders)
-  for (let i = 0; i < 30; i++) await evalGs('backupNow()')
+  t('installing the backup twice still leaves exactly one trigger', d.triggers.filter((x) => x.fn === 'backupNow').length === 1, d.triggers)
+  t('the backup runs every day, at night', d.triggers[0].everyDays === 1 && d.triggers[0].hour === 23, d.triggers)
+  for (let day = 11; day <= 30; day++) { await clock('2026-11-' + day + 'T23:00:00'); await evalGs('backupNow()') }
+  await clock('2026-12-01T23:00:00'); await evalGs('backupNow()')
   d = await driveDump()
-  t('only the newest 26 backups are kept', d.folders[0].files.filter((f) => !f.trashed).length === 26, d.folders[0].files.length)
+  const months = d.folders[0].folders
+  t('the main folder is reused and each month gets one sub-folder', d.folders.length === 1 && months.map((f) => f.name).join() === '2026-11,2026-12', months.map((f) => f.name))
+  const all = months.flatMap((f) => f.files)
+  t('no backup is ever deleted (all 24 copies kept)', all.length === 24 && all.every((x) => !x.trashed), all.length)
+  t('December starts its own folder', months[1].files.length === 1 && /2026-12-01/.test(months[1].files[0].name), months[1])
 
   console.log(`\n${pass} passed, ${bad} failed`)
   process.exit(bad ? 1 : 0)

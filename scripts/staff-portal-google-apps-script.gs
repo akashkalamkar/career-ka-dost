@@ -33,7 +33,7 @@
  *   - 5 wrong passwords lock that username for 15 minutes.
  */
 
-const SCRIPT_VERSION = 'portal-v14'
+const SCRIPT_VERSION = 'portal-v15'
 const TZ = 'Asia/Kolkata'
 const LATE_FROM_MINUTES = 10 * 60 + 10 // 10:10 AM
 const SESSION_HOURS = 12
@@ -1632,42 +1632,37 @@ function removeHoliday(user, req) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// Weekly backup (29 Oct 2026): a full copy of this whole Google Sheet (every tab) is saved into a
-// "Career Ka Dost - Staff Portal Backups" folder in the owner's Google Drive, every Sunday night. The
-// newest 26 copies (about six months) are kept; older copies go to the Drive bin. Turn it on once by
-// running installBackupTrigger from the Apps Script editor (Google will ask permission to use Drive).
+// Daily backup (30 Oct 2026, owner's request): a full copy of this whole Google Sheet (every tab) is saved
+// into the owner's Google Drive EVERY NIGHT, under "Career Ka Dost - Staff Portal Backups", in one
+// sub-folder per month (e.g. "2026-10"). No backup is ever deleted. Turn it on once by running
+// installBackupTrigger from the Apps Script editor (Google will ask permission to use Drive).
 // ---------------------------------------------------------------------------------------------
 
 const BACKUP_FOLDER = 'Career Ka Dost - Staff Portal Backups'
-const BACKUPS_TO_KEEP = 26
 
-function backupFolder_() {
-  const found = DriveApp.getFoldersByName(BACKUP_FOLDER)
-  return found.hasNext() ? found.next() : DriveApp.createFolder(BACKUP_FOLDER)
+function folderIn_(parent, name) {
+  const found = parent.getFoldersByName(name)
+  return found.hasNext() ? found.next() : parent.createFolder(name)
 }
 
-/** Makes one backup copy now. Also what the weekly trigger runs. Safe to run by hand any time. */
+/** Makes one backup copy now. Also what the nightly trigger runs. Safe to run by hand any time. */
 function backupNow() {
   const ss = SpreadsheetApp.getActiveSpreadsheet()
-  const folder = backupFolder_()
-  const name = ss.getName() + ' - backup ' + Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd HH-mm')
-  DriveApp.getFileById(ss.getId()).makeCopy(name, folder)
-
-  const files = []
-  const it = folder.getFiles()
-  while (it.hasNext()) files.push(it.next())
-  files.sort(function (a, b) { return b.getDateCreated().getTime() - a.getDateCreated().getTime() })
-  files.slice(BACKUPS_TO_KEEP).forEach(function (f) { f.setTrashed(true) })
-  Logger.log('Backup saved to Google Drive > ' + BACKUP_FOLDER + ': ' + name)
+  const now = new Date()
+  const main = folderIn_(DriveApp, BACKUP_FOLDER)
+  const month = folderIn_(main, Utilities.formatDate(now, TZ, 'yyyy-MM'))
+  const name = ss.getName() + ' - backup ' + Utilities.formatDate(now, TZ, 'yyyy-MM-dd HH-mm')
+  DriveApp.getFileById(ss.getId()).makeCopy(name, month)
+  Logger.log('Backup saved to Google Drive > ' + BACKUP_FOLDER + ' > ' + month.getName() + ': ' + name)
   return name
 }
 
-/** Run this ONCE from the Apps Script editor to turn the weekly backup on. Safe to re-run. */
+/** Run this ONCE from the Apps Script editor to turn the daily backup on. Safe to re-run. */
 function installBackupTrigger() {
   ScriptApp.getProjectTriggers().forEach(function (t) {
     if (t.getHandlerFunction() === 'backupNow') ScriptApp.deleteTrigger(t)
   })
-  ScriptApp.newTrigger('backupNow').timeBased().onWeekDay(ScriptApp.WeekDay.SUNDAY).atHour(23).create()
+  ScriptApp.newTrigger('backupNow').timeBased().everyDays(1).atHour(23).create()
   backupNow()
-  Logger.log('Weekly backup turned on: every Sunday night, into Google Drive > ' + BACKUP_FOLDER + '. A first copy was made just now.')
+  Logger.log('Daily backup turned on: every night at about 11 PM, into Google Drive > ' + BACKUP_FOLDER + ' (one folder per month, nothing is ever deleted). A first copy was made just now.')
 }
