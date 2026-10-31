@@ -3,6 +3,8 @@
  * The page changes first; once it is on screen we scroll to the element and highlight it for a moment.
  */
 
+import { currentPath, navigate } from './router'
+
 export const SELECT_CLASS_EVENT = 'ckd:resources-class'
 
 let pending = null
@@ -33,6 +35,6 @@ export function applyPendingJump() {
 
 export function jumpTo({ href, anchor, classId }) {
   pending = { anchor, classId }
-  if (window.location.hash === href) applyPendingJump()
-  else window.location.hash = href
+  if (currentPath() === href) applyPendingJump()
+  else navigate(href)
 }

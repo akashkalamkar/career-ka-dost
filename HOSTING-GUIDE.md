@@ -57,7 +57,7 @@ Upload the **contents** so that `index.html` sits at the root of the site (not i
 | `RUN-DEV-SERVER.bat` | Double-click: installs once (if needed), then runs `npm run dev` for a live-editing localhost preview. Needs Node.js. |
 | `index.html` | HTML shell + preconnect hints. |
 | `public/` | Static files copied as-is into the built site: `images/`, `resources/class-10/*.pdf`, favicons. **Add new PDFs/images here.** |
-| `src/App.jsx` | Routes (`#/about`, `#/admin`, ...). |
+| `src/App.jsx` | Routes (`/about`, `/admin`, ...). `src/utils/router.js` changes page without reloading. |
 | `src/components/` | All page sections and widgets (Header, Footer, Hero, Pricing, Resources, SiteSearch, CareerTest, Art3D, Lead form, ...). |
 | `src/config/` | **The files the owner edits for content:** `site.js` (phones, email, social links, career test links), `pricing.js`, `faq.js`, `blog.js`, `legal.js`, `resources.js` (PDF downloads), `achievers.js`, `testimonials.js`, `ui.js`. |
 | `src/admin/` | The staff portal screens (login, attendance, leave, staff, forgot password) and `api.js` (talks to Google). |
@@ -75,7 +75,7 @@ Upload the **contents** so that `index.html` sits at the root of the site (not i
 The website itself has no server. It depends on **two Google Apps Script web apps** (both "Execute as: Me", "Who has access: Anyone"):
 
 1. **Lead form script** (`leads-google-apps-script.gs`): already deployed. Its `/exec` URL is in `.env` as `VITE_LEADS_WEBHOOK_URL`. Leads go to the Google Sheet tab "NEW WEBSITE CKD".
-2. **Staff portal script** (`Code.gs`, version `portal-v10`): the URL is in `.env` as `VITE_ADMIN_API_URL`. **The owner has not yet confirmed that the live script was updated to portal-v10.** Until it is, `#/admin` shows an "older version" message.
+2. **Staff portal script** (`Code.gs`, version `portal-v10`): the URL is in `.env` as `VITE_ADMIN_API_URL`. **The owner has not yet confirmed that the live script was updated to portal-v10.** Until it is, `/admin` shows an "older version" message.
 
 ### Option 1 - update the EXISTING sheet to portal-v10 (the `/exec` link stays the same)
 Use this only if you are keeping the current "CKD EMPLOYEE PORTAL" sheet.
@@ -105,7 +105,7 @@ In the `Staff` tab, column G ("Active") shows `TRUE` for a working employee and 
 
 ## 3. How to host (pick ONE)
 
-The site uses **hash routing** (`#/about`), so it needs **no server rewrite rules** on any host. The site must be served over **HTTPS** (all modern hosts do this by default).
+Since 30 Oct 2026 the site uses **normal page addresses** (`/about`, `/blog/<slug>`) instead of hash routing (`#/about`), so Google can list every page. This needs one rewrite rule on the host: every address without a dot goes to `index.html`. On Vercel this is `vercel.json` in the project root (already included). On another host, add the same rule (Netlify: `public/_redirects` with `/* /index.html 200`; GitHub Pages cannot do this without a 404.html trick). Old `#/` links still work - they are turned into the new address on load. The site must be served over **HTTPS** (all modern hosts do this by default).
 
 ### Option A - Netlify Drop (recommended, easiest, free)
 1. Go to **app.netlify.com/drop** (sign up or log in with the company Google account).
@@ -159,7 +159,7 @@ npm run lint
 4. **Career Test** pop-up offers two tests and opens the Google Forms.
 5. **Header search**: type "pricing" or "dmit" → it jumps to the page and spot.
 6. **Lead form** (Contact page): submit a test entry → a new row appears in the Google Sheet tab "NEW WEBSITE CKD". (Delete the test row afterwards.)
-7. **Lock icon (far right of header) → `#/admin`**: login page appears, the message does NOT say "not connected" or "older version". Log in as Bharat (`brxxckd1010`), set a new password, see Team today / Leave requests / All records / Staff.
+7. **Lock icon (far right of header) → `/admin`**: login page appears, the message does NOT say "not connected" or "older version". Log in as Bharat (`brxxckd1010`), set a new password, see Team today / Leave requests / All records / Staff.
 8. **Forgot password** with `brxxckd1010` → a 6-digit code arrives at careerkadost@gmail.com.
 9. Test on a phone (the layout is mobile-first).
 10. After everyone has logged in once, delete `STEPS.txt` from anywhere it was shared.

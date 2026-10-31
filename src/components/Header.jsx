@@ -6,15 +6,15 @@ import { SearchPanel } from './SiteSearch'
 import { LockIcon, SearchIcon } from './icons'
 
 const nav = [
-  { label: 'Home', href: '#/' },
-  { label: 'About', href: '#/about' },
-  { label: 'Pricing', href: '#/pricing' },
-  { label: 'Career Test', href: '#/career-test' },
-  { label: 'Results', href: '#/results' },
-  { label: 'Free Resources', href: '#/resources' },
-  { label: 'Blog', href: '#/blog' },
-  { label: 'FAQ', href: '#/faq' },
-  { label: 'Admin', href: '#/admin', icon: LockIcon }, // shown as a lock icon only
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Career Test', href: '/career-test' },
+  { label: 'Results', href: '/results' },
+  { label: 'Free Resources', href: '/resources' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Admin', href: '/admin', icon: LockIcon }, // shown as a lock icon only
 ]
 
 export function Header({ path = '/' }) {
@@ -25,7 +25,7 @@ export function Header({ path = '/' }) {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur-md print:hidden">
       <div className={`${container} flex items-center justify-between gap-4 py-4`}>
-        <a href="#/" aria-label="Career Ka Dost home" onClick={() => setOpen(false)}>
+        <a href="/" aria-label="Career Ka Dost home" onClick={() => setOpen(false)}>
           <Brand />
         </a>
 
@@ -34,10 +34,10 @@ export function Header({ path = '/' }) {
             <a
               key={item.href}
               href={item.href}
-              aria-current={item.href === `#${path}` ? 'page' : undefined}
+              aria-current={item.href === path ? 'page' : undefined}
               aria-label={item.icon ? item.label : undefined}
               title={item.icon ? item.label : undefined}
-              className={`border-b-2 py-1 text-sm font-semibold transition hover:text-ink ${item.href === `#${path}` ? 'border-brand text-ink' : 'border-transparent text-ink-soft'}`}
+              className={`border-b-2 py-1 text-sm font-semibold transition hover:text-ink ${item.href === path ? 'border-brand text-ink' : 'border-transparent text-ink-soft'}`}
             >
               {item.icon ? <item.icon className="h-5 w-5" /> : item.label}
             </a>

@@ -15,7 +15,7 @@ export function BlogPost({ slug }) {
       <section className="py-24">
         <div className={container}>
           <h1 className="font-display text-4xl font-extrabold">Article not found</h1>
-          <a href="#/blog" className="mt-6 inline-block font-bold underline decoration-brand decoration-2 underline-offset-4">
+          <a href="/blog" className="mt-6 inline-block font-bold underline decoration-brand decoration-2 underline-offset-4">
             Back to the blog
           </a>
         </div>
@@ -27,7 +27,7 @@ export function BlogPost({ slug }) {
     <article className="py-16 md:py-24">
       <div className={`${container} grid gap-12 lg:grid-cols-12`}>
         <div className="lg:col-span-8">
-          <a href="#/blog" className="inline-flex items-center gap-2 text-sm font-bold text-ink-soft hover:text-ink">
+          <a href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-ink-soft hover:text-ink">
             <ArrowIcon className="h-5 w-5 rotate-180" />
             All articles
           </a>
@@ -87,7 +87,7 @@ export function BlogPost({ slug }) {
                 <ul className="mt-4 divide-y divide-line border-y border-line">
                   {others.map((o) => (
                     <li key={o.slug}>
-                      <a href={`#/blog/${o.slug}`} className="block py-4 font-display text-lg font-bold leading-snug hover:text-brass">
+                      <a href={`/blog/${o.slug}`} className="block py-4 font-display text-lg font-bold leading-snug hover:text-brass">
                         {o.title}
                       </a>
                     </li>

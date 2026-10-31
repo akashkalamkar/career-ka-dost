@@ -64,7 +64,7 @@ If you change the script later, publish it with **Deploy > New deployment** and 
 
 ## Staff portal (login and attendance)
 
-The Staff login page is at `#/admin` (there is a small "Staff login" link at the bottom of every page). Staff log in with a
+The Staff login page is at `/admin` (there is a small "Staff login" link at the bottom of every page). Staff log in with a
 username and password, then press **Check-in done** when they arrive and **Check-out done** when they leave. The time is saved
 automatically from the server clock (India time). Check-in before 10:10 AM is green, from 10:10 AM it is red. The owner
 (Bharat Rai) also sees the whole team, all records by month, and can reset anyone's password.

@@ -5,9 +5,9 @@ import { ShieldArt } from './Art3D'
 import { SectionHeading } from './SectionHeading'
 
 const LEGAL_LINKS = [
-  { label: 'Refund Policy', href: '#/refund-policy' },
-  { label: 'Terms and Conditions', href: '#/terms' },
-  { label: 'Privacy Policy', href: '#/privacy' },
+  { label: 'Refund Policy', href: '/refund-policy' },
+  { label: 'Terms and Conditions', href: '/terms' },
+  { label: 'Privacy Policy', href: '/privacy' },
 ]
 
 /** Shared layout for the Refund Policy, Terms and Privacy pages. */

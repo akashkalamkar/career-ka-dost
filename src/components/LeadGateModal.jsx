@@ -29,7 +29,7 @@ export function LeadGateModal() {
   const titleId = useId()
   const closeRef = useRef(null)
   // The staff login page never shows the visitor pop-up on its own.
-  const [open, setOpen] = useState(() => !readDismissed() && !window.location.hash.startsWith('#/admin'))
+  const [open, setOpen] = useState(() => !readDismissed() && !window.location.pathname.startsWith('/admin'))
   const [session, setSession] = useState(0)
 
   const dismiss = useCallback(() => {

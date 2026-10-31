@@ -138,9 +138,9 @@ export function Pricing() {
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
           {[
-            { t: 'No hidden costs', d: 'We confirm the fee with you before you pay.', href: '#/contact', cta: 'Ask a question' },
-            { t: 'Know the rules', d: 'Read how cancellations and refunds work.', href: '#/refund-policy', cta: 'Refund policy' },
-            { t: 'Still have doubts?', d: 'Most questions are answered in our FAQ.', href: '#/faq', cta: 'Read the FAQ' },
+            { t: 'No hidden costs', d: 'We confirm the fee with you before you pay.', href: '/contact', cta: 'Ask a question' },
+            { t: 'Know the rules', d: 'Read how cancellations and refunds work.', href: '/refund-policy', cta: 'Refund policy' },
+            { t: 'Still have doubts?', d: 'Most questions are answered in our FAQ.', href: '/faq', cta: 'Read the FAQ' },
           ].map((x) => (
             <a key={x.t} href={x.href} className="group border border-line bg-white p-6 transition hover:-translate-y-1 hover:border-brand-deep hover:shadow-xl">
               <p className="font-display text-xl font-extrabold">{x.t}</p>

@@ -10,7 +10,7 @@ export function openLeadForm() {
  * The href still goes to the Contact page if scripts are blocked or the link is opened in a new tab.
  */
 export const bookProps = {
-  href: '#/contact',
+  href: '/contact',
   onClick: (e) => {
     e.preventDefault()
     openLeadForm()
