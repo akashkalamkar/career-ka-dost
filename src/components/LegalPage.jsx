@@ -35,7 +35,7 @@ export function LegalPage({ doc, current }) {
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 text-sm text-mute">Last updated: {LEGAL_UPDATED}</p>
+              <p className="mt-6 text-sm text-mute">Last updated: {doc.updated || LEGAL_UPDATED}</p>
             </div>
           </aside>
 

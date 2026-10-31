@@ -43,7 +43,7 @@ export const SITE = {
    * The "Ask for reviews" link from the Google Business Profile (looks like https://g.page/r/.../review).
    * Empty = the "Review us on Google" buttons are hidden.
    */
-  googleReviewUrl: '',
+  googleReviewUrl: 'https://g.page/r/CdfWg9CjNkQ_EBM/review',
 }
 
 export const FOUNDER = {

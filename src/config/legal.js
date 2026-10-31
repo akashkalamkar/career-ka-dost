@@ -84,6 +84,8 @@ export const TERMS = {
 
 export const PRIVACY = {
   title: 'Privacy Policy',
+  /** Changed 1 Nov 2026 (Google Analytics added); the other pages keep LEGAL_UPDATED. */
+  updated: '1 November 2026',
   intro: 'We respect your privacy. This page explains what information we collect through this website and how we use it.',
   sections: [
     {
@@ -108,7 +110,10 @@ export const PRIVACY = {
     },
     {
       h: 'Cookies and browser storage',
-      p: ['We do not use advertising cookies. Your browser remembers for the current visit that you have closed the booking pop-up, so it does not appear again.'],
+      p: [
+        'We do not use advertising cookies. Your browser remembers for the current visit that you have closed the booking pop-up, so it does not appear again.',
+        'We use Google Analytics to understand how visitors use this website (for example which pages are viewed). It collects anonymous usage information through cookies; we do not use it to identify you.',
+      ],
     },
     {
       h: 'Your choices',
