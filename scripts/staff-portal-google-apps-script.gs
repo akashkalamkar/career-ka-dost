@@ -33,7 +33,7 @@
  *   - 5 wrong passwords lock that username for 15 minutes.
  */
 
-const SCRIPT_VERSION = 'portal-v15'
+const SCRIPT_VERSION = 'portal-v16'
 const TZ = 'Asia/Kolkata'
 const LATE_FROM_MINUTES = 10 * 60 + 10 // 10:10 AM
 const SESSION_HOURS = 12
@@ -269,6 +269,7 @@ function route(req) {
   if (action === 'login') return login(req)
   if (action === 'forgotStart') return forgotStart(req)
   if (action === 'forgotConfirm') return forgotConfirm(req)
+  if (action === 'notices') return notices_() // public: the website's Daily Notice pop-up
 
   const user = requireSession(req.token)
   if (action === 'logout') {
@@ -1665,4 +1666,43 @@ function installBackupTrigger() {
   ScriptApp.newTrigger('backupNow').timeBased().everyDays(1).atHour(23).create()
   backupNow()
   Logger.log('Daily backup turned on: every night at about 11 PM, into Google Drive > ' + BACKUP_FOLDER + ' (one folder per month, nothing is ever deleted). A first copy was made just now.')
+}
+
+// ---------------------------------------------------------------------------------------------
+// Daily Notice on the website (portal-v16). The 10:15 AM (and 5:15 PM) notice routines save their PDF
+// into the Google Drive folder "CKD Daily Notices". The website asks for the list here ('notices', no
+// login) and shows the newest one in its red "Daily Notice" pop-up, with all older ones below it.
+// Nothing is ever deleted; each PDF is made viewable by anyone with its link so visitors can open it.
+// ---------------------------------------------------------------------------------------------
+
+const NOTICE_FOLDER = 'CKD Daily Notices'
+const NOTICE_LIMIT = 60
+
+function notices_() {
+  const cache = CacheService.getScriptCache()
+  const hit = cache.get('notices')
+  if (hit) return JSON.parse(hit)
+  const folder = folderIn_(DriveApp, NOTICE_FOLDER)
+  const list = []
+  const files = folder.getFiles()
+  while (files.hasNext()) {
+    const f = files.next()
+    if (f.isTrashed() || f.getMimeType() !== MimeType.PDF) continue
+    try {
+      if (f.getSharingAccess() !== DriveApp.Access.ANYONE_WITH_LINK) f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW)
+    } catch (err) {
+      continue // could not be made public: leave it off the website rather than show a broken link
+    }
+    list.push({ id: f.getId(), name: f.getName(), created: Utilities.formatDate(f.getDateCreated(), TZ, 'yyyy-MM-dd HH:mm') })
+  }
+  list.sort(function (a, b) { return a.created < b.created ? 1 : a.created > b.created ? -1 : 0 })
+  const out = { ok: true, notices: list.slice(0, NOTICE_LIMIT) }
+  cache.put('notices', JSON.stringify(out), 300) // 5 minutes: fast for visitors, a new PDF shows within 5 minutes
+  return out
+}
+
+/** Optional: run once from the Apps Script editor to create the folder now and see its link. */
+function setupNoticesFolder() {
+  const folder = folderIn_(DriveApp, NOTICE_FOLDER)
+  Logger.log('Daily notice folder ready: Google Drive > ' + NOTICE_FOLDER + ' (' + folder.getUrl() + ')')
 }

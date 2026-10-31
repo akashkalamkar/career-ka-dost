@@ -84,7 +84,10 @@ const ctx = {
     put: (k, v, ttl) => { cacheStore[k] = { v, exp: ttl ? nowMs() + ttl * 1000 : Infinity } },
     remove: (k) => { delete cacheStore[k] },
   }) },
+  MimeType: { PDF: 'application/pdf' },
   DriveApp: {
+    Access: { ANYONE_WITH_LINK: 'ANYONE_WITH_LINK', PRIVATE: 'PRIVATE' },
+    Permission: { VIEW: 'VIEW' },
     getFoldersByName: (n) => iter(drive.folders.filter((x) => x.name === n)),
     createFolder: (n) => makeFolder(n),
     getFileById: (id) => ({
@@ -131,7 +134,20 @@ http.createServer((req, res) => {
     res.writeHead(200); return res.end('clock ' + (fakeNow ? new Date(fakeNow).toISOString() : 'real'))
   }
   if (req.url.startsWith('/__eval')) { const code = new URL(req.url, 'http://x').searchParams.get('code'); let out; try { out = vm.runInContext(code, ctx) } catch (e) { out = 'ERROR: ' + e.message } res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify(out === undefined ? null : out)) }
-  if (req.url.startsWith('/__drive')) { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ folders: drive.folders.map(function dump(x) { return { name: x.name, folders: x.folders.map(dump), files: x.files.map((y) => ({ name: y.name, trashed: y.trashed, tabs: Object.keys(JSON.parse(y.sheetsCopy)) })) } }), triggers: triggers.map((t) => ({ fn: t.fn, day: t.day, everyDays: t.everyDays, hour: t.hour })) })) }
+  // Test control: /__addfile?folder=CKD Daily Notices&name=x.pdf&mime=application/pdf&created=2026-11-01T10:20:00&locked=1
+  // puts a file in a top-level Drive folder (made if missing); locked=1 makes its sharing impossible to change.
+  if (req.url.startsWith('/__addfile')) {
+    const q = new URL(req.url, 'http://x').searchParams
+    const folder = drive.folders.find((x) => x.name === q.get('folder')) || makeFolder(q.get('folder'))
+    const id = 'f' + (folder.files.length + 1) + '_' + Math.random().toString(36).slice(2, 8)
+    const file = { id, name: q.get('name'), mime: q.get('mime') || 'application/pdf', created: new Date(q.get('created') + '+05:30').getTime(), trashed: q.get('trashed') === '1', access: 'PRIVATE', locked: q.get('locked') === '1',
+      getId() { return this.id }, getName() { return this.name }, getMimeType() { return this.mime }, isTrashed() { return this.trashed }, getDateCreated() { return new Date(this.created) },
+      getSharingAccess() { return this.access }, setSharing(a) { if (this.locked) throw new Error('not allowed'); this.access = a } }
+    folder.files.push(file)
+    res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ id }))
+  }
+  if (req.url.startsWith('/__notice-access')) { const f = drive.folders.find((x) => x.name === 'CKD Daily Notices'); res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify(f ? f.files.map((x) => [x.name, x.access]) : null)) }
+  if (req.url.startsWith('/__drive')) { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ folders: drive.folders.map(function dump(x) { return { name: x.name, folders: x.folders.map(dump), files: x.files.map((y) => ({ name: y.name, trashed: y.trashed, tabs: y.sheetsCopy ? Object.keys(JSON.parse(y.sheetsCopy)) : [] })) } }), triggers: triggers.map((t) => ({ fn: t.fn, day: t.day, everyDays: t.everyDays, hour: t.hour })) })) }
   if (req.url.startsWith('/__mail')) { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify(outbox)) }
   if (req.url.startsWith('/__sheet')) {
     res.writeHead(200, { 'Content-Type': 'application/json' })
