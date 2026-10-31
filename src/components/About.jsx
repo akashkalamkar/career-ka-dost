@@ -35,7 +35,9 @@ export function About() {
                 src={FOUNDER.photo}
                 alt={`${FOUNDER.name}, founder of ${SITE.name}`}
                 loading="lazy"
-                className="block w-full drop-shadow-[0_24px_24px_rgba(0,0,0,0.22)]"
+                width={532}
+                height={548}
+                className="block h-auto w-full drop-shadow-[0_24px_24px_rgba(0,0,0,0.22)]"
               />
             </Tilt>
             <div className="mx-auto mt-2 max-w-md border-t-4 border-brand pt-4 text-center">

@@ -1,23 +1,38 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import { fileURLToPath } from 'node:url'
 import { POSTS } from './src/config/blog.js'
+import { allPaths, SITE_URL } from './src/seo.js'
+import { prerender } from './scripts/prerender.js'
 
-const SITE_URL = 'https://www.careerkadost.com'
-// The public pages (same as ROUTES in src/App.jsx, without the staff portal). Blog posts are added automatically.
-const PAGES = ['/', '/about', '/pricing', '/career-test', '/results', '/resources', '/blog', '/faq', '/contact', '/refund-policy', '/terms', '/privacy']
+const root = fileURLToPath(new URL('.', import.meta.url))
+const lastmod = Object.fromEntries(POSTS.map((p) => [`/blog/${p.slug}`, p.date]))
 
 /** Writes sitemap.xml at build time, so every page and every blog post is listed for Google without upkeep. */
 function sitemap() {
   return {
     name: 'ckd-sitemap',
     generateBundle() {
-      const urls = [
-        ...PAGES.map((p) => `  <url><loc>${SITE_URL}${p}</loc></url>`),
-        ...POSTS.map((p) => `  <url><loc>${SITE_URL}/blog/${p.slug}</loc><lastmod>${p.date}</lastmod></url>`),
-      ]
+      const urls = allPaths().map((p) => `  <url><loc>${SITE_URL}${p}</loc>${lastmod[p] ? `<lastmod>${lastmod[p]}</lastmod>` : ''}</url>`)
       const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`
       this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: xml })
+    },
+  }
+}
+
+/** After the build: a ready-made HTML file for every public page (see scripts/prerender.js). */
+function prerenderPages() {
+  let outDir
+  return {
+    name: 'ckd-prerender',
+    apply: 'build',
+    configResolved(config) {
+      outDir = config.build.outDir.startsWith('/') ? config.build.outDir : `${config.root}/${config.build.outDir}`
+    },
+    async closeBundle() {
+      const count = await prerender(root, outDir)
+      console.log(`Prepared ${count} pages for search engines.`)
     },
   }
 }
@@ -34,5 +49,5 @@ function viteBase() {
 
 export default defineConfig({
   base: viteBase(),
-  plugins: [react(), tailwindcss(), sitemap()],
+  plugins: [react(), tailwindcss(), sitemap(), prerenderPages()],
 })

@@ -6,7 +6,9 @@ export function Brand({ tone = 'light', size = 'md', showTagline = true }) {
   return (
     <span className="flex min-w-0 items-center gap-3">
       <img
-        src={SITE.logoUrl}
+        src={SITE.logoSmallUrl}
+        width={160}
+        height={178}
         alt=""
         decoding="async"
         className={`${big ? 'h-16' : 'h-12'} w-auto shrink-0 object-contain`}

@@ -6,9 +6,33 @@ import { formatDate } from '../utils/date'
 import { bookProps } from '../utils/leadForm'
 import { ArrowIcon } from './icons'
 
+/**
+ * Text with links: "[Book counselling](/contact)" in a post's text becomes a link to that page, so posts
+ * can point readers (and Google) to related pages on the site.
+ */
+function RichText({ text }) {
+  const parts = text.split(/(\[[^\]]+\]\([^)\s]+\))/g)
+  return parts.map((part, i) => {
+    const m = /^\[([^\]]+)\]\(([^)\s]+)\)$/.exec(part)
+    return m ? (
+      <a key={i} href={m[2]} className="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4 hover:text-brass">
+        {m[1]}
+      </a>
+    ) : (
+      part
+    )
+  })
+}
+
+/** Up to `count` other posts, the same category first, newest first within each group. */
+function relatedTo(post, count) {
+  const rest = POSTS.filter((p) => p.slug !== post.slug).sort((a, b) => b.date.localeCompare(a.date))
+  return [...rest.filter((p) => p.category === post.category), ...rest.filter((p) => p.category !== post.category)].slice(0, count)
+}
+
 export function BlogPost({ slug }) {
   const post = POSTS.find((p) => p.slug === slug)
-  const others = POSTS.filter((p) => p.slug !== slug).slice(0, 2)
+  const related = post ? relatedTo(post, 3) : []
 
   if (!post) {
     return (
@@ -53,15 +77,39 @@ export function BlogPost({ slug }) {
                   {b.items.map((it) => (
                     <li key={it} className="flex gap-3">
                       <span className="mt-3 h-2 w-2 shrink-0 bg-brand" aria-hidden />
-                      <span>{it}</span>
+                      <span>
+                        <RichText text={it} />
+                      </span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p key={i}>{b.text}</p>
+                <p key={i}>
+                  <RichText text={b.text} />
+                </p>
               ),
             )}
           </div>
+
+          {related.length ? (
+            <nav aria-label="Related articles" className="mt-14 border-t-4 border-brand pt-8">
+              <p className="font-display text-2xl font-extrabold">Related reading</p>
+              <ul className="mt-5 grid gap-4 sm:grid-cols-3">
+                {related.map((o) => (
+                  <li key={o.slug}>
+                    <a href={`/blog/${o.slug}`} className="flex h-full flex-col border border-line bg-white p-5 transition hover:-translate-y-0.5 hover:border-brand-deep hover:shadow-lg">
+                      <span className="text-xs font-bold uppercase tracking-[0.16em] text-brass">{o.category}</span>
+                      <span className="mt-2 font-display text-lg font-bold leading-snug">{o.title}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-base text-ink-soft">
+                See our <RichText text="[services and fees](/pricing)" />, take a <RichText text="[career test](/career-test)" /> or{' '}
+                <RichText text="[book a counselling session](/contact)" />.
+              </p>
+            </nav>
+          ) : null}
         </div>
 
         <aside className="lg:col-span-4">
@@ -81,20 +129,6 @@ export function BlogPost({ slug }) {
               </button>
             </div>
 
-            {others.length ? (
-              <div className="mt-10">
-                <p className="text-xs font-bold uppercase tracking-[0.2em]">More to read</p>
-                <ul className="mt-4 divide-y divide-line border-y border-line">
-                  {others.map((o) => (
-                    <li key={o.slug}>
-                      <a href={`/blog/${o.slug}`} className="block py-4 font-display text-lg font-bold leading-snug hover:text-brass">
-                        {o.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
           </div>
         </aside>
       </div>

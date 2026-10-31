@@ -3,6 +3,8 @@ export const SITE = {
   name: 'Career Ka Dost',
   /** `public/images/logo-mark.png` (full logo: `logo.png`) */
   logoUrl: '/images/logo-mark.png',
+  /** Small, light copy of the logo mark for the header and footer (the full one above is used on bills). */
+  logoSmallUrl: '/images/logo-mark-small.webp',
   tagline: 'Ask before you decide',
   phoneDisplay: '+91 9503821010',
   phoneDisplay2: '+91 9272397879',
@@ -32,12 +34,22 @@ export const SITE = {
    * https://career-ka-dost-default-rtdb.asia-southeast1.firebasedatabase.app). Empty = counter hidden.
    */
   visitCounterDbUrl: 'https://career-ka-dost-7ba24-default-rtdb.asia-southeast1.firebasedatabase.app',
+  /**
+   * Google Analytics 4 "Measurement ID" (looks like G-XXXXXXXXXX; Google Analytics > Admin > Data streams).
+   * Empty = no statistics are collected. The staff portal is never counted.
+   */
+  gaMeasurementId: '',
+  /**
+   * The "Ask for reviews" link from the Google Business Profile (looks like https://g.page/r/.../review).
+   * Empty = the "Review us on Google" buttons are hidden.
+   */
+  googleReviewUrl: '',
 }
 
 export const FOUNDER = {
   name: 'Bharat Rai',
   role: 'Founder, Career Ka Dost',
-  photo: '/images/founder.png',
+  photo: '/images/founder.webp',
   summary: 'Engineer & MBA (Symbiosis, Pune) · Certified Career Counsellor · Corporate Trainer · Public Speaker',
   highlights: [
     'Career guidance and NEET/JEE counselling expert',

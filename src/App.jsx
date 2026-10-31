@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { About } from './components/About'
 import { Blog } from './components/Blog'
 import { BlogPost } from './components/BlogPost'
@@ -15,12 +15,15 @@ import { LegalPage } from './components/LegalPage'
 import { Pricing } from './components/Pricing'
 import { Resources } from './components/Resources'
 import { Results } from './components/Results'
-import { POSTS } from './config/blog'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
-import { AdminApp } from './admin/AdminApp'
 import { applyPendingJump } from './utils/jump'
+import { trackPageView } from './utils/analytics'
 import { countThisVisit } from './utils/visits'
 import { currentPath, handleLinkClick, ROUTE_EVENT, upgradeOldAddress } from './utils/router'
+import { pageMeta } from './seo'
+
+// The staff portal is loaded only when someone opens /admin, so website visitors never download it.
+const AdminApp = lazy(() => import('./admin/AdminApp').then((m) => ({ default: m.AdminApp })))
 
 const withCta = (page) => (
   <>
@@ -42,7 +45,11 @@ const ROUTES = {
   '/refund-policy': () => <LegalPage doc={REFUND_POLICY} current="/refund-policy" />,
   '/terms': () => <LegalPage doc={TERMS} current="/terms" />,
   '/privacy': () => <LegalPage doc={PRIVACY} current="/privacy" />,
-  '/admin': () => <AdminApp />,
+  '/admin': () => (
+    <Suspense fallback={<p className="py-24 text-center font-semibold text-mute">Loading the staff portal...</p>}>
+      <AdminApp />
+    </Suspense>
+  ),
 }
 
 /** Old addresses keep working: they open the page their content moved to. */
@@ -54,36 +61,19 @@ const REDIRECTS = {
   '/stories': '/results',
 }
 
-const SITE_TITLE = 'Career Ka Dost - Career Counselling & Admission Guidance in Nagpur'
-
-/** The browser-tab title for each page. Home keeps the main title; a blog post uses its own title. */
-const TITLES = {
-  '/about': 'About us',
-  '/pricing': 'Services & pricing',
-  '/career-test': 'Career test',
-  '/results': 'Results & testimonials',
-  '/resources': 'Free resources',
-  '/blog': 'Blog',
-  '/faq': 'FAQ',
-  '/contact': 'Book counselling',
-  '/refund-policy': 'Refund policy',
-  '/terms': 'Terms and conditions',
-  '/privacy': 'Privacy policy',
-  '/admin': 'Staff portal',
-}
-
-function resolve() {
-  let path = currentPath()
-  if (REDIRECTS[path]) {
-    path = REDIRECTS[path]
-    window.history.replaceState(null, '', path)
+/** The page for an address. `path` is given when the build prepares a page ahead of time (no browser). */
+function resolve(path) {
+  if (path === undefined) {
+    path = currentPath()
+    if (REDIRECTS[path]) window.history.replaceState(null, '', REDIRECTS[path])
   }
+  if (REDIRECTS[path]) path = REDIRECTS[path]
   if (path.startsWith('/blog/')) return { key: '/blog', Page: () => <BlogPost slug={path.slice(6)} /> }
   return path in ROUTES ? { key: path, Page: ROUTES[path] } : { key: '/', Page: ROUTES['/'] }
 }
 
-function App() {
-  const [route, setRoute] = useState(resolve)
+function App({ initialPath }) {
+  const [route, setRoute] = useState(() => resolve(initialPath))
 
   useEffect(() => {
     function onChange() {
@@ -114,18 +104,17 @@ function App() {
 
   useEffect(() => {
     const path = currentPath()
-    const post = path.startsWith('/blog/') ? POSTS.find((p) => path === `/blog/${p.slug}`) : null
-    document.title = post ? `${post.title} | Career Ka Dost` : TITLES[route.key] ? `${TITLES[route.key]} | Career Ka Dost` : SITE_TITLE
-    // Each blog post gets its own search-result snippet; every other page keeps the one from index.html.
-    const meta = document.querySelector('meta[name="description"]')
-    if (meta) {
-      meta.dataset.site ??= meta.content
-      meta.content = post ? post.excerpt : meta.dataset.site
-    }
+    const meta = path === '/admin' ? { ...pageMeta('/'), title: 'Staff portal | Career Ka Dost', url: 'https://www.careerkadost.com/admin' } : pageMeta(path)
+    document.title = meta.title
+    const set = (selector, attr, value) => document.querySelector(selector)?.setAttribute(attr, value)
+    set('meta[name="description"]', 'content', meta.description)
+    set('meta[property="og:title"]', 'content', meta.title)
+    set('meta[property="og:description"]', 'content', meta.description)
+    set('meta[property="og:type"]', 'content', meta.type)
     // Tell Google the one true address of this page (the home page for anything unknown).
-    const url = `https://www.careerkadost.com${route.key === '/' ? '/' : post ? path : route.key}`
-    document.querySelector('link[rel="canonical"]')?.setAttribute('href', url)
-    document.querySelector('meta[property="og:url"]')?.setAttribute('content', url)
+    set('link[rel="canonical"]', 'href', meta.url)
+    set('meta[property="og:url"]', 'content', meta.url)
+    trackPageView() // after the title is set, so the statistics show the right page name
   }, [route])
 
   const { Page } = route

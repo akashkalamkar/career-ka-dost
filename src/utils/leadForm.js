@@ -1,3 +1,5 @@
+import { trackEvent } from './analytics'
+
 /** Name of the browser event that asks the booking pop-up to open. */
 export const OPEN_LEAD_EVENT = 'ckd:open-lead'
 
@@ -13,6 +15,7 @@ export const bookProps = {
   href: '/contact',
   onClick: (e) => {
     e.preventDefault()
+    trackEvent('book_counselling_click')
     openLeadForm()
   },
 }

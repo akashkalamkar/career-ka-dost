@@ -48,7 +48,9 @@ export function Hero() {
             <img
               src={FOUNDER.photo}
               alt={`${FOUNDER.name}, founder of ${SITE.name}`}
-              className="block w-full drop-shadow-[0_26px_26px_rgba(0,0,0,0.22)]"
+              width={532}
+              height={548}
+              className="block h-auto w-full drop-shadow-[0_26px_26px_rgba(0,0,0,0.22)]"
               fetchPriority="high"
             />
           </Tilt>

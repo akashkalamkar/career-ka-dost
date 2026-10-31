@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { SITE } from '../config/site'
 import { btnPrimary } from '../config/ui'
+import { trackEvent } from '../utils/analytics'
 import { buildLeadMessage, EMPTY_LEAD } from '../utils/lead'
 import { submitLead } from '../utils/submitLead'
 import { openWhatsApp } from '../utils/whatsapp'
@@ -26,6 +27,7 @@ export function LeadCard({ source, idPrefix, onSubmitted, onClose, titleId }) {
     e.preventDefault()
     setSubmitted(true)
     submitLead({ source, ...values })
+    trackEvent('generate_lead', { form: source })
     openWhatsApp({ phoneE164: SITE.whatsappE164, message: buildLeadMessage(SITE.name, values) })
     onSubmitted?.()
   }

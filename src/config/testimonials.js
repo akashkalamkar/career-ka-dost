@@ -10,7 +10,7 @@ export const TESTIMONIALS = [
     college: 'St. Vincent Pallotti College, Nagpur',
     status: '12th pass-out',
     rating: 5,
-    photo: '/images/testimonials/aleena-shaikh.jpg',
+    photo: '/images/testimonials/aleena-shaikh.webp',
     quote:
       "I passed 12th std and was very confused about what career to choose, especially since my JEE score wasn't great. Bharat Rai Sir personally helped me a lot in choosing the right career, and I'm extremely satisfied with the college I got. I'd definitely recommend Career Ka Dost for choosing the career path that's best for you!",
   },

@@ -2,6 +2,7 @@ import { SITE } from '../config/site'
 import { container } from '../config/ui'
 import { mailtoUrl, onEmailClick } from '../utils/email'
 import { Brand } from './Brand'
+import { ReviewButton } from './ReviewButton'
 import { SocialLinks } from './SocialLinks'
 import { VisitCounter } from './VisitCounter'
 import { GmailIcon, InstagramColorIcon, PhoneIcon, PinColorIcon, WhatsAppIcon } from './icons'
@@ -53,6 +54,7 @@ export function Footer() {
             Career guidance, counselling and admissions support for students and parents.
           </p>
           <SocialLinks className="mt-6" />
+          <ReviewButton className="mt-6" />
         </div>
 
         <div className="lg:col-span-2">

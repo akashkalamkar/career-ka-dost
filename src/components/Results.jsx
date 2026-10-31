@@ -3,6 +3,7 @@ import { container } from '../config/ui'
 import { Achievers } from './Achievers'
 import { BarsArt } from './Art3D'
 import { BoardIcon, ChipIcon, StarIcon, UsersIcon } from './icons'
+import { ReviewButton } from './ReviewButton'
 import { SectionHeading } from './SectionHeading'
 import { Testimonials } from './Testimonials'
 import { Tilt } from './Tilt'
@@ -63,6 +64,7 @@ export function Results() {
             <p className="mt-6 leading-relaxed text-ink-soft [transform:translateZ(12px)]">
               Families trust us because we listen first, explain honestly and stay with them until the decision is made.
             </p>
+            <ReviewButton className="mt-6 [transform:translateZ(20px)]" />
           </Tilt>
 
           <div>

@@ -105,7 +105,7 @@ In the `Staff` tab, column G ("Active") shows `TRUE` for a working employee and 
 
 ## 3. How to host (pick ONE)
 
-Since 30 Oct 2026 the site uses **normal page addresses** (`/about`, `/blog/<slug>`) instead of hash routing (`#/about`), so Google can list every page. This needs one rewrite rule on the host: every address without a dot goes to `index.html`. On Vercel this is `vercel.json` in the project root (already included). On another host, add the same rule (Netlify: `public/_redirects` with `/* /index.html 200`; GitHub Pages cannot do this without a 404.html trick). Old `#/` links still work - they are turned into the new address on load. The site must be served over **HTTPS** (all modern hosts do this by default).
+Since 30 Oct 2026 the site uses **normal page addresses** (`/about`, `/blog/<slug>`) instead of hash routing (`#/about`), so Google can list every page. This needs one rewrite rule on the host: every address without a dot goes to `index.html`. On Vercel this is `vercel.json` in the project root (already included; it also has `cleanUrls`, because the build writes a ready-made `about.html`, `blog/<slug>.html` ... for every page and `/about` must be served from `about.html`). On another host, add the same rule (Netlify: `public/_redirects` with `/* /index.html 200`; GitHub Pages cannot do this without a 404.html trick). Old `#/` links still work - they are turned into the new address on load. The site must be served over **HTTPS** (all modern hosts do this by default).
 
 ### Option A - Netlify Drop (recommended, easiest, free)
 1. Go to **app.netlify.com/drop** (sign up or log in with the company Google account).
