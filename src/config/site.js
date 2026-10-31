@@ -38,7 +38,7 @@ export const SITE = {
    * Google Analytics 4 "Measurement ID" (looks like G-XXXXXXXXXX; Google Analytics > Admin > Data streams).
    * Empty = no statistics are collected. The staff portal is never counted.
    */
-  gaMeasurementId: '',
+  gaMeasurementId: 'G-KDN0CHHWSW',
   /**
    * The "Ask for reviews" link from the Google Business Profile (looks like https://g.page/r/.../review).
    * Empty = the "Review us on Google" buttons are hidden.
