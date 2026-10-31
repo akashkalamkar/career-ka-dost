@@ -305,6 +305,19 @@ export function GenerateBill({ token, onAuthError }) {
   const [invoice, setInvoice] = useState(null)
   const [downloading, setDownloading] = useState(false)
   const invoiceRef = useRef(null)
+  // The top of whatever is on screen (the form, or the finished bill). The form is long and "Create bill"
+  // sits at its bottom, so without this the finished bill opened scrolled to its end, with its Download
+  // button out of sight above.
+  const topRef = useRef(null)
+  const firstRender = useRef(true)
+  useEffect(() => {
+    // Not when the tab is first opened - only when a bill is finished, or "Create another bill" is pressed.
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
+    topRef.current?.scrollIntoView({ block: 'start' })
+  }, [invoice])
 
   const subtotal = round2(items.reduce((sum, it) => sum + it.price, 0))
   const discountPercent = discountMode === 'percent' ? Number(discountPercentInput) || 0 : subtotal > 0 ? round2(((Number(discountAmountInput) || 0) / subtotal) * 100) : 0
@@ -386,7 +399,7 @@ export function GenerateBill({ token, onAuthError }) {
   if (invoice) {
     return (
       <div className="space-y-5">
-        <div className={`${card} print:hidden`}>
+        <div ref={topRef} className={`${card} scroll-mt-32 print:hidden`}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="font-display text-2xl font-extrabold">Bill ready: {invoice.invoiceNo}</h2>
@@ -408,12 +421,20 @@ export function GenerateBill({ token, onAuthError }) {
           ) : null}
         </div>
         <PrintableInvoice ref={invoiceRef} invoice={invoice} />
+        <div className="flex flex-wrap justify-center gap-3 print:hidden">
+          <button type="button" onClick={downloadPdf} disabled={downloading} className={`${btnPrimary} !px-5 !py-2.5 disabled:opacity-50`}>
+            {downloading ? 'Preparing PDF...' : 'Download PDF'}
+          </button>
+          <button type="button" onClick={reset} className={`${btnInk} !px-5 !py-2.5`}>
+            Create another bill
+          </button>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className={card}>
+    <div ref={topRef} className={`${card} scroll-mt-32`}>
       <h2 className="font-display text-2xl font-extrabold md:text-3xl">Generate invoice</h2>
       <p className="mt-2 text-ink-soft">Pick the service(s), add a discount if needed, and print a receipt. The invoice number, date and time are filled in automatically.</p>
 
