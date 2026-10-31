@@ -26,6 +26,12 @@ export const SITE = {
   mapEmbedUrl:
     'https://www.google.com/maps?q=Buty+Chambers%2C+opposite+Fortune+Mall%2C+Sitabuldi%2C+Nagpur%2C+Maharashtra+440012&z=16&output=embed',
   copyrightYear: 2026,
+  /**
+   * Live "Total visits" counter in the footer: the address of the free Firebase Realtime Database
+   * (Firebase console > Realtime Database > Data, the link at the top, e.g.
+   * https://career-ka-dost-default-rtdb.asia-southeast1.firebasedatabase.app). Empty = counter hidden.
+   */
+  visitCounterDbUrl: 'https://career-ka-dost-7ba24-default-rtdb.asia-southeast1.firebasedatabase.app',
 }
 
 export const FOUNDER = {

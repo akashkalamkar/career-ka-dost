@@ -19,6 +19,7 @@ import { POSTS } from './config/blog'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
 import { AdminApp } from './admin/AdminApp'
 import { applyPendingJump } from './utils/jump'
+import { countThisVisit } from './utils/visits'
 import { currentPath, handleLinkClick, ROUTE_EVENT, upgradeOldAddress } from './utils/router'
 
 const withCta = (page) => (
@@ -108,6 +109,7 @@ function App() {
 
   useEffect(() => {
     applyPendingJump()
+    countThisVisit() // once per tab; skipped on the staff portal
   }, [route])
 
   useEffect(() => {

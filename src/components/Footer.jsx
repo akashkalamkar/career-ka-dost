@@ -3,6 +3,7 @@ import { container } from '../config/ui'
 import { mailtoUrl, onEmailClick } from '../utils/email'
 import { Brand } from './Brand'
 import { SocialLinks } from './SocialLinks'
+import { VisitCounter } from './VisitCounter'
 import { GmailIcon, InstagramColorIcon, PhoneIcon, PinColorIcon, WhatsAppIcon } from './icons'
 
 const link = 'whitespace-nowrap underline-offset-4 transition hover:text-ink hover:underline'
@@ -128,9 +129,12 @@ export function Footer() {
 
       <div className="border-t border-line">
         <div className={`${container} flex flex-col gap-4 pb-24 pt-6 text-xs font-bold text-ink-soft md:flex-row md:items-center md:justify-between md:pb-6`}>
-          <p>
-            &copy; {SITE.copyrightYear} {SITE.name}. All rights reserved.
-          </p>
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-6">
+            <p>
+              &copy; {SITE.copyrightYear} {SITE.name}. All rights reserved.
+            </p>
+            <VisitCounter />
+          </div>
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
             {LEGAL.map((l) => (
               <li key={l.href}>
