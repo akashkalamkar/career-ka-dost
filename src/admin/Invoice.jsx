@@ -54,7 +54,7 @@ function ServicePicker({ onAdd }) {
   const needsPrice = Boolean(chosen && chosen.price === null)
 
   return (
-    // A plain div, not a form: this sits inside the bigger "Generate bill" form, and a form cannot
+    // A plain div, not a form: this sits inside the bigger "Generate invoice" form, and a form cannot
     // contain another form (the browser silently mishandles it), so "+ Add to bill" is a button
     // with its own onClick instead of a nested submit.
     <div className="flex flex-wrap items-end gap-3 border border-dashed border-ink/25 p-4">
@@ -278,7 +278,7 @@ function usePreloadPdfTools() {
 }
 
 // ---------------------------------------------------------------------------------------------
-// Generate bill (everyone: owner and staff alike)
+// Generate invoice (everyone: owner and staff alike)
 // ---------------------------------------------------------------------------------------------
 
 export function GenerateBill({ token, onAuthError }) {
@@ -414,7 +414,7 @@ export function GenerateBill({ token, onAuthError }) {
 
   return (
     <div className={card}>
-      <h2 className="font-display text-2xl font-extrabold md:text-3xl">Generate bill</h2>
+      <h2 className="font-display text-2xl font-extrabold md:text-3xl">Generate invoice</h2>
       <p className="mt-2 text-ink-soft">Pick the service(s), add a discount if needed, and print a receipt. The invoice number, date and time are filled in automatically.</p>
 
       <form onSubmit={submit} className="mt-6 space-y-7">

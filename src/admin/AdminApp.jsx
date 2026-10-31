@@ -131,6 +131,14 @@ function Login({ onLoggedIn, onForgot, notice }) {
 const tabClass = (on) =>
   `border-2 px-5 py-2.5 text-sm font-extrabold transition hover:-translate-y-0.5 ${on ? 'border-brand-deep bg-brand' : 'border-ink/15 bg-white hover:border-brand-deep'}`
 
+// The two invoice buttons sit apart at the far right, each in its own colour (darker when open).
+const ACTION_STYLE = {
+  billing: (on) => (on ? 'border-[#0b5e31] bg-[#0b5e31] text-white' : 'border-[#1b9e57] bg-[#1b9e57] text-white hover:bg-[#15824a]'),
+  invoices: (on) => (on ? 'border-[#0d3a8a] bg-[#0d3a8a] text-white' : 'border-[#2563c9] bg-[#2563c9] text-white hover:bg-[#1d4fa6]'),
+}
+const actionClass = (id, on) =>
+  `border-2 px-5 py-2.5 text-sm font-extrabold shadow-sm transition hover:-translate-y-0.5 ${ACTION_STYLE[id](on)} ${on ? 'ring-4 ring-offset-2 ring-[#ffb81c]' : ''}`
+
 function Dashboard({ session, boot, onBoot, onSignOut }) {
   const { token, user } = session
   const isOwner = user.role === 'owner'
@@ -142,8 +150,6 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
         { id: 'reports', label: 'Daily reports' },
         { id: 'leaves', label: pending ? `Leave requests (${pending})` : 'Leave requests' },
         { id: 'records', label: 'All records' },
-        { id: 'billing', label: 'Generate bill' },
-        { id: 'invoices', label: 'All invoices' },
         { id: 'payments', label: 'Payments due' },
         { id: 'expenses', label: 'Expenses' },
         { id: 'holidays', label: 'Holidays' },
@@ -153,13 +159,15 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
     : [
         { id: 'me', label: 'My attendance' },
         { id: 'leave', label: 'Apply for leave' },
-        { id: 'billing', label: 'Generate bill' },
-        { id: 'invoices', label: 'My invoices' },
         { id: 'payments', label: 'Payments due' },
         { id: 'expenses', label: 'My expenses' },
         { id: 'holidays', label: 'Holidays' },
         { id: 'password', label: 'Change password' },
       ]
+  const actions = [
+    { id: 'billing', label: 'Generate invoice' },
+    { id: 'invoices', label: isOwner ? 'All invoices' : 'My invoices' },
+  ]
   const [tab, setTab] = useState(isOwner ? 'team' : 'me')
 
   return (
@@ -180,15 +188,27 @@ function Dashboard({ session, boot, onBoot, onSignOut }) {
         </p>
       ) : null}
 
-      <div className="mb-8 flex flex-wrap gap-3 print:hidden" role="tablist" aria-label="Portal sections">
-        {tabs.map((t) => (
-          <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} onClick={() => {
-              warmUpSoon()
-              setTab(t.id)
-            }} className={tabClass(tab === t.id)}>
-            {t.label}
-          </button>
-        ))}
+      <div className="mb-8 flex flex-col gap-4 print:hidden lg:flex-row lg:items-start lg:justify-between" role="tablist" aria-label="Portal sections">
+        <div className="flex flex-wrap gap-3">
+          {tabs.map((t) => (
+            <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} onClick={() => {
+                warmUpSoon()
+                setTab(t.id)
+              }} className={tabClass(tab === t.id)}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex shrink-0 flex-wrap gap-3 border-t-2 border-dashed border-line pt-4 lg:justify-end lg:border-l-2 lg:border-t-0 lg:pl-5 lg:pt-0">
+          {actions.map((t) => (
+            <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} onClick={() => {
+                warmUpSoon()
+                setTab(t.id)
+              }} className={actionClass(t.id, tab === t.id)}>
+              {t.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {tab === 'me' ? <MyAttendance token={token} user={user} boot={boot} onBoot={onBoot} onAuthError={onSignOut} /> : null}

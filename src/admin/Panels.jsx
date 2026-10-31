@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { btnInk, btnPrimary } from '../config/ui'
 import { CheckInTime, OnLeaveChip, StatusChip } from './Chips'
 import { card, dateLabel, inputClass, time12 } from './format'
+import { dayHead, hoursLabel, minutesByPerson, minutesOf, mondayOf, shiftDays, weekDates, weekLabel } from './hours'
 import { Message } from './Shared'
 import { useCaller } from './useCaller'
 
@@ -49,6 +50,129 @@ function Summary({ rows }) {
       <span className="mr-4 inline-block bg-[#d3f0d9] px-3 py-1 text-[#0f6b2a]">{onTime} on time</span>
       <span className="inline-block bg-[#f8c9c9] px-3 py-1 text-[#a40000]">{late} late</span>
     </p>
+  )
+}
+
+/**
+ * Hours worked in one week (Monday to Sunday), day by day, with the week's total. The owner sees every
+ * employee plus a total for the whole team; an employee sees only their own. A day is counted once the
+ * person has checked out, so the figures fill in through the day. Arrows move to earlier weeks.
+ */
+export function WeeklyHours({ token, boot, onAuthError, owner }) {
+  const run = useCaller(token, onAuthError)
+  const today = boot.serverTime.date
+  const [monday, setMonday] = useState(() => mondayOf(today))
+  // Months other than the current one, fetched when a week reaches into them.
+  const [months, setMonths] = useState({})
+  const [error, setError] = useState('')
+
+  const dates = weekDates(monday)
+  const needed = [...new Set(dates.map((d) => d.slice(0, 7)))].filter((m) => m !== boot.month)
+  const missing = needed.filter((m) => !months[m])
+  const missingKey = missing.join(',')
+
+  useEffect(() => {
+    if (!missingKey) return
+    let stop = false
+    Promise.all(missingKey.split(',').map((m) => run('attendance', { month: m }).then((data) => [m, data.rows])))
+      .then((pairs) => {
+        if (!stop) setMonths((old) => ({ ...old, ...Object.fromEntries(pairs) }))
+      })
+      .catch((err) => {
+        if (!stop) setError(err.message)
+      })
+    return () => {
+      stop = true
+    }
+  }, [missingKey, run])
+
+  const pool = [...boot.rows, ...needed.flatMap((m) => months[m] || [])]
+  const inWeek = pool.filter((r) => r.date >= dates[0] && r.date <= dates[6])
+  const people = owner
+    ? boot.staff.filter((s) => s.role !== 'owner' && (s.active || inWeek.some((r) => r.username === s.username)))
+    : [{ username: boot.user.username, name: boot.user.name }]
+  const cell = (username, date) => {
+    const r = inWeek.find((x) => x.username === username && x.date === date)
+    return r ? minutesOf(r.hours) : 0
+  }
+  const totals = minutesByPerson(inWeek)
+  const teamTotal = people.reduce((n, p) => n + (totals[p.username] || 0), 0)
+  // Sunday is a holiday: its column only appears if someone actually worked that day.
+  const shown = dates.filter((d, i) => i < 6 || people.some((p) => cell(p.username, d)))
+  const isThisWeek = monday === mondayOf(today)
+
+  return (
+    <div className={card}>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="font-display text-2xl font-extrabold md:text-3xl">{owner ? 'Hours worked this week' : 'My hours this week'}</h2>
+          <p className="mt-1 text-sm font-bold text-ink-soft">{weekLabel(monday)}</p>
+        </div>
+        <div className="flex gap-2">
+          <button type="button" onClick={() => setMonday(shiftDays(monday, -7))} className={`${btnInk} !px-4 !py-2.5`}>
+            &larr; Previous week
+          </button>
+          <button type="button" onClick={() => setMonday(shiftDays(monday, 7))} disabled={isThisWeek} className={`${btnInk} !px-4 !py-2.5 disabled:opacity-40`}>
+            Next week &rarr;
+          </button>
+        </div>
+      </div>
+      <p className="mt-4 inline-block bg-[#dbe9ff] px-3 py-1 text-sm font-extrabold text-[#0d3a8a]">
+        {owner ? 'All employees' : 'Total'}: {hoursLabel(teamTotal)}
+      </p>
+      <div className="mt-4">
+        <Message>{error}</Message>
+      </div>
+      {missing.length && !error ? <p className="mt-3 font-semibold text-mute">Loading...</p> : null}
+      <div className="mt-4 overflow-x-auto border border-line">
+        <table className="w-full min-w-[40rem] text-left text-sm">
+          <thead className="bg-paper-2 text-xs font-extrabold uppercase tracking-wider">
+            <tr>
+              <th className="px-4 py-3">Name</th>
+              {shown.map((d) => (
+                <th key={d} className={`whitespace-nowrap px-3 py-3 ${d === today ? 'text-brass' : ''}`}>
+                  {dayHead(d)}
+                </th>
+              ))}
+              <th className="whitespace-nowrap px-4 py-3">Week total</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-line">
+            {people.map((p) => (
+              <tr key={p.username}>
+                <td className="whitespace-nowrap px-4 py-3 font-semibold">{p.name}</td>
+                {shown.map((d) => {
+                  const m = cell(p.username, d)
+                  return (
+                    <td key={d} className="whitespace-nowrap px-3 py-3">
+                      {m ? hoursLabel(m) : <span className="text-mute">-</span>}
+                    </td>
+                  )
+                })}
+                <td className="whitespace-nowrap px-4 py-3 font-extrabold">{hoursLabel(totals[p.username] || 0)}</td>
+              </tr>
+            ))}
+          </tbody>
+          {owner && people.length > 1 ? (
+            <tfoot className="border-t-2 border-ink/15 bg-paper-2 font-extrabold">
+              <tr>
+                <td className="px-4 py-3">All employees</td>
+                {shown.map((d) => {
+                  const m = people.reduce((n, p) => n + cell(p.username, d), 0)
+                  return (
+                    <td key={d} className="whitespace-nowrap px-3 py-3">
+                      {m ? hoursLabel(m) : '-'}
+                    </td>
+                  )
+                })}
+                <td className="whitespace-nowrap px-4 py-3">{hoursLabel(teamTotal)}</td>
+              </tr>
+            </tfoot>
+          ) : null}
+        </table>
+      </div>
+      <p className="mt-3 text-sm font-semibold text-mute">A day is added once the person checks out.</p>
+    </div>
   )
 }
 
@@ -200,6 +324,8 @@ export function MyAttendance({ token, user, boot, onBoot, onAuthError }) {
 
       <TodayReport token={token} boot={boot} onBoot={onBoot} onAuthError={onAuthError} />
 
+      <WeeklyHours token={token} boot={{ ...boot, user }} onAuthError={onAuthError} />
+
       <div className={card}>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -207,6 +333,7 @@ export function MyAttendance({ token, user, boot, onBoot, onAuthError }) {
             <div className="mt-2">
               <Summary rows={rows} />
             </div>
+            <p className="mt-2 text-sm font-bold text-ink-soft">Hours this month: {hoursLabel(rows.reduce((n, r) => n + minutesOf(r.hours), 0))}</p>
           </div>
           <label className="block text-sm font-bold">
             Month
@@ -248,53 +375,56 @@ export function TeamToday({ token, boot, onBoot, onAuthError }) {
   }
 
   return (
-    <div className={card}>
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-brass">{dateLabel(boot.serverTime.date)}</p>
-          <h2 className="mt-1 font-display text-2xl font-extrabold md:text-3xl">Team today</h2>
+    <div className="space-y-8">
+      <div className={card}>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-brass">{dateLabel(boot.serverTime.date)}</p>
+            <h2 className="mt-1 font-display text-2xl font-extrabold md:text-3xl">Team today</h2>
+          </div>
+          <button type="button" onClick={refresh} disabled={busy} className={`${btnInk} !px-5 !py-2.5 disabled:opacity-50`}>
+            {busy ? 'Refreshing...' : 'Refresh'}
+          </button>
         </div>
-        <button type="button" onClick={refresh} disabled={busy} className={`${btnInk} !px-5 !py-2.5 disabled:opacity-50`}>
-          {busy ? 'Refreshing...' : 'Refresh'}
-        </button>
-      </div>
-      <div className="mt-4">
-        <Message>{error}</Message>
-      </div>
-      <p className="mt-4 flex flex-wrap gap-3 text-sm font-bold">
-        <span className="bg-[#d3f0d9] px-3 py-1 text-[#0f6b2a]">{counts.onTime} on time</span>
-        <span className="bg-[#f8c9c9] px-3 py-1 text-[#a40000]">{counts.late} late</span>
-        <span className="bg-[#dbe9ff] px-3 py-1 text-[#0d3a8a]">{counts.leave} on leave</span>
-        <span className="bg-paper-2 px-3 py-1 text-mute">{counts.waiting} not checked in yet</span>
-      </p>
-      <div className="mt-5 overflow-x-auto border border-line">
-        <table className="w-full min-w-[34rem] text-left text-sm">
-          <thead className="bg-paper-2 text-xs font-extrabold uppercase tracking-wider">
-            <tr>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Check-in</th>
-              <th className="px-4 py-3">Check-out</th>
-              <th className="px-4 py-3">Hours</th>
-              <th className="px-4 py-3">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {team.map((s) => (
-              <tr key={s.username}>
-                <td className="px-4 py-3 font-semibold">{s.name}</td>
-                <td className="px-4 py-3">
-                  <CheckInTime rec={s.today} />
-                </td>
-                <td className="whitespace-nowrap px-4 py-3">{s.today && s.today.checkOut ? time12(s.today.checkOut) : <span className="text-mute">-</span>}</td>
-                <td className="whitespace-nowrap px-4 py-3">{s.today && s.today.hours ? s.today.hours : <span className="text-mute">-</span>}</td>
-                <td className="px-4 py-3">
-                  {!s.today && s.leave ? <OnLeaveChip leave={s.leave} /> : <StatusChip status={s.today ? s.today.status : ''} />}
-                </td>
+        <div className="mt-4">
+          <Message>{error}</Message>
+        </div>
+        <p className="mt-4 flex flex-wrap gap-3 text-sm font-bold">
+          <span className="bg-[#d3f0d9] px-3 py-1 text-[#0f6b2a]">{counts.onTime} on time</span>
+          <span className="bg-[#f8c9c9] px-3 py-1 text-[#a40000]">{counts.late} late</span>
+          <span className="bg-[#dbe9ff] px-3 py-1 text-[#0d3a8a]">{counts.leave} on leave</span>
+          <span className="bg-paper-2 px-3 py-1 text-mute">{counts.waiting} not checked in yet</span>
+        </p>
+        <div className="mt-5 overflow-x-auto border border-line">
+          <table className="w-full min-w-[34rem] text-left text-sm">
+            <thead className="bg-paper-2 text-xs font-extrabold uppercase tracking-wider">
+              <tr>
+                <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Check-in</th>
+                <th className="px-4 py-3">Check-out</th>
+                <th className="px-4 py-3">Hours</th>
+                <th className="px-4 py-3">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-line">
+              {team.map((s) => (
+                <tr key={s.username}>
+                  <td className="px-4 py-3 font-semibold">{s.name}</td>
+                  <td className="px-4 py-3">
+                    <CheckInTime rec={s.today} />
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3">{s.today && s.today.checkOut ? time12(s.today.checkOut) : <span className="text-mute">-</span>}</td>
+                  <td className="whitespace-nowrap px-4 py-3">{s.today && s.today.hours ? s.today.hours : <span className="text-mute">-</span>}</td>
+                  <td className="px-4 py-3">
+                    {!s.today && s.leave ? <OnLeaveChip leave={s.leave} /> : <StatusChip status={s.today ? s.today.status : ''} />}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+      <WeeklyHours token={token} boot={boot} onAuthError={onAuthError} owner />
     </div>
   )
 }
@@ -365,12 +495,13 @@ export function TeamReports({ token, boot, onAuthError }) {
 function summarizeByEmployee(rows, staff) {
   const map = {}
   staff.forEach((s) => {
-    map[s.username] = { username: s.username, name: s.name, active: s.active, present: 0, onTime: 0, late: 0 }
+    map[s.username] = { username: s.username, name: s.name, active: s.active, present: 0, onTime: 0, late: 0, minutes: 0 }
   })
   rows.forEach((r) => {
     const e = map[r.username]
     if (!e) return
     e.present++
+    e.minutes += minutesOf(r.hours)
     if (r.status === 'On time') e.onTime++
     else if (r.status === 'Late') e.late++
   })
@@ -411,6 +542,7 @@ function MonthSummary({ rows, staff, working }) {
             <th className="px-4 py-3">Present</th>
             <th className="px-4 py-3">On time</th>
             <th className="px-4 py-3">Late</th>
+            <th className="px-4 py-3">Hours worked</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-line">
@@ -424,9 +556,18 @@ function MonthSummary({ rows, staff, working }) {
               <td className="px-4 py-3">{e.present}</td>
               <td className="px-4 py-3">{e.onTime}</td>
               <td className="px-4 py-3">{e.late}</td>
+              <td className="whitespace-nowrap px-4 py-3 font-extrabold">{hoursLabel(e.minutes)}</td>
             </tr>
           ))}
         </tbody>
+        <tfoot className="border-t-2 border-ink/15 bg-paper-2 font-extrabold">
+          <tr>
+            <td className="px-4 py-3" colSpan={working !== null ? 5 : 4}>
+              All employees
+            </td>
+            <td className="whitespace-nowrap px-4 py-3">{hoursLabel(list.reduce((n, e) => n + e.minutes, 0))}</td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   )
@@ -476,7 +617,7 @@ export function AllRecords({ token, boot, onAuthError }) {
       <div className={card}>
         <h2 className="font-display text-2xl font-extrabold md:text-3xl">Monthly summary per employee</h2>
         <p className="mt-2 text-ink-soft">
-          Days present, on time and late for the month selected below - useful for reviews.
+          Days present, on time, late and hours worked for the month selected below - useful for reviews.
           {working !== null ? ' Working days leave out Sundays and holidays, and count only up to today.' : ''}
         </p>
         <div className="mt-5">
