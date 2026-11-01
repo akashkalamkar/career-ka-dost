@@ -33,7 +33,7 @@
  *   - 5 wrong passwords lock that username for 15 minutes.
  */
 
-const SCRIPT_VERSION = 'portal-v16'
+const SCRIPT_VERSION = 'portal-v17'
 const TZ = 'Asia/Kolkata'
 const LATE_FROM_MINUTES = 10 * 60 + 10 // 10:10 AM
 const SESSION_HOURS = 12
@@ -99,7 +99,7 @@ let attendanceMemo = null
 let leavesMemo = null
 let reportsMemo = null
 // Only these change data, so only these wait for the lock. Reading and logging in do not.
-const WRITE_ACTIONS = { checkin: 1, checkout: 1, changePassword: 1, resetPassword: 1, forgotStart: 1, forgotConfirm: 1, addStaff: 1, setActive: 1, applyLeave: 1, cancelLeave: 1, decideLeave: 1, submitReport: 1, createInvoice: 1, recordPayment: 1, addExpense: 1, deleteExpense: 1, markExpensesPaidBack: 1, addHoliday: 1, removeHoliday: 1 }
+const WRITE_ACTIONS = { checkin: 1, checkout: 1, changePassword: 1, resetPassword: 1, forgotStart: 1, forgotConfirm: 1, addStaff: 1, setActive: 1, applyLeave: 1, cancelLeave: 1, decideLeave: 1, submitReport: 1, createInvoice: 1, recordPayment: 1, addExpense: 1, deleteExpense: 1, markExpensesPaidBack: 1, addHoliday: 1, removeHoliday: 1, uploadNotice: 1 }
 
 /**
  * Only the owner is created automatically. He adds every employee himself from the Staff tab in the
@@ -270,6 +270,7 @@ function route(req) {
   if (action === 'forgotStart') return forgotStart(req)
   if (action === 'forgotConfirm') return forgotConfirm(req)
   if (action === 'notices') return notices_() // public: the website's Daily Notice pop-up
+  if (action === 'uploadNotice') return uploadNotice_(req) // the daily notice routines (needs the upload key)
 
   const user = requireSession(req.token)
   if (action === 'logout') {
@@ -1699,6 +1700,33 @@ function notices_() {
   const out = { ok: true, notices: list.slice(0, NOTICE_LIMIT) }
   cache.put('notices', JSON.stringify(out), 300) // 5 minutes: fast for visitors, a new PDF shows within 5 minutes
   return out
+}
+
+/**
+ * The daily notice routines send their PDF here (portal-v17), because Claude's Google Drive connector
+ * cannot upload a file that large. Protected by a key kept in Script properties as NOTICE_UPLOAD_KEY
+ * (Apps Script > Project Settings > Script properties); without it, uploads are refused.
+ * Request: { action: 'uploadNotice', key, name: 'NEET_UG_2026_Notices_DD-MM-YYYY.pdf', data: base64 PDF }.
+ * Never replaces or deletes anything; a second upload with the same name is ignored.
+ */
+function uploadNotice_(req) {
+  const expected = PropertiesService.getScriptProperties().getProperty('NOTICE_UPLOAD_KEY')
+  if (!expected || String(req.key || '') !== expected) fail('Not allowed.')
+  const name = String(req.name || '')
+  if (!/^[\w.-]{1,120}\.pdf$/i.test(name)) fail('Please send a PDF file name.')
+  const bytes = Utilities.base64Decode(String(req.data || ''))
+  if (bytes.length < 100 || bytes.length > 20 * 1024 * 1024) fail('The PDF looks empty or too large.')
+  if (String.fromCharCode(bytes[0], bytes[1], bytes[2], bytes[3]) !== '%PDF') fail('That is not a PDF file.')
+  const folder = folderIn_(DriveApp, NOTICE_FOLDER)
+  const same = folder.getFilesByName(name)
+  while (same.hasNext()) {
+    const f = same.next()
+    if (!f.isTrashed()) return { ok: true, id: f.getId(), already: true }
+  }
+  const file = folder.createFile(Utilities.newBlob(bytes, MimeType.PDF, name))
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW)
+  CacheService.getScriptCache().remove('notices')
+  return { ok: true, id: file.getId() }
 }
 
 /** Optional: run once from the Apps Script editor to create the folder now and see its link. */

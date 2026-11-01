@@ -50,6 +50,15 @@ const makeFolder = (name, list = drive.folders) => {
     getFiles: () => iter(folder.files.filter((x) => !x.trashed)),
     getFoldersByName: (n) => iter(folder.folders.filter((x) => x.name === n)),
     createFolder: (n) => makeFolder(n, folder.folders),
+    getFilesByName: (n) => iter(folder.files.filter((x) => x.name === n)),
+    getUrl: () => 'https://drive.google.com/drive/folders/mock',
+    createFile: (blob) => {
+      const file = { id: 'up' + (folder.files.length + 1), name: blob.name, mime: blob.mime, size: blob.bytes.length, created: nowMs(), trashed: false, access: 'PRIVATE',
+        getId() { return this.id }, getName() { return this.name }, getMimeType() { return this.mime }, isTrashed() { return this.trashed }, getDateCreated() { return new Date(this.created) },
+        getSharingAccess() { return this.access }, setSharing(a) { this.access = a } }
+      folder.files.push(file)
+      return file
+    },
   }
   list.push(folder)
   return folder
@@ -108,6 +117,8 @@ const ctx = {
   MailApp: { sendEmail: (to, subject, body) => { outbox.push({ to, subject, body }) } },
   ContentService: { MimeType: { JSON: 'json' }, createTextOutput: (t) => ({ text: t, setMimeType() { return this } }) },
   Utilities: {
+    base64Decode: (b) => Array.from(Buffer.from(b, 'base64')).map((x) => (x > 127 ? x - 256 : x)),
+    newBlob: (bytes, mime, name) => ({ bytes, mime, name }),
     DigestAlgorithm: { SHA_256: 'sha256' }, Charset: { UTF_8: 'utf8' },
     computeDigest: (alg, s) => Array.from(crypto.createHash('sha256').update(s, 'utf8').digest()).map((b) => (b > 127 ? b - 256 : b)),
     getUuid: () => crypto.randomUUID(),

@@ -2,6 +2,7 @@
 const B = 'http://localhost:8787'
 const post = async (body) => (await fetch(B, { method: 'POST', body: JSON.stringify(body) })).json()
 const add = (q) => fetch(B + '/__addfile?' + new URLSearchParams({ folder: 'CKD Daily Notices', mime: 'application/pdf', ...q })).then((r) => r.json())
+const clock = (v) => fetch(B + '/__time?ist=' + v).then((x) => x.text())
 const evalGs = (code) => fetch(B + '/__eval?code=' + encodeURIComponent(code)).then((r) => r.json())
 let pass = 0, bad = 0
 const t = (name, cond, extra) => { cond ? pass++ : bad++; console.log((cond ? 'PASS ' : 'FAIL ') + name + (cond ? '' : '  ' + JSON.stringify(extra))) }
@@ -37,8 +38,29 @@ const t = (name, cond, extra) => { cond ? pass++ : bad++; console.log((cond ? 'P
   await evalGs("CacheService.getScriptCache().remove('notices'); 'ok'")
   r = await post({ action: 'notices' })
   t('at most 60 are sent, newest kept', r.notices.length === 60 && r.notices[0].name === 'NEET_UG_2026_Notices_31-10-2026_5-15PM.pdf', r.notices.length)
+  // portal-v17: uploads from the routines
+  const pdf = Buffer.concat([Buffer.from('%PDF-1.4\n'), Buffer.alloc(500, 65)]).toString('base64')
+  r = await post({ action: 'uploadNotice', key: 'anything', name: 'NEET_UG_2026_Notices_01-11-2026.pdf', data: pdf })
+  t('upload refused while no key is set in Script properties', !r.ok, r)
+  await evalGs("PropertiesService.getScriptProperties().setProperty('NOTICE_UPLOAD_KEY', 'k123'); 'ok'")
+  r = await post({ action: 'uploadNotice', key: 'wrong', name: 'NEET_UG_2026_Notices_01-11-2026.pdf', data: pdf })
+  t('upload refused with a wrong key', !r.ok && /not allowed/i.test(r.error), r)
+  r = await post({ action: 'uploadNotice', key: 'k123', name: 'x.docx', data: pdf })
+  t('a non-PDF name is refused', !r.ok, r)
+  r = await post({ action: 'uploadNotice', key: 'k123', name: 'fake.pdf', data: Buffer.alloc(500, 65).toString('base64') })
+  t('content that is not a PDF is refused', !r.ok, r)
+  await clock('2026-11-01T10:30:00')
+  r = await post({ action: 'uploadNotice', key: 'k123', name: 'NEET_UG_2026_Notices_01-11-2026.pdf', data: pdf })
+  t('upload with the right key works', r.ok && r.id && !r.already, r)
+  const again = await post({ action: 'uploadNotice', key: 'k123', name: 'NEET_UG_2026_Notices_01-11-2026.pdf', data: pdf })
+  t('the same file sent twice is not duplicated', again.ok && again.already && again.id === r.id, again)
+  r = await post({ action: 'notices' })
+  t('new upload shows at once as the latest (cache cleared)', r.notices[0].name === 'NEET_UG_2026_Notices_01-11-2026.pdf' && r.notices[0].created === '2026-11-01 10:30', r.notices[0])
+  const acc = await (await fetch(B + '/__notice-access')).json()
+  t('uploaded PDF is viewable by anyone with the link', acc.find(([n]) => n === 'NEET_UG_2026_Notices_01-11-2026.pdf')[1] === 'ANYONE_WITH_LINK', acc)
+  await clock('off')
   r = await (await fetch(B)).json()
-  t('version is portal-v16', r.version === 'portal-v16', r)
+  t('version is portal-v17', r.version === 'portal-v17', r)
 
   console.log(`\n${pass} passed, ${bad} failed`)
   process.exit(bad ? 1 : 0)
