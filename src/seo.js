@@ -56,6 +56,11 @@ export const PAGES = {
     fullTitle: 'Book Career Counselling in Nagpur | Career Ka Dost',
     description: 'Book career or admission counselling with Career Ka Dost: Buty Chambers, Sitabuldi, Nagpur, or online across Maharashtra. Call, WhatsApp or send the form.',
   },
+  '/stream-quiz': {
+    title: 'Stream quiz',
+    fullTitle: 'Which Stream After 10th? Free Quiz | Career Ka Dost',
+    description: 'Free 2-minute quiz for Class 9 and 10 students: find out whether Science (PCM or PCB), Commerce or Arts matches your interests best.',
+  },
   '/refund-policy': { title: 'Refund policy', description: 'Refund and cancellation policy for Career Ka Dost counselling sessions and services.' },
   '/terms': { title: 'Terms and conditions', description: 'Terms and conditions for using the Career Ka Dost website and counselling services.' },
   '/privacy': { title: 'Privacy policy', description: 'How Career Ka Dost collects, uses and protects the information you share on this website.' },

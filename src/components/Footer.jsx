@@ -20,6 +20,7 @@ const EXPLORE = [
   { label: 'Results & testimonials', href: '/results' },
   { label: 'Free Resources', href: '/resources' },
   { label: 'Blog', href: '/blog' },
+  { label: 'Stream quiz', href: '/stream-quiz' },
   { label: 'FAQ', href: '/faq' },
   { label: 'Contact', href: '/contact' },
 ]

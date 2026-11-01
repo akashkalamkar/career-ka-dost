@@ -45,6 +45,7 @@ const SECTIONS = [
   { title: 'Student testimonials', href: '/results', anchor: 'testimonials', keywords: 'testimonials reviews feedback aleena shaikh parents words' },
   { title: 'Book your counselling', href: '/contact', anchor: 'lead-form', keywords: 'book counselling session appointment form enquiry register lead' },
   ...SERVICE_PAGES.map((sv) => ({ title: sv.h1, href: `/${sv.slug}`, keywords: `${sv.menu} ${sv.description} ${sv.help.join(' ')}` })),
+  { title: 'Stream quiz: which stream after 10th?', href: '/stream-quiz', keywords: 'quiz stream after 10th science commerce arts pcm pcb which stream should i choose test' },
   { title: 'Find our office on the map', href: '/contact', keywords: 'map directions google maps office address buty chambers fortune mall' },
 ].map((s) => ({ ...s, type: 'Section', detail: '' }))
 

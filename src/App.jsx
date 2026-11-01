@@ -18,6 +18,7 @@ import { Pricing } from './components/Pricing'
 import { Resources } from './components/Resources'
 import { Results } from './components/Results'
 import { ServicePage } from './components/ServicePage'
+import { StreamQuiz } from './components/StreamQuiz'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
 import { SERVICES } from './config/services'
 import { applyPendingJump } from './utils/jump'
@@ -50,6 +51,7 @@ const ROUTES = {
   '/resources': () => withCta(<Resources />),
   '/blog': () => <Blog />,
   '/faq': () => withCta(<Faq />),
+  '/stream-quiz': () => withCta(<StreamQuiz />),
   '/contact': () => <LeadForm />,
   '/refund-policy': () => <LegalPage doc={REFUND_POLICY} current="/refund-policy" />,
   '/terms': () => <LegalPage doc={TERMS} current="/terms" />,

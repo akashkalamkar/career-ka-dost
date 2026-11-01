@@ -22,6 +22,16 @@ export function HomeMore() {
           </p>
         </div>
 
+        <a href="/stream-quiz" className="mt-8 flex flex-wrap items-center justify-between gap-3 border-2 border-brand-deep bg-white p-5 transition hover:bg-brand/20">
+          <span>
+            <span className="block font-display text-xl font-extrabold">Confused after 10th? Take the free stream quiz</span>
+            <span className="text-sm text-ink-soft">10 quick questions: Science, Commerce or Arts - which suits you?</span>
+          </span>
+          <span className="inline-flex items-center gap-2 font-bold">
+            Start the quiz <ArrowIcon className="h-4 w-4" />
+          </span>
+        </a>
+
         <h2 className="mt-12 font-display text-2xl font-extrabold">Our services</h2>
         <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {SERVICES.map((sv) => (
