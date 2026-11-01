@@ -5,9 +5,10 @@
  *   subtitle?: string
  *   variant?: 'light' | 'dark'
  *   art?: import('react').ReactNode   // optional 3D illustration shown to the right on large screens
+ *   as?: 'h1' | 'h2'                  // 'h1' for the main heading of a page (one per page, for Google)
  * }} props
  */
-export function SectionHeading({ eyebrow, title, subtitle, variant = 'light', art }) {
+export function SectionHeading({ eyebrow, title, subtitle, variant = 'light', art, as: Heading = 'h2' }) {
   const isDark = variant === 'dark'
 
   return (
@@ -21,11 +22,11 @@ export function SectionHeading({ eyebrow, title, subtitle, variant = 'light', ar
             {eyebrow}
           </p>
         ) : null}
-        <h2
+        <Heading
           className={`text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight md:text-5xl ${isDark ? 'text-white' : 'text-ink'}`}
         >
           {title}
-        </h2>
+        </Heading>
         {subtitle ? (
           <p className={`mt-5 text-pretty text-lg leading-relaxed ${isDark ? 'text-white/70' : 'text-ink-soft'}`}>
             {subtitle}

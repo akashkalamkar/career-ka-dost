@@ -10,7 +10,7 @@ Then confirm the project works:
 ```bash
 npm install
 npm run dev                                   # http://localhost:5173
-node scripts/portal-tests/run-all.cjs         # expect: TOTAL: 333 passed, 0 failed
+node scripts/portal-tests/run-all.cjs         # expect: TOTAL: 334 passed, 0 failed
 ```
 
 ## Rules

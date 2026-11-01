@@ -9,7 +9,7 @@ export const SERVICES = [
   {
     slug: 'mht-cet-counselling-nagpur',
     menu: 'MHT CET counselling',
-    title: 'MHT CET Counselling in Nagpur – CAP round & college selection',
+    title: 'MHT CET Counselling in Nagpur – CAP Round Guidance',
     description: 'MHT CET counselling in Nagpur and online across Maharashtra: CAP round guidance, college and branch shortlisting, option form and document help.',
     eyebrow: 'Engineering admission',
     h1: 'MHT CET counselling in Nagpur',
@@ -39,7 +39,7 @@ export const SERVICES = [
   {
     slug: 'neet-counselling-maharashtra',
     menu: 'NEET counselling',
-    title: 'NEET Counselling in Maharashtra – MBBS, BDS, BAMS, BHMS admission',
+    title: 'NEET Counselling in Maharashtra – MBBS, BAMS, BDS',
     description: 'NEET counselling for Maharashtra state quota and All India Quota: MBBS, BDS, BAMS, BHMS admission guidance, choice filling and documents. Nagpur and online.',
     eyebrow: 'Medical admission',
     h1: 'NEET counselling in Maharashtra',

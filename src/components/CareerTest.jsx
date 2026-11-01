@@ -76,7 +76,7 @@ export function CareerTest() {
       <div className={container}>
         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
-            <SectionHeading
+            <SectionHeading as="h1"
               eyebrow="Career test"
               title="Your career starts with one test."
               subtitle="Not sure where to begin? Take our psychometric assessment and see which paths fit you best, then talk it through with a counsellor who knows what to do next."

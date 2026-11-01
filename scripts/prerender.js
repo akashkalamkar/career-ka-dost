@@ -30,7 +30,8 @@ function pageHtml(template, meta, body, extraHead = '') {
   html = setTag(html, /<meta property="og:url" content="[^"]*" \/>/, `<meta property="og:url" content="${esc(meta.url)}" />`, 'og:url')
   const ld = (meta.jsonLd || []).map((d) => `    <script type="application/ld+json">${JSON.stringify(d).replace(/</g, '\\u003c')}</script>\n`).join('')
   html = html.replace('</head>', `${ld}${extraHead}  </head>`)
-  return setTag(html, /<div id="root"><\/div>/, `<div id="root">${body}</div>`, '<div id="root">')
+  const mark = meta.prerendered ? ` data-prerendered="${esc(meta.prerendered)}"` : ''
+  return setTag(html, /<div id="root"><\/div>/, `<div id="root"${mark}>${body}</div>`, '<div id="root">')
 }
 
 export async function prerender(root, outDir) {
@@ -50,7 +51,7 @@ export async function prerender(root, outDir) {
   for (const path of paths) {
     const file = path === '/' ? join(outDir, 'index.html') : join(outDir, `${path.slice(1)}.html`)
     mkdirSync(dirname(file), { recursive: true })
-    writeFileSync(file, pageHtml(template, pageMeta(path), render(path)))
+    writeFileSync(file, pageHtml(template, { ...pageMeta(path), prerendered: path }, render(path)))
   }
   // The staff portal: no content ahead of time, and kept out of search results.
   const admin = { ...pageMeta('/'), title: 'Staff portal | Career Ka Dost', url: 'https://www.careerkadost.com/admin', jsonLd: [] }

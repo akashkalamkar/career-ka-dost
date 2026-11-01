@@ -85,7 +85,7 @@ export function MissionVision() {
   return (
     <section id="about" className="scroll-mt-20 py-20 md:py-28">
       <div className={container}>
-        <SectionHeading
+        <SectionHeading as="h1"
           eyebrow="Our vision and mission"
           title="Clarity, confidence and the right direction."
           subtitle="We help students choose a career based on aptitude, interests and real opportunities, not pressure or trends."

@@ -28,13 +28,22 @@ function persistDismissed() {
 export function LeadGateModal() {
   const titleId = useId()
   const closeRef = useRef(null)
-  // The staff login page never shows the visitor pop-up on its own.
-  const [open, setOpen] = useState(() => typeof window !== 'undefined' && !readDismissed() && !window.location.pathname.startsWith('/admin'))
+  // Closed at first, so the page itself shows first (Google counts a pop-up covering the page on arrival
+  // against a site on phones). It opens by itself after 10 seconds, once per visit; never on the staff portal.
+  const [open, setOpen] = useState(false)
   const [session, setSession] = useState(0)
 
   const dismiss = useCallback(() => {
     persistDismissed()
     setOpen(false)
+  }, [])
+
+  useEffect(() => {
+    if (readDismissed() || window.location.pathname.startsWith('/admin')) return
+    const timer = window.setTimeout(() => {
+      if (!readDismissed() && !window.location.pathname.startsWith('/admin')) setOpen(true)
+    }, 10000)
+    return () => window.clearTimeout(timer)
   }, [])
 
   useEffect(() => {

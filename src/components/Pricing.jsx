@@ -111,7 +111,7 @@ export function Pricing() {
   return (
     <section id="pricing" className="scroll-mt-20 py-20 md:py-28">
       <div className={container}>
-        <SectionHeading
+        <SectionHeading as="h1"
           eyebrow="Services and pricing"
           title="Clear services. Honest pricing."
           subtitle="Pick the service that fits your situation. We will confirm the fee for any service with you before you pay."

@@ -150,7 +150,7 @@ export function Resources() {
   return (
     <section id="resources" className="scroll-mt-20 py-20 md:py-28">
       <div className={container}>
-        <SectionHeading
+        <SectionHeading as="h1"
           eyebrow="Free resources"
           title="Practice papers for every class."
           subtitle="Pick your class and subject, open it, then download the PDF to your phone or computer. Print it or solve it on screen."

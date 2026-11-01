@@ -10,6 +10,7 @@ import { FloatingActions } from './components/FloatingActions'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
+import { HomeMore } from './components/HomeMore'
 import { LeadForm } from './components/LeadForm'
 import { LeadGateModal } from './components/LeadGateModal'
 import { LegalPage } from './components/LegalPage'
@@ -36,7 +37,12 @@ const withCta = (page) => (
 )
 
 const ROUTES = {
-  '/': () => <Hero />,
+  '/': () => (
+    <>
+      <Hero />
+      <HomeMore />
+    </>
+  ),
   '/about': () => withCta(<About />),
   '/pricing': () => withCta(<Pricing />),
   '/career-test': () => withCta(<CareerTest />),

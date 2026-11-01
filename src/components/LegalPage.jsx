@@ -15,7 +15,7 @@ export function LegalPage({ doc, current }) {
   return (
     <section className="py-20 md:py-28">
       <div className={container}>
-        <SectionHeading eyebrow="Legal" title={doc.title} subtitle={doc.intro} art={<ShieldArt className="max-w-[12rem]" />} />
+        <SectionHeading as="h1" eyebrow="Legal" title={doc.title} subtitle={doc.intro} art={<ShieldArt className="max-w-[12rem]" />} />
         <div className="grid gap-12 lg:grid-cols-12">
           <aside className="lg:col-span-4">
             <div className="lg:sticky lg:top-28">

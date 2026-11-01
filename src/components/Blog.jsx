@@ -10,14 +10,14 @@ export function Blog() {
   return (
     <section id="blog" className="scroll-mt-20 py-20 md:py-28">
       <div className={container}>
-        <SectionHeading
+        <SectionHeading as="h1"
           eyebrow="Blog"
-          title="Guides for students and parents."
-          subtitle="Plain-language explanations of counselling rounds, careers and admissions."
+          title="Career guidance blog for students and parents."
+          subtitle="Plain-language guides on career options after 10th and 12th, MHT CET and NEET counselling in Maharashtra, JoSAA, choosing a stream, a college or a career counsellor - written by the Career Ka Dost team in Nagpur, and checked against official sources."
           art={<BooksArt />}
         />
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {POSTS.map((p) => (
+          {[...POSTS].sort((a, b) => b.date.localeCompare(a.date)).map((p) => (
             <Tilt key={p.slug} as="article" className="group flex flex-col border border-line border-t-4 border-t-brand bg-white hover:shadow-2xl">
               <a href={`/blog/${p.slug}`} className="flex flex-1 flex-col p-7">
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-brass [transform:translateZ(14px)]">{p.category}</p>

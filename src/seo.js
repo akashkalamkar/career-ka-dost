@@ -9,7 +9,7 @@ import { SERVICES } from './config/services.js'
  */
 
 export const SITE_URL = 'https://www.careerkadost.com'
-export const SITE_TITLE = 'Career Ka Dost - Career Counselling & Admission Guidance in Nagpur'
+export const SITE_TITLE = 'Career Counselling in Nagpur & Maharashtra | Career Ka Dost'
 const SITE_DESCRIPTION =
   'Career Ka Dost, Sitabuldi, Nagpur - career guidance and admission counselling for NEET, JEE, MHT-CET, DMIT and college admissions, for students and parents across India. Book counselling today.'
 
@@ -18,34 +18,42 @@ export const PAGES = {
   '/': { title: null, description: SITE_DESCRIPTION },
   '/about': {
     title: 'About us',
+    fullTitle: 'About Career Ka Dost – Career Counsellor in Nagpur',
     description: 'Meet Career Ka Dost and founder Bharat Rai: honest, one-to-one career and admission counselling for students and parents in Nagpur and across Maharashtra.',
   },
   '/pricing': {
     title: 'Services & pricing',
+    fullTitle: 'Career Counselling Services & Fees | Career Ka Dost',
     description: 'Career counselling services and fees: Future Blueprint session, DMIT report counselling, engineering and medical counselling, admission guidance and school sessions.',
   },
   '/career-test': {
     title: 'Career test',
+    fullTitle: 'Online Career Test – Aptitude & Interest | Career Ka Dost',
     description: 'Take a psychometric aptitude test or a career interest inventory online, then discuss your results with a Career Ka Dost counsellor in Nagpur or online.',
   },
   '/results': {
     title: 'Results & testimonials',
+    fullTitle: 'Results & Student Testimonials | Career Ka Dost',
     description: 'Students counselled, achievers admitted through CAP rounds and what students and parents say about Career Ka Dost career counselling in Nagpur.',
   },
   '/resources': {
     title: 'Free resources',
+    fullTitle: 'Free Sample Papers & Practice PDFs | Career Ka Dost',
     description: 'Free sample papers and practice PDFs for Class 9, 10, 11 and 12 students. Download, print or solve on screen - from Career Ka Dost, Nagpur.',
   },
   '/blog': {
     title: 'Blog',
+    fullTitle: 'Career Guidance Blog: NEET, MHT CET & More | Career Ka Dost',
     description: 'Guides on career options, MHT CET and NEET counselling in Maharashtra, choosing a stream and a college - for students and parents, from Career Ka Dost.',
   },
   '/faq': {
     title: 'FAQ',
+    fullTitle: 'Career Counselling FAQs – Fees, DMIT, NEET | Career Ka Dost',
     description: 'Answers to common questions about career counselling, DMIT, NEET, JEE and MHT CET counselling, fees and booking a session with Career Ka Dost, Nagpur.',
   },
   '/contact': {
     title: 'Book counselling',
+    fullTitle: 'Book Career Counselling in Nagpur | Career Ka Dost',
     description: 'Book career or admission counselling with Career Ka Dost: Buty Chambers, Sitabuldi, Nagpur, or online across Maharashtra. Call, WhatsApp or send the form.',
   },
   '/refund-policy': { title: 'Refund policy', description: 'Refund and cancellation policy for Career Ka Dost counselling sessions and services.' },
@@ -72,7 +80,8 @@ export function pageMeta(path) {
   if (post) {
     const url = `${SITE_URL}/blog/${post.slug}`
     return {
-      title: `${post.title} | Career Ka Dost`,
+      // A shorter `seoTitle` (blog.js) is used for Google when the article title is long; ~60 characters show in results.
+      title: `${post.seoTitle || post.title} | Career Ka Dost`.length <= 60 ? `${post.seoTitle || post.title} | Career Ka Dost` : post.seoTitle || post.title,
       description: post.excerpt,
       url,
       type: 'article',

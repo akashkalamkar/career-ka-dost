@@ -20,7 +20,7 @@ export function Faq() {
   return (
     <section id="faq" className="scroll-mt-20 py-20 md:py-28">
       <div className={container}>
-        <SectionHeading
+        <SectionHeading as="h1"
           eyebrow="FAQ"
           title="Answers for students and parents."
           subtitle="Search, or pick a topic. If you cannot find your question, message us and we will reply."

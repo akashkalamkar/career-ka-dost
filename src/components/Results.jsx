@@ -27,7 +27,7 @@ export function Results() {
     <>
       <section id="results" className="scroll-mt-20 py-20 md:py-28">
         <div className={container}>
-          <SectionHeading
+          <SectionHeading as="h1"
             eyebrow="Our track record"
             title="Trusted by students and parents across India."
             subtitle="Years of focused counselling, training and workshops, and families who keep recommending us."

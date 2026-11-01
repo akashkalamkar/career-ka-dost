@@ -31,10 +31,10 @@ export function LeadForm() {
       <div className={container}>
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-5">
-            <SectionHeading
+            <SectionHeading as="h1"
               eyebrow="Contact us"
               title="Book your counselling."
-              subtitle="Tell us a little about you and we'll reply on WhatsApp. No spam, just one focused conversation about your next step."
+              subtitle="Tell us a little about you and we'll reply on WhatsApp. No spam, just one focused conversation about your next step. Sessions are held at our office in Sitabuldi, Nagpur, or online for students and parents anywhere in Maharashtra - for career planning, DMIT report counselling, MHT CET and NEET counselling, and admission guidance."
             />
             <div className="space-y-4">
               <InfoCard icon={PhoneIcon} label="Call">
