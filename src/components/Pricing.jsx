@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { PRICING_CATEGORIES, SERVICE_FINDER } from '../config/pricing'
+import { SERVICES } from '../config/services'
 import { SITE } from '../config/site'
 import { btnInk, btnPrimary, container } from '../config/ui'
 import { slug } from '../utils/searchIndex'
@@ -96,6 +97,11 @@ function PlanCard({ plan }) {
           <WhatsAppIcon className="h-4 w-4" />
           {hasPrice ? 'Book this service' : 'Get a quote'}
         </button>
+        {SERVICES.find((x) => x.plan === plan.name) ? (
+          <a href={`/${SERVICES.find((x) => x.plan === plan.name).slug}`} className="mt-3 block text-center text-sm font-bold underline decoration-brand decoration-2 underline-offset-4">
+            Know more
+          </a>
+        ) : null}
       </div>
     </Tilt>
   )

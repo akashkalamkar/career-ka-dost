@@ -1,3 +1,4 @@
+import { SERVICES as SERVICE_PAGES } from '../config/services'
 import { FAQS } from '../config/faq'
 import { POSTS } from '../config/blog'
 import { PRICING_CATEGORIES } from '../config/pricing'
@@ -43,6 +44,7 @@ const SECTIONS = [
   { title: 'Our achievers', href: '/results', anchor: 'achievers', keywords: 'achievers cap round seat allotted college toppers students congratulations' },
   { title: 'Student testimonials', href: '/results', anchor: 'testimonials', keywords: 'testimonials reviews feedback aleena shaikh parents words' },
   { title: 'Book your counselling', href: '/contact', anchor: 'lead-form', keywords: 'book counselling session appointment form enquiry register lead' },
+  ...SERVICE_PAGES.map((sv) => ({ title: sv.h1, href: `/${sv.slug}`, keywords: `${sv.menu} ${sv.description} ${sv.help.join(' ')}` })),
   { title: 'Find our office on the map', href: '/contact', keywords: 'map directions google maps office address buty chambers fortune mall' },
 ].map((s) => ({ ...s, type: 'Section', detail: '' }))
 

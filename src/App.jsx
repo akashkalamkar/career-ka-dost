@@ -16,7 +16,9 @@ import { LegalPage } from './components/LegalPage'
 import { Pricing } from './components/Pricing'
 import { Resources } from './components/Resources'
 import { Results } from './components/Results'
+import { ServicePage } from './components/ServicePage'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
+import { SERVICES } from './config/services'
 import { applyPendingJump } from './utils/jump'
 import { trackPageView } from './utils/analytics'
 import { countThisVisit } from './utils/visits'
@@ -46,6 +48,7 @@ const ROUTES = {
   '/refund-policy': () => <LegalPage doc={REFUND_POLICY} current="/refund-policy" />,
   '/terms': () => <LegalPage doc={TERMS} current="/terms" />,
   '/privacy': () => <LegalPage doc={PRIVACY} current="/privacy" />,
+  ...Object.fromEntries(SERVICES.map((sv) => [`/${sv.slug}`, () => withCta(<ServicePage slug={sv.slug} />)])),
   '/admin': () => (
     <Suspense fallback={<p className="py-24 text-center font-semibold text-mute">Loading the staff portal...</p>}>
       <AdminApp />

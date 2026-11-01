@@ -1,3 +1,4 @@
+import { SERVICES } from '../config/services'
 import { SITE } from '../config/site'
 import { container } from '../config/ui'
 import { mailtoUrl, onEmailClick } from '../utils/email'
@@ -64,6 +65,16 @@ export function Footer() {
               <li key={l.href}>
                 <a className={link} href={l.href}>
                   {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className={`${head} mt-8`}>Services</p>
+          <ul className="mt-5 space-y-3 text-sm">
+            {SERVICES.map((sv) => (
+              <li key={sv.slug}>
+                <a className={link} href={`/${sv.slug}`}>
+                  {sv.menu}
                 </a>
               </li>
             ))}

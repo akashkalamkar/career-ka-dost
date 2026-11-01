@@ -1,4 +1,5 @@
 import { POSTS } from './config/blog.js'
+import { SERVICES } from './config/services.js'
 
 /**
  * What Google sees for each page: title, description, main address and structured data. Used in two
@@ -50,6 +51,8 @@ export const PAGES = {
   '/refund-policy': { title: 'Refund policy', description: 'Refund and cancellation policy for Career Ka Dost counselling sessions and services.' },
   '/terms': { title: 'Terms and conditions', description: 'Terms and conditions for using the Career Ka Dost website and counselling services.' },
   '/privacy': { title: 'Privacy policy', description: 'How Career Ka Dost collects, uses and protects the information you share on this website.' },
+  // Service pages (src/config/services.js) use their own full title, without the ' | Career Ka Dost' ending.
+  ...Object.fromEntries(SERVICES.map((sv) => [`/${sv.slug}`, { title: sv.menu, fullTitle: sv.title, description: sv.description }])),
 }
 
 const BUSINESS_ID = `${SITE_URL}/#business`
@@ -100,7 +103,7 @@ export function pageMeta(path) {
   const key = path in PAGES ? path : '/'
   const page = PAGES[key]
   return {
-    title: page.title ? `${page.title} | Career Ka Dost` : SITE_TITLE,
+    title: page.fullTitle || (page.title ? `${page.title} | Career Ka Dost` : SITE_TITLE),
     description: page.description,
     url: `${SITE_URL}${key}`,
     type: 'website',
