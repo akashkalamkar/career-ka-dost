@@ -28,17 +28,22 @@ const STREAMS = {
   },
 }
 
+// Everyday situations, not school subjects or exam names: the answers show how a student naturally thinks,
+// what holds their attention and what kind of work they would find meaningful. Each answer points to one
+// or more streams (pcm, pcb, com, arts). The order of answers is mixed so no letter always means one stream.
 const QUESTIONS = [
-  { q: 'Which subject do you enjoy the most?', a: [['Mathematics', ['pcm']], ['Biology', ['pcb']], ['Accounts, business or economics topics', ['com']], ['History, languages or civics', ['arts']]] },
-  { q: 'Which school task do you like doing?', a: [['Solving tricky numerical problems', ['pcm']], ['Experiments and learning how living things work', ['pcb']], ['Planning a budget or running a stall at a school fair', ['com']], ['Writing, debating or making presentations', ['arts']]] },
-  { q: 'What would you rather read about in your free time?', a: [['Gadgets, space or how machines work', ['pcm']], ['The human body, health or nature', ['pcb']], ['Business stories, money and markets', ['com']], ['People, society, stories or current affairs', ['arts']]] },
-  { q: 'Which of these sounds like a good working day?', a: [['Building or designing something', ['pcm']], ['Helping patients feel better', ['pcb']], ['Making business decisions with numbers', ['com']], ['Arguing a case, writing or creating content', ['arts']]] },
-  { q: 'How do you feel about long hours of Maths practice?', a: [['I enjoy it', ['pcm', 'com']], ['It is fine, but I prefer Biology', ['pcb']], ['I manage, for business maths', ['com']], ['I would rather avoid it', ['arts', 'pcb']]] },
-  { q: 'What kind of problems do you like solving?', a: [['Logical puzzles with one right answer', ['pcm']], ['Understanding why something happens in the body or nature', ['pcb']], ['How to make something profitable', ['com']], ['Questions about people and society with many points of view', ['arts']]] },
-  { q: 'Which of these would you most like to learn?', a: [['Coding or robotics', ['pcm']], ['First aid or how medicines work', ['pcb']], ['Investing or how a company works', ['com']], ['A new language or public speaking', ['arts']]] },
-  { q: 'In a group project, you usually...', a: [['Handle the calculations and technical parts', ['pcm']], ['Do the research and observations', ['pcb']], ['Organise the plan, budget and roles', ['com']], ['Write the report and present it', ['arts']]] },
-  { q: 'Which of these exams would you be happiest preparing for?', a: [['JEE or MHT CET (engineering)', ['pcm']], ['NEET (medical)', ['pcb']], ['CA Foundation or a BBA entrance', ['com']], ['CLAT (law) or a design or mass media entrance', ['arts']]] },
-  { q: 'What matters most to you in a future career?', a: [['Working with technology and innovation', ['pcm']], ['Caring for people’s health', ['pcb']], ['Running or growing a business', ['com']], ['Expressing ideas and influencing society', ['arts']]] },
+  { q: 'A free Sunday afternoon, no phone allowed. What do you end up doing?', a: [['Looking after plants or a pet, or reading about how the body or nature works', ['pcb']], ['Taking something apart to see how it works, or solving a puzzle', ['pcm']], ['Reading, writing, drawing or talking with someone about ideas', ['arts']], ['Planning how to earn or save some money, or organising a small sale', ['com']]] },
+  { q: 'A close friend is upset. What do you usually do first?', a: [['Suggest a practical, step-by-step way to fix the problem', ['pcm']], ['Listen, understand how they feel and find the right words', ['arts']], ['Notice if they are unwell or tired and take care of them', ['pcb']], ['Help them weigh the options and make a plan', ['com']]] },
+  { q: 'Which news story would you actually read to the end?', a: [['A start-up that grew into a big company', ['com']], ['A new medicine or treatment that saves lives', ['pcb']], ['A court judgement or a debate on a social issue', ['arts']], ['A new rocket, robot or invention', ['pcm']]] },
+  { q: 'You have to explain something to a younger child. What would you enjoy explaining most?', a: [['Why we fall ill and how the body heals itself', ['pcb']], ['How a bicycle gear or an electric circuit works', ['pcm']], ['How money kept in a bank grows over time', ['com']], ['A story from history, or why we have rules', ['arts']]] },
+  { q: 'Which kind of mistake bothers you the most?', a: [['Wasting money or time', ['com']], ['A careless mistake that could hurt someone', ['pcb']], ['A wrong calculation or a gap in logic', ['pcm']], ['Someone being misunderstood or treated unfairly', ['arts']]] },
+  { q: 'At a school exhibition, which stall would you choose to run?', a: [['A poster, skit or report on a social issue', ['arts']], ['A working model you built yourself', ['pcm']], ['The canteen stall, handling the cash and stock', ['com']], ['A project on nutrition, diseases or plants', ['pcb']]] },
+  { q: 'How do you best learn something completely new?', a: [['Try it, test it, break it and rebuild it', ['pcm']], ['Observe carefully and remember the details and diagrams', ['pcb']], ['Read different views, discuss them, then form your own opinion', ['arts']], ['Look at real examples of what works and the numbers behind them', ['com']]] },
+  { q: 'A long, detailed chapter full of names and diagrams. How does that feel?', a: [['Fine, if it is to the point and useful in real life', ['com']], ['I would much rather solve problems than read pages of text', ['pcm']], ['I enjoy long reading and writing answers in my own words', ['arts']], ['I can learn lots of details if the topic is about living things', ['pcb']]] },
+  { q: 'Planning a class trip, which job do you naturally take?', a: [['The first-aid kit, food and everyone\u2019s well-being', ['pcb']], ['The budget and collecting money', ['com']], ['The route, timings and bookings online', ['pcm']], ['Convincing everyone, keeping it fun and writing the messages', ['arts']]] },
+  { q: 'Which question do you catch yourself asking most often?', a: [['"Why do people think or behave like that?"', ['arts']], ['"How does this actually work?"', ['pcm']], ['"Is this worth it? What does it cost?"', ['com']], ['"Why does the body or nature do that?"', ['pcb']]] },
+  { q: 'Working on numbers - percentages, graphs, equations - feels...', a: [['Satisfying when I find the method, even if it takes long', ['pcm', 'com']], ['Fine when it is about everyday things like profit or discounts', ['com']], ['OK when it explains something real, like growth or medicine doses', ['pcb']], ['Like a chore; I prefer subjects built on words and ideas', ['arts']]] },
+  { q: 'Fifteen years from now, what would make you proudest?', a: [['People are healthier or alive because of my work', ['pcb']], ['My words, art or work changed how people think, or got someone justice', ['arts']], ['Something I designed or built is used by thousands of people', ['pcm']], ['I built a business, or I manage money and teams for others', ['com']]] },
 ]
 
 export function StreamQuiz() {
@@ -66,8 +71,8 @@ export function StreamQuiz() {
         </p>
         <h1 className="mt-4 text-balance font-display text-4xl font-extrabold leading-[1.1] tracking-tight md:text-5xl">Which stream should I choose after 10th?</h1>
         <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-          Answer 10 quick questions to see whether Science (PCM or PCB), Commerce or Arts matches your interests best. It takes about two
-          minutes. This is a quick self-check to start your thinking, not a psychometric test.
+          Answer 12 questions about everyday situations - there are no right or wrong answers, so pick what is truly like you, not what
+          sounds best. It takes about three minutes and shows whether Science (PCM or PCB), Commerce or Arts matches how you think.
         </p>
 
         {!done ? (
@@ -124,10 +129,13 @@ export function StreamQuiz() {
               ))}
             </ul>
 
-            <p className="mt-6 text-sm text-mute">
-              A quiz like this only shows where your interests point today. Marks, aptitude, family situation and goals matter too - a
-              counsellor can help you weigh them all before you decide.
-            </p>
+            <div className="mt-6 border-2 border-[#c40000] bg-[#fff1f1] p-4 md:p-5" role="note">
+              <p className="font-display text-lg font-extrabold text-[#c40000]">Important: this is only a self-assessment quiz</p>
+              <p className="mt-1 font-semibold text-[#8a0000]">
+                It shows where your interests point today, not a final answer. Marks, aptitude, family situation and goals matter too.
+                Please contact us for expert guidance before you choose your stream.
+              </p>
+            </div>
             <div className="mt-6 flex flex-wrap gap-3">
               <a {...bookProps} className={btnPrimary}>
                 Book a counselling session

@@ -25,7 +25,7 @@ export function HomeMore() {
         <a href="/stream-quiz" className="mt-8 flex flex-wrap items-center justify-between gap-3 border-2 border-brand-deep bg-white p-5 transition hover:bg-brand/20">
           <span>
             <span className="block font-display text-xl font-extrabold">Confused after 10th? Take the free stream quiz</span>
-            <span className="text-sm text-ink-soft">10 quick questions: Science, Commerce or Arts - which suits you?</span>
+            <span className="text-sm text-ink-soft">12 everyday questions: Science, Commerce or Arts - which suits you?</span>
           </span>
           <span className="inline-flex items-center gap-2 font-bold">
             Start the quiz <ArrowIcon className="h-4 w-4" />

@@ -59,7 +59,7 @@ export const PAGES = {
   '/stream-quiz': {
     title: 'Stream quiz',
     fullTitle: 'Which Stream After 10th? Free Quiz | Career Ka Dost',
-    description: 'Free 2-minute quiz for Class 9 and 10 students: find out whether Science (PCM or PCB), Commerce or Arts matches your interests best.',
+    description: 'Free 3-minute quiz for Class 9 and 10 students: 12 everyday questions to find whether Science (PCM or PCB), Commerce or Arts suits you best.',
   },
   '/refund-policy': { title: 'Refund policy', description: 'Refund and cancellation policy for Career Ka Dost counselling sessions and services.' },
   '/terms': { title: 'Terms and conditions', description: 'Terms and conditions for using the Career Ka Dost website and counselling services.' },
