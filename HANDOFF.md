@@ -287,3 +287,4 @@ This is NOT what the original packaging recipe (section 11) assumed - it predate
 - 6 Google reviews added word for word to testimonials.js (college: 'Google review'); 3 shown on the home page, all on /results, with a link to the Google profile. No Review structured data on purpose (self-serving reviews are not allowed by Google).
 - Structured data: founder Person on /about; FAQPage on /faq and every service page (seo.js extraJsonLd).
 - 33 pages in the sitemap.
+- Testimonials (3 Nov 2026): every card now copies the owner's Canva "Student Testimonial" design (yellow #ffd51e bars, beige #e0e0cb frame, #f6f6f6 card, stars #ffb600, Poppins heading + Open Sans text self-hosted in public/fonts). Cards scroll slowly left to right (.ckd-marquee in index.css, pauses on hover, stops for reduced motion). Half stars supported (rating: 4.5). No photo = placeholder picture. The home page review strip was removed at the owner's request; testimonials live on /results only.

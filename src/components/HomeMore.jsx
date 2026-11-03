@@ -1,16 +1,13 @@
 import { POSTS } from '../config/blog'
 import { SERVICES } from '../config/services'
-import { SITE } from '../config/site'
-import { TESTIMONIALS } from '../config/testimonials'
 import { container } from '../config/ui'
-import { ArrowIcon, StarIcon } from './icons'
+import { ArrowIcon } from './icons'
 
 /**
  * Below the home page banner: a short introduction, the service pages and the newest articles, so the
  * home page tells visitors (and Google) what Career Ka Dost does and links to the main pages.
  */
 export function HomeMore() {
-  const reviews = TESTIMONIALS.filter((t) => t.college === 'Google review').slice(0, 3)
   const latest = [...POSTS].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
   return (
     <section className="border-t border-line bg-paper-2 py-16 md:py-20">
@@ -54,29 +51,6 @@ export function HomeMore() {
             </li>
           ))}
         </ul>
-
-        <h2 className="mt-12 font-display text-2xl font-extrabold">What students say on Google</h2>
-        <ul className="mt-5 grid gap-4 md:grid-cols-3">
-          {reviews.map((t) => (
-            <li key={t.name} className="flex flex-col border border-line border-t-4 border-t-brand bg-white p-5">
-              <span className="flex gap-1 text-brand" role="img" aria-label={`${t.rating} out of 5 stars`}>
-                {Array.from({ length: t.rating }, (_, i) => (
-                  <StarIcon key={i} className="h-4 w-4" />
-                ))}
-              </span>
-              <blockquote className="mt-3 flex-1 text-ink-soft">&ldquo;{t.quote}&rdquo;</blockquote>
-              <p className="mt-4 font-display font-extrabold">{t.name}</p>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-5 flex flex-wrap gap-x-6 gap-y-2 font-bold">
-          <a href="/results#testimonials" className="underline decoration-brand decoration-2 underline-offset-4">
-            More student stories
-          </a>
-          <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer" className="underline decoration-brand decoration-2 underline-offset-4">
-            All reviews on Google (rated 4.9)
-          </a>
-        </p>
 
         <h2 className="mt-12 font-display text-2xl font-extrabold">Latest guides</h2>
         <ul className="mt-5 grid gap-4 md:grid-cols-3">

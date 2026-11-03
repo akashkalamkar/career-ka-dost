@@ -1,6 +1,42 @@
 @import 'tailwindcss';
 
 /* Figtree served from this website (public/fonts), not from Google Fonts: one less outside server to wait for. */
+/* Poppins and Open Sans: only for the testimonial cards (same fonts as the Canva testimonial design). */
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/poppins-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/poppins-900.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/open-sans-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/open-sans-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/open-sans-700.woff2') format('woff2');
+}
 @font-face {
   font-family: 'Figtree';
   font-style: normal;
@@ -100,5 +136,26 @@ body {
 @media print {
   @page {
     margin: 12mm;
+  }
+}
+
+/* Testimonial cards move slowly from left to right; they stop while the mouse is on them. */
+@keyframes ckd-marquee {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.ckd-marquee {
+  animation: ckd-marquee var(--marquee-duration, 60s) linear infinite;
+}
+.ckd-marquee:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ckd-marquee {
+    animation: none;
   }
 }
