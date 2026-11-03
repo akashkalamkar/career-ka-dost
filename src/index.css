@@ -159,3 +159,23 @@ body {
     animation: none;
   }
 }
+
+/* The Daily Notice sign swings gently from its pin, like a hanging board. */
+@keyframes ckd-swing {
+  0%,
+  100% {
+    transform: rotate(-7deg);
+  }
+  50% {
+    transform: rotate(7deg);
+  }
+}
+.ckd-swing {
+  transform-origin: 50% 9%;
+  animation: ckd-swing 2.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ckd-swing {
+    animation: none;
+  }
+}

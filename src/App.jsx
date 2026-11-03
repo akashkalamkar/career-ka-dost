@@ -4,7 +4,6 @@ import { Blog } from './components/Blog'
 import { BlogPost } from './components/BlogPost'
 import { CareerTest } from './components/CareerTest'
 import { CtaStrip } from './components/CtaStrip'
-import { DailyNotice } from './components/DailyNotice'
 import { Faq } from './components/Faq'
 import { FloatingActions } from './components/FloatingActions'
 import { Footer } from './components/Footer'
@@ -140,7 +139,6 @@ function App({ initialPath }) {
       </main>
       <Footer />
       <FloatingActions />
-      <DailyNotice path={route.key} />
     </div>
   )
 }

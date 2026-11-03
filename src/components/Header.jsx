@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { Brand } from './Brand'
 import { btnPrimary, container } from '../config/ui'
 import { bookProps, openLeadForm } from '../utils/leadForm'
+import { DailyNotice } from './DailyNotice'
 import { SearchPanel } from './SiteSearch'
 import { LockIcon, SearchIcon } from './icons'
 
@@ -63,6 +64,7 @@ export function Header({ path = '/' }) {
               Book counselling
             </a>
           </span>
+          <DailyNotice path={path} />
           <button
             type="button"
             className="flex h-10 w-10 items-center justify-center xl:hidden"

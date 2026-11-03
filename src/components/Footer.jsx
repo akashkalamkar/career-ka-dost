@@ -70,16 +70,6 @@ export function Footer() {
               </li>
             ))}
           </ul>
-          <p className={`${head} mt-8`}>Services</p>
-          <ul className="mt-5 space-y-3 text-sm">
-            {SERVICES.map((sv) => (
-              <li key={sv.slug}>
-                <a className={link} href={`/${sv.slug}`}>
-                  {sv.menu}
-                </a>
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div className="lg:col-span-3">
@@ -138,6 +128,20 @@ export function Footer() {
               <span className="bg-brand px-3 py-1.5 text-xs font-bold text-ink shadow">Open in Google Maps</span>
             </a>
           </div>
+        </div>
+
+        {/* Services: their own full-width row, split into equal columns (1 on phones, 2 on tablets, 3 on computers). */}
+        <div className="border-t border-line pt-10 md:col-span-2 lg:col-span-12">
+          <p className={head}>Services</p>
+          <ul className="mt-5 gap-x-10 text-sm sm:columns-2 lg:columns-3">
+            {SERVICES.map((sv) => (
+              <li key={sv.slug} className="mb-3 break-inside-avoid">
+                <a className="underline-offset-4 transition hover:text-ink hover:underline" href={`/${sv.slug}`}>
+                  {sv.menu}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
