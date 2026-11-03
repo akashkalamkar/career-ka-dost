@@ -25,12 +25,12 @@ export function Header({ path = '/' }) {
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur-md print:hidden">
-      <div className={`${container} flex items-center justify-between gap-4 py-4`}>
-        <a href="/" aria-label="Career Ka Dost home" onClick={() => setOpen(false)}>
+      <div className="mx-auto flex w-full max-w-[90rem] items-center justify-between gap-4 px-5 py-4 md:px-8">
+        <a href="/" aria-label="Career Ka Dost home" className="shrink-0" onClick={() => setOpen(false)}>
           <Brand />
         </a>
 
-        <nav className="hidden items-center gap-5 xl:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-4 xl:flex 2xl:gap-6" aria-label="Primary">
           {nav.map((item) => (
             <a
               key={item.href}
@@ -38,7 +38,7 @@ export function Header({ path = '/' }) {
               aria-current={item.href === path ? 'page' : undefined}
               aria-label={item.icon ? item.label : undefined}
               title={item.icon ? item.label : undefined}
-              className={`border-b-2 py-1 text-sm font-semibold transition hover:text-ink ${item.href === path ? 'border-brand text-ink' : 'border-transparent text-ink-soft'}`}
+              className={`whitespace-nowrap border-b-2 py-1 text-sm font-semibold transition hover:text-ink ${item.href === path ? 'border-brand text-ink' : 'border-transparent text-ink-soft'}`}
             >
               {item.icon ? <item.icon className="h-5 w-5" /> : item.label}
             </a>
