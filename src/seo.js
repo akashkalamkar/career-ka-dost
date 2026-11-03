@@ -9,17 +9,17 @@ import { SERVICES } from './config/services.js'
  */
 
 export const SITE_URL = 'https://www.careerkadost.com'
-export const SITE_TITLE = 'Career Counselling in Nagpur & Maharashtra | Career Ka Dost'
+export const SITE_TITLE = 'Best Career Counsellor in Nagpur & Online | Career Ka Dost'
 const SITE_DESCRIPTION =
-  'Career Ka Dost, Sitabuldi, Nagpur - career guidance and admission counselling for NEET, JEE, MHT-CET, DMIT and college admissions, for students and parents across India. Book counselling today.'
+  'Trusted career counsellor in Nagpur since 2023: 20,000+ students guided, rated 4.9 on Google. Stream choice, NEET, MHT CET, DMIT - in Sitabuldi or online across India.'
 
 /** The public pages (the staff portal is left out on purpose). */
 export const PAGES = {
   '/': { title: null, description: SITE_DESCRIPTION },
   '/about': {
     title: 'About us',
-    fullTitle: 'About Career Ka Dost – Career Counsellor in Nagpur',
-    description: 'Meet Career Ka Dost and founder Bharat Rai: honest, one-to-one career and admission counselling for students and parents in Nagpur and across Maharashtra.',
+    fullTitle: 'About Bharat Rai – Top Career Counsellor in Nagpur',
+    description: 'Meet Bharat Rai, founder of Career Ka Dost (since 2023): honest one-to-one career and admission counselling in Nagpur and online, in English, Hindi and Marathi.',
   },
   '/pricing': {
     title: 'Services & pricing',
@@ -53,8 +53,8 @@ export const PAGES = {
   },
   '/contact': {
     title: 'Book counselling',
-    fullTitle: 'Book Career Counselling in Nagpur | Career Ka Dost',
-    description: 'Book career or admission counselling with Career Ka Dost: Buty Chambers, Sitabuldi, Nagpur, or online across Maharashtra. Call, WhatsApp or send the form.',
+    fullTitle: 'Book a Career Counsellor – Nagpur & Online | Career Ka Dost',
+    description: 'Book career counselling with Career Ka Dost: Buty Chambers, Sitabuldi, Nagpur (Mon-Sat, 10 am-6 pm) or online across India. Call, WhatsApp or send the form.',
   },
   '/stream-quiz': {
     title: 'Stream quiz',

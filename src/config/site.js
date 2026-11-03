@@ -23,7 +23,7 @@ export const SITE = {
   addressLine:
     '2nd Floor, Buty Chambers, opposite Fortune Mall, Sitabuldi, Nagpur, Maharashtra 440012',
   /** Google Maps (short link) */
-  mapsUrl: 'https://maps.app.goo.gl/2FcYjpmDKMUZMP239',
+  mapsUrl: 'https://maps.app.goo.gl/FohdQ5gyy5rdRBw48',
   /** Interactive embed (no API key). Update the `q=` text if the office moves. */
   mapEmbedUrl:
     'https://www.google.com/maps?q=Buty+Chambers%2C+opposite+Fortune+Mall%2C+Sitabuldi%2C+Nagpur%2C+Maharashtra+440012&z=16&output=embed',

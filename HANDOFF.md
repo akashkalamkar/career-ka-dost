@@ -274,3 +274,9 @@ This is NOT what the original packaging recipe (section 11) assumed - it predate
 - `index.html` now has a `google-site-verification` meta tag (added 24 Oct 2026, for Search Console) - do not remove it, that would un-verify the site in Search Console.
 - The owner was told Vercel's free "Hobby" plan is technically for non-commercial use and Vercel's own terms would prefer the paid "Pro" plan (~$20/month, verify the current price on Vercel's own page) for a real business site; he has not decided whether to upgrade yet.
 
+
+## Google search update (2 Nov 2026)
+- Target searches: best career counsellor in Nagpur, career counsellor near me, top career counsellor, best online career counsellor, career counselling in Nagpur, career counselling after 12th.
+- Home title "Best Career Counsellor in Nagpur & Online | Career Ka Dost"; About, Contact, Online counselling page and the "best career counsellor in Nagpur" article retargeted.
+- Business structured data (index.html) now matches the Google Business Profile: hours Mon-Sat 10:00-18:00, founded 2023-03, both phones, languages English/Hindi/Marathi (sessions only - the website stays English-only), areas Nagpur, Bhandara, Chandrapur, Maharashtra, India, Facebook + GBP link in sameAs. SITE.mapsUrl = GBP link https://maps.app.goo.gl/FohdQ5gyy5rdRBw48.
+- No star rating in structured data on purpose (Google ignores self-written ratings for a business's own site).

@@ -157,11 +157,11 @@ export const SERVICES = [
   {
     slug: 'online-career-counselling-maharashtra',
     menu: 'Online career counselling',
-    title: 'Online Career Counselling in Maharashtra | Career Ka Dost',
-    description: 'Online career counselling for students and parents anywhere in Maharashtra: stream choice, career planning and admission guidance by video call.',
+    title: 'Best Online Career Counsellor – All India | Career Ka Dost',
+    description: 'Online career counselling for students and parents anywhere in India: stream choice, career planning and admission guidance by video call, in English, Hindi or Marathi.',
     eyebrow: 'Online sessions',
-    h1: 'Online career counselling across Maharashtra',
-    intro: 'The same one-to-one career counselling we offer in our Nagpur office, by video call, for students and parents anywhere in Maharashtra - from Vidarbha and Marathwada to Pune, Mumbai and the Konkan.',
+    h1: 'Online career counselling across India',
+    intro: 'The same one-to-one career counselling we offer in our Nagpur office, by video call, for students and parents anywhere in India - from Vidarbha, Marathwada, Pune and Mumbai to every other state. Sessions are in English, Hindi or Marathi.',
     plan: 'Future Blueprint Session',
     help: [
       'One-to-one video sessions with the student and parents together, from home.',
@@ -178,7 +178,8 @@ export const SERVICES = [
     ],
     faqs: [
       ['Is online career counselling as good as meeting in person?', 'Yes, when it includes a proper discussion, assessment where needed, and clear next steps. Many families prefer it because it saves travel time.'],
-      ['Which cities do you cover online?', 'Students anywhere in Maharashtra can book online sessions.'],
+      ['Which cities do you cover online?', 'Students anywhere in India can book online sessions. Most of our students come from Nagpur, Bhandara and Chandrapur, and many families join from other districts and states.'],
+      ['Which languages are the sessions in?', 'English, Hindi or Marathi - whichever the student and parents are most comfortable with.'],
       ['What do I need for an online session?', 'A phone or computer with a stable internet connection, and a quiet place where the student and parents can sit together.'],
       ['Can I also visit your office?', 'Yes. Our office is at Buty Chambers, Sitabuldi, Nagpur.'],
     ],
