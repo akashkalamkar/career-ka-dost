@@ -1,5 +1,7 @@
 import { POSTS } from './config/blog.js'
+import { FAQS } from './config/faq.js'
 import { SERVICES } from './config/services.js'
+import { FOUNDER } from './config/site.js'
 
 /**
  * What Google sees for each page: title, description, main address and structured data. Used in two
@@ -121,8 +123,40 @@ export function pageMeta(path) {
     description: page.description,
     url: `${SITE_URL}${key}`,
     type: 'website',
-    jsonLd: key === '/' ? [] : [crumb([['Home', '/'], [page.title, key]])],
+    jsonLd: key === '/' ? [] : [crumb([['Home', '/'], [page.title, key]]), ...extraJsonLd(key)],
   }
+}
+
+/** Question-and-answer data for Google and AI answers. */
+const faqPage = (pairs) => ({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: pairs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+})
+
+/** Extra structured data for some pages: the founder on About, questions and answers on FAQ and service pages. */
+function extraJsonLd(key) {
+  if (key === '/about') {
+    return [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        '@id': `${SITE_URL}/about#founder`,
+        name: FOUNDER.name,
+        jobTitle: FOUNDER.role,
+        description: FOUNDER.summary,
+        image: `${SITE_URL}${FOUNDER.photo}`,
+        url: `${SITE_URL}/about`,
+        worksFor: { '@id': BUSINESS_ID, '@type': 'Organization', name: 'Career Ka Dost' },
+        alumniOf: { '@type': 'EducationalOrganization', name: 'Symbiosis, Pune' },
+        knowsAbout: ['Career counselling', 'Admission counselling', 'NEET counselling', 'MHT CET counselling', 'JEE and JoSAA counselling', 'DMIT', 'Psychometric assessment'],
+        knowsLanguage: ['en', 'hi', 'mr'],
+      },
+    ]
+  }
+  if (key === '/faq') return [faqPage(FAQS.map((f) => [f.q, f.a]))]
+  const service = SERVICES.find((sv) => key === `/${sv.slug}`)
+  return service ? [faqPage(service.faqs)] : []
 }
 
 /** Every address that gets its own ready-made page and a place in the sitemap. */

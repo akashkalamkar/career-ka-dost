@@ -18,6 +18,9 @@ export function Hero() {
             {SITE.tagline}
           </p>
           <h1 className="text-balance font-display text-[2.5rem] font-extrabold leading-[1.04] tracking-tight sm:text-6xl lg:text-[4.25rem]">
+            <span className="mb-4 block text-lg font-bold leading-snug tracking-normal text-brass sm:text-xl">
+              Career counsellor in Nagpur &amp; online across India
+            </span>
             Your career is too important to{' '}
             <span className="bg-[linear-gradient(transparent_62%,var(--color-brand)_62%)] px-1">leave to chance.</span>
           </h1>

@@ -1,3 +1,4 @@
+import { SITE } from '../config/site'
 import { TESTIMONIALS } from '../config/testimonials'
 import { container } from '../config/ui'
 import { QuoteArt } from './Art3D'
@@ -107,6 +108,11 @@ export function Testimonials() {
             ))}
           </div>
         ) : null}
+        <p className="mt-10 text-center">
+          <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer" className="font-bold underline decoration-brand decoration-2 underline-offset-4">
+            Read all our reviews on Google (rated 4.9)
+          </a>
+        </p>
       </div>
     </section>
   )

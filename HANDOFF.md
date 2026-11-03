@@ -280,3 +280,10 @@ This is NOT what the original packaging recipe (section 11) assumed - it predate
 - Home title "Best Career Counsellor in Nagpur & Online | Career Ka Dost"; About, Contact, Online counselling page and the "best career counsellor in Nagpur" article retargeted.
 - Business structured data (index.html) now matches the Google Business Profile: hours Mon-Sat 10:00-18:00, founded 2023-03, both phones, languages English/Hindi/Marathi (sessions only - the website stays English-only), areas Nagpur, Bhandara, Chandrapur, Maharashtra, India, Facebook + GBP link in sameAs. SITE.mapsUrl = GBP link https://maps.app.goo.gl/FohdQ5gyy5rdRBw48.
 - No star rating in structured data on purpose (Google ignores self-written ratings for a business's own site).
+
+## SEO update 2 (3 Nov 2026)
+- 4 new service pages (services.js): /career-counselling-after-12th-nagpur, /ayush-counselling-bams-bhms-bums, /physiotherapy-bpth-admission-guidance, /career-counselling-vidarbha (one page for students from Bhandara, Chandrapur, Wardha, Gondia, Amravati, Pune - one page on purpose, not one per city, to avoid Google's "doorway pages" rule). AYUSH/BPTh routes checked against State CET Cell (Group B: BAMS/BHMS/BUMS; Group C: BPTh/BOTh/BASLP/B.P&O) and AACCC (15% AIQ AYUSH) - pages tell readers to check the current year's official notice.
+- Home h1 now starts with "Career counsellor in Nagpur & online across India".
+- 6 Google reviews added word for word to testimonials.js (college: 'Google review'); 3 shown on the home page, all on /results, with a link to the Google profile. No Review structured data on purpose (self-serving reviews are not allowed by Google).
+- Structured data: founder Person on /about; FAQPage on /faq and every service page (seo.js extraJsonLd).
+- 33 pages in the sitemap.
