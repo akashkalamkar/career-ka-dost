@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 
-const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+let motionQuery
+const reduceMotion = () => (motionQuery ??= window.matchMedia('(prefers-reduced-motion: reduce)')).matches
 
 /**
  * A card that tilts in 3D toward the mouse pointer, with a soft light that follows the cursor.

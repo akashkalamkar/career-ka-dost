@@ -12,7 +12,7 @@ import { ShareWhatsApp } from './ShareButtons'
  * Text with links: "[Book counselling](/contact)" in a post's text becomes a link to that page, so posts
  * can point readers (and Google) to related pages on the site.
  */
-function RichText({ text }) {
+export function RichText({ text }) {
   const parts = text.split(/(\[[^\]]+\]\([^)\s]+\))/g)
   return parts.map((part, i) => {
     const m = /^\[([^\]]+)\]\(([^)\s]+)\)$/.exec(part)

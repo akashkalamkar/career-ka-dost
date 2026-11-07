@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { Suspense, lazy, startTransition, useEffect, useState } from 'react'
 import { About } from './components/About'
 import { Blog } from './components/Blog'
 import { BlogPost } from './components/BlogPost'
@@ -19,6 +19,7 @@ import { Results } from './components/Results'
 import { ServicePage } from './components/ServicePage'
 import { StreamQuiz } from './components/StreamQuiz'
 import { DocumentChecklist } from './components/DocumentChecklist'
+import { MoreInfo } from './components/MoreInfo'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
 import { SERVICES } from './config/services'
 import { applyPendingJump } from './utils/jump'
@@ -48,12 +49,34 @@ const ROUTES = {
   '/pricing': () => withCta(<Pricing />),
   '/career-test': () => withCta(<CareerTest />),
   '/results': () => withCta(<Results />),
-  '/resources': () => withCta(<Resources />),
-  '/blog': () => <Blog />,
+  '/resources': () =>
+    withCta(
+      <>
+        <Resources />
+        <MoreInfo page="/resources" />
+      </>,
+    ),
+  '/blog': () => (
+    <>
+      <Blog />
+      <MoreInfo page="/blog" />
+    </>
+  ),
   '/faq': () => withCta(<Faq />),
-  '/stream-quiz': () => withCta(<StreamQuiz />),
+  '/stream-quiz': () =>
+    withCta(
+      <>
+        <StreamQuiz />
+        <MoreInfo page="/stream-quiz" />
+      </>,
+    ),
   '/neet-counselling-documents-maharashtra': () => <DocumentChecklist />,
-  '/contact': () => <LeadForm />,
+  '/contact': () => (
+    <>
+      <LeadForm />
+      <MoreInfo page="/contact" />
+    </>
+  ),
   '/refund-policy': () => <LegalPage doc={REFUND_POLICY} current="/refund-policy" />,
   '/terms': () => <LegalPage doc={TERMS} current="/terms" />,
   '/privacy': () => <LegalPage doc={PRIVACY} current="/privacy" />,
@@ -91,7 +114,9 @@ function App({ initialPath }) {
   useEffect(() => {
     let lastPath = currentPath()
     function onChange() {
-      setRoute(resolve())
+      // A transition: the click is answered at once and the new page is drawn just after, which keeps
+      // the site quick to respond (Google's "interactivity" score).
+      startTransition(() => setRoute(resolve()))
       lastPath = currentPath()
       window.scrollTo(0, 0)
     }
