@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { btnInk, btnPrimary, container } from '../config/ui'
 import { trackEvent } from '../utils/analytics'
 import { bookProps } from '../utils/leadForm'
+import { ShareWhatsApp } from './ShareButtons'
 
 /**
  * "Which stream suits me?" - a 10-question self-check for Class 9 and 10 students. Each answer adds a
@@ -143,6 +144,15 @@ export function StreamQuiz() {
               <button type="button" onClick={() => setAnswers([])} className={btnInk}>
                 Take the quiz again
               </button>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-line pt-5">
+              <p className="font-semibold">Ask your friends to try it:</p>
+              <ShareWhatsApp
+                what="quiz_result"
+                label="Share my result on WhatsApp"
+                text={`I took the free "Which stream after 10th?" quiz by Career Ka Dost - I lean towards ${STREAMS[ranked[0]].name}! Which stream suits you? Try it (3 minutes):`}
+                url="https://www.careerkadost.com/stream-quiz"
+              />
             </div>
             <p className="mt-6 text-sm font-semibold">
               Read next:{' '}

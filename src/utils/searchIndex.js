@@ -25,6 +25,7 @@ const PAGES = [
   { title: 'Results and testimonials', href: '/results', keywords: 'results testimonials reviews achievers success stories rating toppers' },
   { title: 'Free Resources', href: '/resources', keywords: 'free resources sample papers downloads pdf practice question papers study material' },
   { title: 'Blog', href: '/blog', keywords: 'blog articles guides news reading' },
+  { title: 'NEET counselling documents checklist', href: '/neet-counselling-documents-maharashtra', keywords: 'documents checklist required documents neet counselling maharashtra state quota cet cell domicile caste validity non creamy layer annexure mbbs bds bams bhms bpth' },
   { title: 'FAQ', href: '/faq', keywords: 'faq questions answers help doubts' },
   { title: 'Contact and location', href: '/contact', keywords: 'contact address location map office phone whatsapp email call visit nagpur sitabuldi find us' },
   { title: 'Refund Policy', href: '/refund-policy', keywords: `refund cancellation cancel money back ${REFUND_POLICY.intro ?? ''}` },

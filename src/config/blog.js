@@ -62,6 +62,7 @@ export const POSTS = [
     readTime: "8 min read",
     excerpt: "How Maharashtra NEET state quota counselling works for MBBS, BDS and AYUSH courses: eligibility, registration, merit list, choice filling, rounds and documents.",
     body: [
+      { type: 'p', text: "Getting your papers ready? Use our free [NEET counselling documents checklist for Maharashtra](/neet-counselling-documents-maharashtra) - tick each document, then print or share it." },
       { type: 'p', text: "After the NEET UG result, every medical aspirant in Maharashtra has two counselling processes to think about: the All India Quota run by the Medical Counselling Committee (MCC), and the Maharashtra state quota run by the State CET Cell. For most Maharashtra students, the state quota is where the majority of realistic seats are. This guide explains Maharashtra NEET counselling in simple steps for students and parents in Nagpur and across the state." },
       { type: 'h', text: "Who conducts Maharashtra NEET counselling?" },
       { type: 'p', text: "The State Common Entrance Test Cell, Maharashtra, conducts the Centralised Admission Process (CAP) for the state quota seats, working with the Directorate of Medical Education and Research (DMER) and, for AYUSH courses, the Directorate of AYUSH. All official notices, the information brochure, merit lists and allotment results are published on the State CET Cell website, cetcell.mahacet.org." },
@@ -224,6 +225,7 @@ export const POSTS = [
     readTime: "7 min read",
     excerpt: "The difference between NEET All India Quota (MCC) and State Quota counselling, which seats each covers, who can apply, and how to take part in both wisely.",
     body: [
+      { type: 'p', text: "Getting your papers ready? Use our free [NEET counselling documents checklist for Maharashtra](/neet-counselling-documents-maharashtra) - tick each document, then print or share it." },
       { type: 'p', text: "After the NEET UG result, the first question most families ask is: should we go for All India Quota or State Quota? The honest answer is usually both. They are two separate counselling processes, run by different authorities, for different seats. This guide explains the difference simply, so you can plan your choices with confidence." },
       { type: 'h', text: "The two counselling systems at a glance" },
       { type: 'ul', items: ["All India Quota (AIQ) counselling is conducted by the Medical Counselling Committee (MCC) on mcc.nic.in.", "State Quota counselling is conducted by each state's own authority. In Maharashtra it is the State CET Cell (cetcell.mahacet.org).", "You register separately for each, follow separate schedules and get separate allotments."] },

@@ -123,6 +123,15 @@ export function ServicePage({ slug }) {
           <aside className="lg:col-span-4">
             <div className="space-y-8 lg:sticky lg:top-28">
               <Fee plan={plan} />
+              {s.checklist ? (
+                <a href={s.checklist} className="block border-2 border-brand-deep bg-white p-5 transition hover:bg-brand/20">
+                  <span className="text-xs font-bold uppercase tracking-[0.18em] text-brass">Free checklist</span>
+                  <span className="mt-1 block font-display text-lg font-extrabold leading-snug">NEET counselling documents list (Maharashtra)</span>
+                  <span className="mt-2 inline-flex items-center gap-2 text-sm font-bold">
+                    Tick, print or share <ArrowIcon className="h-4 w-4" />
+                  </span>
+                </a>
+              ) : null}
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.2em]">Other services</p>
                 <ul className="mt-3 divide-y divide-line border-y border-line">

@@ -38,6 +38,7 @@ export const SERVICES = [
   },
   {
     slug: 'neet-counselling-maharashtra',
+    checklist: '/neet-counselling-documents-maharashtra',
     menu: 'NEET counselling',
     title: 'NEET Counselling in Maharashtra – MBBS, BAMS, BDS',
     description: 'NEET counselling for Maharashtra state quota and All India Quota: MBBS, BDS, BAMS, BHMS admission guidance, choice filling and documents. Nagpur and online.',
@@ -247,6 +248,7 @@ export const SERVICES = [
   },
   {
     slug: 'ayush-counselling-bams-bhms-bums',
+    checklist: '/neet-counselling-documents-maharashtra',
     menu: 'AYUSH counselling (BAMS, BHMS, BUMS)',
     title: 'BAMS, BHMS, BUMS Admission – AYUSH Counselling Guide',
     description: 'BAMS, BHMS and BUMS admission guidance through NEET UG: Maharashtra state counselling and AACCC All India Quota counselling, choice filling and documents.',
@@ -277,6 +279,7 @@ export const SERVICES = [
   },
   {
     slug: 'physiotherapy-bpth-admission-guidance',
+    checklist: '/neet-counselling-documents-maharashtra',
     menu: 'Physiotherapy & allied health',
     title: 'Physiotherapy (BPTh) Admission Guidance in Maharashtra',
     description: 'Admission guidance for physiotherapy (BPTh), occupational therapy (BOTh), BASLP and other allied health courses in Maharashtra, through NEET UG counselling.',

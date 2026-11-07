@@ -63,6 +63,11 @@ export const PAGES = {
     fullTitle: 'Which Stream After 10th? Free Quiz | Career Ka Dost',
     description: 'Free 3-minute quiz for Class 9 and 10 students: 12 everyday questions to find whether Science (PCM or PCB), Commerce or Arts suits you best.',
   },
+  '/neet-counselling-documents-maharashtra': {
+    title: 'NEET documents checklist',
+    fullTitle: 'NEET Counselling Documents List 2026 – Maharashtra',
+    description: 'Free checklist of documents for NEET UG 2026 Maharashtra state quota counselling (MBBS, BDS, BAMS, BHMS, BPTh), as listed by the State CET Cell. Tick, print or share.',
+  },
   '/refund-policy': { title: 'Refund policy', description: 'Refund and cancellation policy for Career Ka Dost counselling sessions and services.' },
   '/terms': { title: 'Terms and conditions', description: 'Terms and conditions for using the Career Ka Dost website and counselling services.' },
   '/privacy': { title: 'Privacy policy', description: 'How Career Ka Dost collects, uses and protects the information you share on this website.' },

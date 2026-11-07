@@ -21,6 +21,7 @@ const EXPLORE = [
   { label: 'Free Resources', href: '/resources' },
   { label: 'Blog', href: '/blog' },
   { label: 'Stream quiz', href: '/stream-quiz' },
+  { label: 'NEET documents checklist', href: '/neet-counselling-documents-maharashtra' },
   { label: 'FAQ', href: '/faq' },
   { label: 'Contact', href: '/contact' },
 ]

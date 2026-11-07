@@ -18,6 +18,7 @@ import { Resources } from './components/Resources'
 import { Results } from './components/Results'
 import { ServicePage } from './components/ServicePage'
 import { StreamQuiz } from './components/StreamQuiz'
+import { DocumentChecklist } from './components/DocumentChecklist'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
 import { SERVICES } from './config/services'
 import { applyPendingJump } from './utils/jump'
@@ -51,6 +52,7 @@ const ROUTES = {
   '/blog': () => <Blog />,
   '/faq': () => withCta(<Faq />),
   '/stream-quiz': () => withCta(<StreamQuiz />),
+  '/neet-counselling-documents-maharashtra': () => <DocumentChecklist />,
   '/contact': () => <LeadForm />,
   '/refund-policy': () => <LegalPage doc={REFUND_POLICY} current="/refund-policy" />,
   '/terms': () => <LegalPage doc={TERMS} current="/terms" />,
@@ -87,14 +89,22 @@ function App({ initialPath }) {
   const [route, setRoute] = useState(() => resolve(initialPath))
 
   useEffect(() => {
+    let lastPath = currentPath()
     function onChange() {
       setRoute(resolve())
+      lastPath = currentPath()
       window.scrollTo(0, 0)
     }
+    // A link to a heading on the same page ("#what-is-neet", e.g. "In this article") only scrolls to it.
+    const sameShowingPage = () => window.location.hash && !window.location.hash.startsWith('#/') && currentPath() === lastPath
+    function onBackForward() {
+      if (!sameShowingPage()) onChange()
+    }
     window.addEventListener(ROUTE_EVENT, onChange)
-    window.addEventListener('popstate', onChange)
+    window.addEventListener('popstate', onBackForward)
     // An old-style "#/page" link opened while the site is already on screen.
     function onOldLink() {
+      if (sameShowingPage()) return
       upgradeOldAddress()
       onChange()
     }
@@ -102,7 +112,7 @@ function App({ initialPath }) {
     document.addEventListener('click', handleLinkClick)
     return () => {
       window.removeEventListener(ROUTE_EVENT, onChange)
-      window.removeEventListener('popstate', onChange)
+      window.removeEventListener('popstate', onBackForward)
       window.removeEventListener('hashchange', onOldLink)
       document.removeEventListener('click', handleLinkClick)
     }

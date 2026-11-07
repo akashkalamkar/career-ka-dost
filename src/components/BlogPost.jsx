@@ -1,10 +1,12 @@
+import { useEffect, useRef, useState } from 'react'
 import { POSTS } from '../config/blog'
-import { SITE } from '../config/site'
+import { FOUNDER, SITE } from '../config/site'
 import { btnPrimary, container } from '../config/ui'
 import { openWhatsApp } from '../utils/whatsapp'
 import { formatDate } from '../utils/date'
 import { bookProps } from '../utils/leadForm'
 import { ArrowIcon } from './icons'
+import { ShareWhatsApp } from './ShareButtons'
 
 /**
  * Text with links: "[Book counselling](/contact)" in a post's text becomes a link to that page, so posts
@@ -24,6 +26,76 @@ function RichText({ text }) {
   })
 }
 
+/** Heading text -> an id for "In this article" links, e.g. "What is NEET?" -> "what-is-neet". */
+const idOf = (text) =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+/** A thin yellow bar at the very top of the screen that fills up as the reader goes through the article. */
+function ReadingProgress({ target }) {
+  const [pct, setPct] = useState(0)
+  useEffect(() => {
+    function update() {
+      const el = target.current
+      if (!el) return
+      const r = el.getBoundingClientRect()
+      const total = r.height - window.innerHeight
+      setPct(total > 0 ? Math.min(100, Math.max(0, (-r.top / total) * 100)) : 100)
+    }
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [target])
+  return (
+    <div className="fixed inset-x-0 top-0 z-50 h-1 bg-transparent print:hidden" aria-hidden>
+      <div className="h-1 bg-brand-deep transition-[width] duration-150" style={{ width: `${pct}%` }} />
+    </div>
+  )
+}
+
+/** "In this article": links to each main heading. */
+function Contents({ headings }) {
+  if (headings.length < 3) return null
+  return (
+    <nav aria-label="In this article" className="mt-8 border border-line border-l-4 border-l-brand bg-white p-5">
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-brass">In this article</p>
+      <ol className="mt-3 space-y-2 text-base font-semibold">
+        {headings.map((h, i) => (
+          <li key={h} className="flex gap-3">
+            <span className="w-5 shrink-0 text-mute">{i + 1}.</span>
+            <a href={`#${idOf(h)}`} className="underline-offset-4 hover:text-brass hover:underline">
+              {h}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+/** Who wrote it: Bharat Rai, with a link to the About page. */
+function AuthorBox() {
+  return (
+    <div className="mt-14 flex flex-col gap-5 border border-line bg-paper-2 p-6 sm:flex-row sm:items-center">
+      <img src={FOUNDER.photo} alt={FOUNDER.name} width={96} height={96} loading="lazy" className="h-24 w-24 shrink-0 rounded-full border-4 border-brand bg-white object-cover object-top" />
+      <div>
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-brass">Written by</p>
+        <p className="mt-1 font-display text-xl font-extrabold">{FOUNDER.name}</p>
+        <p className="mt-1 text-sm text-ink-soft">{FOUNDER.summary}</p>
+        <a href="/about" className="mt-2 inline-block text-sm font-bold underline decoration-brand decoration-2 underline-offset-4">
+          About {FOUNDER.name.split(' ')[0]} Sir and Career Ka Dost
+        </a>
+      </div>
+    </div>
+  )
+}
+
 /** Up to `count` other posts, the same category first, newest first within each group. */
 function relatedTo(post, count) {
   const rest = POSTS.filter((p) => p.slug !== post.slug).sort((a, b) => b.date.localeCompare(a.date))
@@ -32,7 +104,8 @@ function relatedTo(post, count) {
 
 export function BlogPost({ slug }) {
   const post = POSTS.find((p) => p.slug === slug)
-  const related = post ? relatedTo(post, 3) : []
+  const related = post ? relatedTo(post, 4) : []
+  const articleRef = useRef(null)
 
   if (!post) {
     return (
@@ -47,8 +120,13 @@ export function BlogPost({ slug }) {
     )
   }
 
+  const [next, ...more] = related
+  const url = `https://www.careerkadost.com/blog/${post.slug}`
+  const headings = post.body.filter((b) => b.type === 'h').map((b) => b.text)
+
   return (
-    <article className="py-16 md:py-24">
+    <article ref={articleRef} className="py-16 md:py-24">
+      <ReadingProgress target={articleRef} />
       <div className={`${container} grid gap-12 lg:grid-cols-12`}>
         <div className="lg:col-span-8">
           <a href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-ink-soft hover:text-ink">
@@ -60,12 +138,16 @@ export function BlogPost({ slug }) {
           <p className="mt-5 text-mute">
             {formatDate(post.date)} &middot; {post.readTime}
           </p>
-          <div className="mt-6 h-1 w-16 bg-brand" aria-hidden />
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <span className="h-1 w-16 bg-brand" aria-hidden />
+            <ShareWhatsApp what="article" text={post.title} url={url} />
+          </div>
+          <Contents headings={headings} />
 
           <div className="mt-10 space-y-5 text-lg leading-[1.85] text-ink-soft">
             {post.body.map((b, i) =>
               b.type === 'h' ? (
-                <h2 key={i} className="!mt-10 font-display text-2xl font-extrabold text-ink md:text-3xl">
+                <h2 key={i} id={idOf(b.text)} className="!mt-10 scroll-mt-28 font-display text-2xl font-extrabold text-ink md:text-3xl">
                   {b.text}
                 </h2>
               ) : b.type === 'h3' ? (
@@ -91,11 +173,29 @@ export function BlogPost({ slug }) {
             )}
           </div>
 
-          {related.length ? (
+          <div className="mt-10 flex flex-wrap items-center gap-3 border-y border-line py-5">
+            <p className="font-semibold">Found this useful? Send it to a friend or parent:</p>
+            <ShareWhatsApp what="article" text={post.title} url={url} />
+          </div>
+
+          <AuthorBox />
+
+          {next ? (
+            <a href={`/blog/${next.slug}`} className="group mt-10 block border-2 border-brand-deep bg-white p-6 transition hover:bg-brand/20">
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-brass">Read next</span>
+              <span className="mt-2 flex items-start justify-between gap-4">
+                <span className="font-display text-2xl font-extrabold leading-snug">{next.title}</span>
+                <ArrowIcon className="mt-2 h-6 w-6 shrink-0 transition group-hover:translate-x-1" />
+              </span>
+              <span className="mt-2 block text-ink-soft">{next.excerpt}</span>
+            </a>
+          ) : null}
+
+          {more.length ? (
             <nav aria-label="Related articles" className="mt-14 border-t-4 border-brand pt-8">
-              <p className="font-display text-2xl font-extrabold">Related reading</p>
+              <p className="font-display text-2xl font-extrabold">More to read</p>
               <ul className="mt-5 grid gap-4 sm:grid-cols-3">
-                {related.map((o) => (
+                {more.map((o) => (
                   <li key={o.slug}>
                     <a href={`/blog/${o.slug}`} className="flex h-full flex-col border border-line bg-white p-5 transition hover:-translate-y-0.5 hover:border-brand-deep hover:shadow-lg">
                       <span className="text-xs font-bold uppercase tracking-[0.16em] text-brass">{o.category}</span>
