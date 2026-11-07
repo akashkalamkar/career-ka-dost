@@ -25,7 +25,7 @@ export const PAGE_INFO = {
       'You leave with a clear plan and next steps, with follow-up on WhatsApp during admission season.',
     ] },
     { type: 'h', text: 'Coming from outside Nagpur?' },
-    { type: 'p', text: 'Our office in Sitabuldi is in the centre of Nagpur, easy to reach by road or rail. Many families travel from [Bhandara, Chandrapur, Wardha, Gondia and Amravati](/career-counselling-vidarbha); if travel is difficult, [online career counselling](/online-career-counselling-maharashtra) works just as well.' },
+    { type: 'p', text: 'Our office in Sitabuldi is in the centre of Nagpur, easy to reach by road or rail. Many families travel from [Bhandara, Chandrapur, Wardha, Gondia, Amravati, Yavatmal and Gadchiroli](/career-counselling-vidarbha); if travel is difficult, [online career counselling](/online-career-counselling-maharashtra) works just as well.' },
     { type: 'h', text: 'What to keep ready' },
     { type: 'ul', items: [
       'Class 10 and Class 12 marksheets (or the latest school results).',

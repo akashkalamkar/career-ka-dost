@@ -312,10 +312,10 @@ export const SERVICES = [
     slug: 'career-counselling-vidarbha',
     menu: 'Students from Vidarbha & beyond',
     title: 'Career Counsellor for Bhandara, Chandrapur, Wardha & Gondia',
-    description: 'Career counselling for students from Bhandara, Chandrapur, Wardha, Gondia, Amravati, Pune and across Maharashtra - at our Nagpur office or online.',
+    description: 'Career counselling for students from Bhandara, Chandrapur, Wardha, Gondia, Amravati, Yavatmal, Gadchiroli and across Maharashtra - at our Nagpur office or online.',
     eyebrow: 'Vidarbha and beyond',
     h1: 'Career counselling for Bhandara, Chandrapur, Wardha and Gondia students',
-    intro: 'Our office is in Sitabuldi, Nagpur, but many of the families we guide live outside the city. Students from Bhandara, Chandrapur, Wardha, Gondia, Amravati, Pune and other places can visit us in Nagpur or take the full session online - in English, Hindi or Marathi.',
+    intro: 'Our office is in Sitabuldi, Nagpur, but many of the families we guide live outside the city. Students from Bhandara, Chandrapur, Wardha, Gondia, Amravati, Yavatmal, Gadchiroli, Umred, Ramtek, Pune and other places can visit us in Nagpur or take the full session online - in English, Hindi or Marathi.',
     plan: 'Future Blueprint Session',
     help: [
       'The same one-to-one counselling online as in our office: stream choice, course choice and admission guidance.',
@@ -331,7 +331,7 @@ export const SERVICES = [
       ['Clear next steps', 'A written plan and support through admission.'],
     ],
     faqs: [
-      ['We live in Chandrapur (or Bhandara, Wardha, Gondia, Amravati). Do we need to come to Nagpur?', 'No. You can take the complete session online. If you prefer to meet in person, you are welcome at our office in Buty Chambers, Sitabuldi, Nagpur.'],
+      ['We live in Chandrapur (or Bhandara, Wardha, Gondia, Amravati, Yavatmal, Gadchiroli). Do we need to come to Nagpur?', 'No. You can take the complete session online. If you prefer to meet in person, you are welcome at our office in Buty Chambers, Sitabuldi, Nagpur.'],
       ['What are your office hours?', 'Monday to Saturday, 10 am to 6 pm. We are closed on Sunday.'],
       ['Do you guide students from outside Maharashtra?', 'Yes. Online sessions are available for students anywhere in India.'],
       ['Which language are the sessions in?', 'English, Hindi or Marathi - whichever the family is most comfortable with.'],
