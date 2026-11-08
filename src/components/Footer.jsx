@@ -123,7 +123,7 @@ export function Footer() {
               href={SITE.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Open Career Ka Dost in Google Maps"
+              aria-label="Open in Google Maps: Career Ka Dost"
               className="absolute inset-0 flex items-end justify-end bg-brand/0 p-3 transition group-hover:bg-brand/20"
             >
               <span className="bg-brand px-3 py-1.5 text-xs font-bold text-ink shadow">Open in Google Maps</span>

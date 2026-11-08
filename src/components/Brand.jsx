@@ -9,7 +9,7 @@ export function Brand({ tone = 'light', size = 'md', showTagline = true }) {
         src={SITE.logoSmallUrl}
         width={160}
         height={178}
-        alt=""
+        alt="Career Ka Dost logo"
         decoding="async"
         className={`${big ? 'h-16' : 'h-12'} w-auto shrink-0 object-contain`}
       />

@@ -24,9 +24,9 @@ export function Header({ path = '/' }) {
   const closeSearch = useCallback(() => setSearching(false), [])
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur-md print:hidden">
+    <header className="sticky top-0 z-40 overflow-x-clip border-b border-line bg-paper/90 backdrop-blur-md print:hidden">
       <div className="mx-auto flex w-full max-w-[90rem] items-center justify-between gap-4 px-5 py-4 md:px-8">
-        <a href="/" aria-label="Career Ka Dost home" className="shrink-0" onClick={() => setOpen(false)}>
+        <a href="/" className="shrink-0" onClick={() => setOpen(false)}>
           <Brand />
         </a>
 

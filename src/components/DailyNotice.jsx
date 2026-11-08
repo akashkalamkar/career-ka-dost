@@ -101,12 +101,12 @@ export function DailyNotice({ path }) {
       <button
         type="button"
         onClick={show}
-        aria-label="Daily Notice: latest NEET UG notices PDF"
-        title="Daily Notice"
+        title="Daily Notice: latest NEET UG notices (PDF)"
         className="absolute right-1 top-full -mt-3 h-16 w-16 shrink-0 print:hidden sm:static sm:-my-4 sm:h-[4.5rem] sm:w-[4.5rem]"
       >
         {/* On phones the sign hangs from the bottom edge of the header, so nothing in the header gets smaller. */}
         <NoticeSign className="ckd-swing h-full w-full drop-shadow-[0_4px_6px_rgba(19,35,63,0.25)]" />
+        <span className="sr-only">Daily Notice: latest NEET UG notices (PDF)</span>
       </button>
 
       {open

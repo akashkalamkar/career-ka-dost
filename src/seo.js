@@ -13,7 +13,7 @@ import { FOUNDER } from './config/site.js'
 export const SITE_URL = 'https://www.careerkadost.com'
 export const SITE_TITLE = 'Best Career Counsellor in Nagpur & Online | Career Ka Dost'
 const SITE_DESCRIPTION =
-  'Trusted career counsellor in Nagpur since 2023: 20,000+ students guided, rated 4.9 on Google. Stream choice, NEET, MHT CET, DMIT - in Sitabuldi or online across India.'
+  'Career counsellor in Nagpur since 2023: 20,000+ students guided, 4.9 on Google. Stream choice, NEET, MHT CET, JoSAA, DMIT - in Sitabuldi or online.'
 
 /** The public pages (the staff portal is left out on purpose). */
 export const PAGES = {
@@ -26,7 +26,7 @@ export const PAGES = {
   '/pricing': {
     title: 'Services & pricing',
     fullTitle: 'Career Counselling Services & Fees | Career Ka Dost',
-    description: 'Career counselling services and fees: Future Blueprint session, DMIT report counselling, engineering and medical counselling, admission guidance and school sessions.',
+    description: 'Career counselling services and fees: Future Blueprint session, DMIT, engineering (JoSAA, MHT CET) and medical counselling, admission guidance, school sessions.',
   },
   '/career-test': {
     title: 'Career test',
@@ -66,11 +66,11 @@ export const PAGES = {
   '/neet-counselling-documents-maharashtra': {
     title: 'NEET documents checklist',
     fullTitle: 'NEET Counselling Documents List 2026 – Maharashtra',
-    description: 'Free checklist of documents for NEET UG 2026 Maharashtra state quota counselling (MBBS, BDS, BAMS, BHMS, BPTh), as listed by the State CET Cell. Tick, print or share.',
+    description: 'Free checklist of documents for NEET UG 2026 Maharashtra state quota counselling (MBBS, BDS, BAMS, BHMS, BPTh) from the State CET Cell. Tick, print, share.',
   },
-  '/refund-policy': { title: 'Refund policy', description: 'Refund and cancellation policy for Career Ka Dost counselling sessions and services.' },
-  '/terms': { title: 'Terms and conditions', description: 'Terms and conditions for using the Career Ka Dost website and counselling services.' },
-  '/privacy': { title: 'Privacy policy', description: 'How Career Ka Dost collects, uses and protects the information you share on this website.' },
+  '/refund-policy': { title: 'Refund policy', description: 'Refund and cancellation policy for Career Ka Dost counselling sessions and services: when you can cancel, reschedule or get a refund, in plain language.' },
+  '/terms': { title: 'Terms and conditions', description: 'Terms and conditions for using the Career Ka Dost website and booking our counselling services, including what we provide and your responsibilities.' },
+  '/privacy': { title: 'Privacy policy', description: 'How Career Ka Dost collects, uses and protects the personal information you share on this website, including forms, WhatsApp, analytics and your choices.' },
   // Service pages (src/config/services.js) use their own full title, without the ' | Career Ka Dost' ending.
   ...Object.fromEntries(SERVICES.map((sv) => [`/${sv.slug}`, { title: sv.menu, fullTitle: sv.title, description: sv.description }])),
 }

@@ -64,7 +64,7 @@ export function About() {
                   key={a.name}
                   className="flex items-center gap-3 border border-ink/20 bg-white py-2 pl-2 pr-4 text-sm font-semibold shadow-[0_3px_0_0_rgba(0,0,0,0.12)] transition hover:-translate-y-0.5 hover:shadow-[0_5px_0_0_#ffb81c]"
                 >
-                  <img src={a.logo} alt="" loading="lazy" className="h-9 w-9 shrink-0 object-contain" />
+                  <img src={a.logo} alt={`${a.name} logo`} loading="lazy" className="h-9 w-9 shrink-0 object-contain" />
                   {a.name}
                 </li>
               ))}

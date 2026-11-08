@@ -30,7 +30,7 @@ export const FAQS = [
   {
     category: 'Services',
     q: 'What services do you offer?',
-    a: 'Future Blueprint Session, DMIT (Test & Report Counselling), School Awareness Sessions, Engineering Counselling (JoSAA and MHT-CET), Medical Counselling (MCC and state CET) and Admission Guidance for Law, BBA, MBA, B.Sc and BCA.',
+    a: 'Future Blueprint Session, DMIT (Test & Report Counselling), School Awareness Sessions, Engineering Counselling (JoSAA and MHT CET), Medical Counselling (MCC and state CET) and Admission Guidance for Law, BBA, MBA, B.Sc and BCA.',
   },
   {
     category: 'Services',
@@ -44,8 +44,8 @@ export const FAQS = [
   },
   {
     category: 'Admissions',
-    q: 'Do you help with JoSAA and MHT-CET counselling?',
-    a: 'Yes. Our Engineering Counselling covers JoSAA and MHT-CET: understanding cutoffs, shortlisting colleges and branches, and filling choices in a sensible order.',
+    q: 'Do you help with JoSAA and MHT CET counselling?',
+    a: 'Yes. Our Engineering Counselling covers JoSAA and MHT CET: understanding cut-offs, shortlisting colleges and branches, and filling choices in a sensible order.',
   },
   {
     category: 'Admissions',

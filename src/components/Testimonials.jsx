@@ -83,7 +83,7 @@ function Card({ t }) {
           <span className="block text-[26px] font-black tracking-tight">Testimonial</span>
         </p>
         <span className="flex flex-col items-center">
-          <img src={SITE.logoSmallUrl} alt="" width={34} height={34} loading="lazy" className="h-[34px] w-[34px] object-contain" />
+          <img src={SITE.logoSmallUrl} alt="Career Ka Dost logo" width={34} height={34} loading="lazy" className="h-[34px] w-[34px] object-contain" />
           <span className="mt-0.5 text-[9px] font-bold leading-none text-black" style={heading}>
             Career Ka <span style={{ color: STAR }}>Dost</span>
           </span>

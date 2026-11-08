@@ -21,6 +21,10 @@ export function HomeMore() {
             Sessions are held at our office in Sitabuldi, Nagpur, and online for families anywhere in India.
           </p>
           <p className="mt-4 text-lg leading-relaxed text-ink-soft">
+            Looking for a career counsellor near you in Nagpur? Our office is on the 2nd floor of Buty Chambers, opposite Fortune Mall, Sitabuldi - in the centre of the city. Families
+            from Bhandara, Chandrapur, Wardha, Gondia and Amravati can also take the full session online.
+          </p>
+          <p className="mt-4 text-lg leading-relaxed text-ink-soft">
             Since March 2023 we have counselled 20,000+ students, most of them from Nagpur, Bhandara and Chandrapur, and families rate us 4.9
             on Google. Sessions are in English, Hindi or Marathi. Office hours: Monday to Saturday, 10 am to 6 pm (closed on Sunday).
           </p>

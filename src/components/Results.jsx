@@ -12,7 +12,7 @@ const STAT_ICONS = { users: UsersIcon, board: BoardIcon, star: StarIcon, chip: C
 
 function Stars() {
   return (
-    <span className="flex gap-1 text-brand" aria-label="5 out of 5 stars">
+    <span className="flex gap-1 text-brand" role="img" aria-label="5 out of 5 stars">
       {[0, 1, 2, 3, 4].map((i) => (
         <svg key={i} viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden>
           <path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1L12 2Z" />
@@ -75,7 +75,7 @@ export function Results() {
             <ul className="mt-8 grid gap-4 sm:grid-cols-2">
               {FOUNDER.awards.map((a) => (
                 <Tilt key={a.name} as="li" max={10} className="flex items-center gap-4 border border-line border-l-4 border-l-brand bg-white p-4 font-semibold hover:shadow-xl">
-                  <img src={a.logo} alt="" loading="lazy" className="h-12 w-12 shrink-0 object-contain [transform:translateZ(24px)]" />
+                  <img src={a.logo} alt={`${a.name} logo`} loading="lazy" className="h-12 w-12 shrink-0 object-contain [transform:translateZ(24px)]" />
                   <span className="[transform:translateZ(16px)]">{a.name}</span>
                 </Tilt>
               ))}

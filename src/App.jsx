@@ -20,13 +20,14 @@ import { ServicePage } from './components/ServicePage'
 import { StreamQuiz } from './components/StreamQuiz'
 import { DocumentChecklist } from './components/DocumentChecklist'
 import { MoreInfo } from './components/MoreInfo'
+import { NotFound } from './components/NotFound'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
 import { SERVICES } from './config/services'
 import { applyPendingJump } from './utils/jump'
 import { trackPageView } from './utils/analytics'
 import { countThisVisit } from './utils/visits'
 import { currentPath, handleLinkClick, ROUTE_EVENT, upgradeOldAddress } from './utils/router'
-import { pageMeta } from './seo'
+import { allPaths, pageMeta } from './seo'
 
 // The staff portal is loaded only when someone opens /admin, so website visitors never download it.
 const AdminApp = lazy(() => import('./admin/AdminApp').then((m) => ({ default: m.AdminApp })))
@@ -105,7 +106,7 @@ function resolve(path) {
   }
   if (REDIRECTS[path]) path = REDIRECTS[path]
   if (path.startsWith('/blog/')) return { key: '/blog', Page: () => <BlogPost slug={path.slice(6)} /> }
-  return path in ROUTES ? { key: path, Page: ROUTES[path] } : { key: '/', Page: ROUTES['/'] }
+  return path in ROUTES ? { key: path, Page: ROUTES[path] } : { key: '/404', Page: NotFound }
 }
 
 function App({ initialPath }) {
@@ -160,6 +161,16 @@ function App({ initialPath }) {
     // Tell Google the one true address of this page (the home page for anything unknown).
     set('link[rel="canonical"]', 'href', meta.url)
     set('meta[property="og:url"]', 'content', meta.url)
+    // An address that is not a page: a clear message, and Google is asked not to list it.
+    document.head.querySelectorAll('meta[data-ckd-robots]').forEach((m) => m.remove())
+    if (route.key === '/404' || (path.startsWith('/blog/') && !allPaths().includes(path))) {
+      document.title = 'Page not found | Career Ka Dost'
+      const robots = document.createElement('meta')
+      robots.name = 'robots'
+      robots.content = 'noindex'
+      robots.setAttribute('data-ckd-robots', '')
+      document.head.appendChild(robots)
+    }
     trackPageView() // after the title is set, so the statistics show the right page name
   }, [route])
 

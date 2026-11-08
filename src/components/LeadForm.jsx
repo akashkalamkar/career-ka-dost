@@ -29,7 +29,7 @@ export function LeadForm() {
   return (
     <section id="lead-form" className="scroll-mt-20 py-20 md:py-28">
       <div className={container}>
-        <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
+        <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-5">
             <SectionHeading as="h1"
               eyebrow="Contact us"

@@ -97,7 +97,20 @@ function PlanCard({ plan }) {
           <WhatsAppIcon className="h-4 w-4" />
           {hasPrice ? 'Book this service' : 'Get a quote'}
         </button>
-        {SERVICES.find((x) => x.plan === plan.name) ? (
+        {plan.more ? (
+          <div className="mt-3 text-center text-sm">
+            <p className="font-bold text-mute">Know more:</p>
+            <ul className="mt-1 space-y-1">
+              {plan.more.map(([label, href]) => (
+                <li key={href}>
+                  <a href={href} className="font-bold underline decoration-brand decoration-2 underline-offset-4">
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : SERVICES.find((x) => x.plan === plan.name) ? (
           <a href={`/${SERVICES.find((x) => x.plan === plan.name).slug}`} className="mt-3 block text-center text-sm font-bold underline decoration-brand decoration-2 underline-offset-4">
             Know more
           </a>
@@ -134,7 +147,7 @@ export function Pricing() {
               <h2 className="font-display text-3xl font-extrabold tracking-tight">{c.title}</h2>
               <p className="text-ink-soft">{c.blurb}</p>
             </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {c.plans.map((p) => (
                 <PlanCard key={p.name} plan={p} />
               ))}
