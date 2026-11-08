@@ -61,7 +61,7 @@ export function DocumentChecklist() {
           Free document checklist
         </p>
         <p className="hidden border-b-4 border-brand pb-3 font-display text-lg font-extrabold print:block">
-          Career Ka Dost · {SITE.phoneDisplay} · {SITE.websiteDisplay}
+          {SITE.fullName} · {SITE.phonePretty} · {SITE.websiteDisplay}
         </p>
         <h1 className="mt-4 text-balance font-display text-4xl font-extrabold leading-[1.1] tracking-tight md:text-5xl">{LIST.title}</h1>
         <p className="mt-5 text-lg leading-relaxed text-ink-soft">

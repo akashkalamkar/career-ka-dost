@@ -190,7 +190,7 @@ export const SERVICES = [
   {
     slug: 'online-career-counselling-maharashtra',
     menu: 'Online career counselling',
-    title: 'Best Online Career Counsellor – All India | Career Ka Dost',
+    title: 'Online Career Counselling Across India | Career Ka Dost',
     description: 'Online career counselling for students and parents anywhere in India: stream choice, career planning and admission guidance by video call.',
     eyebrow: 'Online sessions',
     h1: 'Online career counselling across India',

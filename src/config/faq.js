@@ -90,6 +90,6 @@ export const FAQS = [
   {
     category: 'Fees and policies',
     q: 'Where is your office?',
-    a: '2nd Floor, Buty Chambers, opposite Fortune Mall, Sitabuldi, Nagpur, Maharashtra 440012. You can open it in Google Maps from the Contact page.',
+    a: '2nd Floor, Buty Chambers, Opposite Fortune Mall, Sitabuldi, Nagpur, Maharashtra 440012. You can open it in Google Maps from the Contact page.',
   },
 ]

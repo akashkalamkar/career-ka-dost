@@ -113,7 +113,7 @@ function Card({ t }) {
 
       <footer className="flex items-end justify-between px-5 pb-3">
         <p className="text-[9px] font-bold text-black">
-          Get in Touch | <span aria-hidden>&#9742;</span> {SITE.phoneDisplay.replace('+91 ', '')}
+          Get in Touch | <span aria-hidden>&#9742;</span> {SITE.phonePretty.replace('+91 ', '')}
         </p>
         <span className="grid grid-cols-4 gap-x-1 text-[11px] font-black leading-none" style={{ color: '#f7c04a' }} aria-hidden>
           <span />

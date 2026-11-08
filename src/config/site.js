@@ -8,6 +8,12 @@ export const SITE = {
   tagline: 'Ask before you decide',
   phoneDisplay: '+91 9503821010',
   phoneDisplay2: '+91 9272397879',
+  /** Website display of the two numbers (spaced like the Google profile). Bills and invoices keep using phoneDisplay above. */
+  phonePretty: '+91 95038 21010',
+  phonePretty2: '+91 92723 97879',
+  /** The full business name, exactly as on the Google Business Profile and the signboard. */
+  fullName: 'Career Ka Dost | Career Counselling',
+  hoursText: 'Monday to Saturday, 10 am to 6 pm. Closed on Sunday.',
   /** E.164 without + for wa.me */
   whatsappE164: '919503821010',
   phoneTel: '+919503821010',
@@ -21,7 +27,7 @@ export const SITE = {
   linkedinUrl: 'https://www.linkedin.com/company/careerkadost',
   /** The "Scan for psychometric test" QR code in the brochure points here. */
   addressLine:
-    '2nd Floor, Buty Chambers, opposite Fortune Mall, Sitabuldi, Nagpur, Maharashtra 440012',
+    '2nd Floor, Buty Chambers, Opposite Fortune Mall, Sitabuldi, Nagpur, Maharashtra 440012',
   /** Google Maps (short link) */
   mapsUrl: 'https://maps.app.goo.gl/FohdQ5gyy5rdRBw48',
   /** Interactive embed (no API key). Update the `q=` text if the office moves. */

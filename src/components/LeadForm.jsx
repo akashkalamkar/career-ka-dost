@@ -39,12 +39,14 @@ export function LeadForm() {
             <div className="space-y-4">
               <InfoCard icon={PhoneIcon} label="Call">
                 <a className={`${link} whitespace-nowrap`} href={`tel:${SITE.phoneTel}`}>
-                  {SITE.phoneDisplay}
+                  {SITE.phonePretty}
                 </a>
-                ,{' '}
-                <a className={`${link} whitespace-nowrap`} href={`tel:${SITE.phoneTel2}`}>
-                  {SITE.phoneDisplay2}
-                </a>
+                <span className="mt-1 block text-sm font-semibold text-ink-soft">
+                  Alternate number:{' '}
+                  <a className={`${link} whitespace-nowrap`} href={`tel:${SITE.phoneTel2}`}>
+                    {SITE.phonePretty2}
+                  </a>
+                </span>
               </InfoCard>
               <InfoCard icon={MailIcon} label="Email">
                 <a className={link} href={mailtoUrl()} onClick={onEmailClick}>

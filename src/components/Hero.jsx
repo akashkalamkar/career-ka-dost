@@ -13,17 +13,20 @@ export function Hero() {
     <section id="hero">
       <div className={`${container} grid gap-12 pb-16 pt-10 md:pb-20 md:pt-16 lg:grid-cols-12 lg:items-center lg:gap-14`}>
         <div className="lg:col-span-7">
-          <p className="mb-7 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.22em] text-ink">
-            <span className="h-1 w-10 bg-brand" aria-hidden />
-            {SITE.tagline}
-          </p>
-          <h1 className="text-balance font-display text-[2.5rem] font-extrabold leading-[1.04] tracking-tight sm:text-6xl lg:text-[4.25rem]">
-            Your career is too important to{' '}
-            <span className="bg-[linear-gradient(transparent_62%,var(--color-brand)_62%)] px-1">leave to chance.</span>
+          <h1>
+            <span className="mb-7 flex items-center gap-3 font-sans text-xs font-bold uppercase leading-normal tracking-[0.22em] text-ink">
+              <span className="h-1 w-10 shrink-0 bg-brand" aria-hidden />
+              Career counselling in Nagpur &amp; Maharashtra
+            </span>
+            <span className="block text-balance font-display text-[2.5rem] font-extrabold leading-[1.04] tracking-tight sm:text-6xl lg:text-[4.25rem]">
+              Your career is too important to{' '}
+              <span className="bg-[linear-gradient(transparent_62%,var(--color-brand)_62%)] px-1">leave to chance.</span>
+            </span>
           </h1>
           <p className="mt-8 max-w-xl text-pretty text-lg leading-relaxed text-ink-soft md:text-xl">
             Honest, one-to-one career and admission counselling for every student, from Class 9 onwards: engineering, medical, law,
-            management, science and more. For every family, whatever the marks and whatever the budget.
+            management, science and more. Based in Nagpur, guiding families across Maharashtra and online across India - whatever the
+            marks and whatever the budget.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
             <a {...bookProps} className={btnPrimary}>

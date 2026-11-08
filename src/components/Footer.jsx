@@ -82,12 +82,14 @@ export function Footer() {
               </span>
               <span className="pt-1.5 leading-snug">
                 <a className={link} href={`tel:${SITE.phoneTel}`}>
-                  {SITE.phoneDisplay}
+                  {SITE.phonePretty}
                 </a>
-                ,{' '}
-                <a className={link} href={`tel:${SITE.phoneTel2}`}>
-                  {SITE.phoneDisplay2}
-                </a>
+                <span className="mt-1 block text-xs font-semibold text-ink-soft">
+                  Alternate number:{' '}
+                  <a className={link} href={`tel:${SITE.phoneTel2}`}>
+                    {SITE.phonePretty2}
+                  </a>
+                </span>
               </span>
             </li>
             <Row icon={WhatsAppIcon} iconClass="text-[#25d366]" href={`https://wa.me/${SITE.whatsappE164}`} external>
@@ -108,6 +110,7 @@ export function Footer() {
             <Row icon={PinColorIcon} href={SITE.mapsUrl} external>
               {SITE.addressLine}
             </Row>
+            <li className="pl-12 text-sm font-semibold text-ink-soft">{SITE.hoursText}</li>
           </ul>
           <div className="group relative mt-6 overflow-hidden border border-line">
             <iframe
@@ -150,7 +153,7 @@ export function Footer() {
         <div className={`${container} flex flex-col gap-4 pb-24 pt-6 text-xs font-bold text-ink-soft md:flex-row md:items-center md:justify-between md:pb-6`}>
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-6">
             <p>
-              &copy; {SITE.copyrightYear} {SITE.name}. All rights reserved.
+              &copy; {SITE.copyrightYear} {SITE.fullName}. All rights reserved.
             </p>
             <VisitCounter />
           </div>

@@ -315,3 +315,13 @@ This is NOT what the original packaging recipe (section 11) assumed - it predate
 - Tested on the built copy (not the live server, which the build machine cannot reach): 35 pages x phone/tablet/desktop widths, 131 internal link pairs, Lighthouse phone: performance 94-98, accessibility 96, best practices 96, SEO 100.
 - Known, accepted: yellow "Dost" in the logo has low contrast (brand colour); Lighthouse "errors in console" are only blocked Firebase/Google calls on the test machine.
 - Owner to confirm before handover: legal pages (src/config/legal.js says "confirm every section, especially the refund rules"), the personal Facebook link in index.html sameAs (replace with a Facebook business page), strike-through "original" prices on Pricing (should reflect a price actually charged).
+
+## Matching the Google Business Profile (8 Nov 2026)
+- Source of truth: the owner's file CKD_GBP_to_Website_SEO_Handoff.md (website follows the profile).
+- Full name `Career Ka Dost | Career Counselling` now in schema `name` (alternateName "Career Ka Dost"), footer copyright and printed checklist; logo/header unchanged.
+- Home title "Career Counselling in Nagpur & Maharashtra | Career Ka Dost"; "Best"/"Top" removed from titles (About, Online). The article "How to find the best career counsellor in Nagpur (or online)" stays (advice, not a claim).
+- Home H1 = small label "Career counselling in Nagpur & Maharashtra" + the slogan (Hero.jsx). First paragraph says Nagpur-based, serving Maharashtra and online across India.
+- Phones on the website: primary +91 95038 21010, "Alternate number" +91 92723 97879 (SITE.phonePretty / phonePretty2); bills/invoices still use phoneDisplay. Second contactPoint removed from schema. Address "Opposite" capitalised; hours line in footer (SITE.hoursText).
+- Schema areaServed: Nagpur, Wardha, Bhandara, Umred, Ramtek, Lakhani + Maharashtra + India. Personal Facebook link removed from sameAs.
+- Owner decision: KEEP the crossed-out prices on Pricing exactly as they were (Future Blueprint, Engineering, Medical, DMIT). pricing.js is unchanged from the previous version.
+- Still open: Google Maps embed iframe, storefront photo, Facebook business page, proof for "5,000+" and "scientific/AI" wording, new pages (hub, Parent & Student session, Future Blueprint, Career DNA, SAP), JoSAA deepening, cut-off pages.

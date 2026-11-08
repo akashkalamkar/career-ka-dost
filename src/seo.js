@@ -11,7 +11,7 @@ import { FOUNDER } from './config/site.js'
  */
 
 export const SITE_URL = 'https://www.careerkadost.com'
-export const SITE_TITLE = 'Best Career Counsellor in Nagpur & Online | Career Ka Dost'
+export const SITE_TITLE = 'Career Counselling in Nagpur & Maharashtra | Career Ka Dost'
 const SITE_DESCRIPTION =
   'Career counsellor in Nagpur since 2023: 20,000+ students guided, 4.9 on Google. Stream choice, NEET, MHT CET, JoSAA, DMIT - in Sitabuldi or online.'
 
@@ -20,7 +20,7 @@ export const PAGES = {
   '/': { title: null, description: SITE_DESCRIPTION },
   '/about': {
     title: 'About us',
-    fullTitle: 'About Bharat Rai – Top Career Counsellor in Nagpur',
+    fullTitle: 'About Bharat Rai – Career Counsellor in Nagpur',
     description: 'Meet Bharat Rai, founder of Career Ka Dost (since 2023): honest one-to-one career and admission counselling in Nagpur and online, in English, Hindi and Marathi.',
   },
   '/pricing': {
