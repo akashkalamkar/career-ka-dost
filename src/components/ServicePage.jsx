@@ -175,6 +175,10 @@ export function ServicePage({ slug }) {
                 </a>
               ) : null}
               <div>
+                <a href="/career-counselling-in-nagpur" className="mb-4 flex items-center justify-between gap-3 border-2 border-brand-deep bg-white p-4 font-bold hover:bg-brand/20">
+                  Career counselling in Nagpur: all services
+                  <ArrowIcon className="h-4 w-4 shrink-0" />
+                </a>
                 <p className="text-xs font-bold uppercase tracking-[0.2em]">Other services</p>
                 <ul className="mt-3 divide-y divide-line border-y border-line">
                   {others.map((o) => (

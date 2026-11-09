@@ -20,6 +20,7 @@ export const slug = (text) =>
 const PAGES = [
   { title: 'Home', href: '/', keywords: 'home start main career ka dost' },
   { title: 'About us', href: '/about', keywords: 'about us company who we are vision mission founder why choose process how it works' },
+  { title: 'Career counselling in Nagpur', href: '/career-counselling-in-nagpur', keywords: 'career counselling in nagpur career counsellor career guidance sitabuldi near me students parents after 10th 12th all services' },
   { title: 'Pricing and services', href: '/pricing', keywords: 'pricing price fees cost services plans packages charges rates' },
   { title: 'Career Test', href: '/career-test', keywords: 'career test psychometric assessment aptitude quiz dmit' },
   { title: 'Results and testimonials', href: '/results', keywords: 'results testimonials reviews achievers success stories rating toppers' },

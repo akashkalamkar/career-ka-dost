@@ -14,6 +14,7 @@ const row = 'group flex items-start gap-3 transition hover:text-ink'
 const iconWrap = 'flex h-9 w-9 shrink-0 items-center justify-center bg-white text-brass shadow-sm transition group-hover:bg-brand group-hover:text-ink'
 
 const EXPLORE = [
+  { label: 'Career counselling in Nagpur', href: '/career-counselling-in-nagpur' },
   { label: 'About us', href: '/about' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Career Test', href: '/career-test' },

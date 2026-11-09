@@ -22,6 +22,7 @@ import { DocumentChecklist } from './components/DocumentChecklist'
 import { Breadcrumbs } from './components/Breadcrumbs'
 import { MoreInfo } from './components/MoreInfo'
 import { SitemapPage } from './components/SitemapPage'
+import { NagpurHub } from './components/NagpurHub'
 import { NotFound } from './components/NotFound'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
 import { SERVICES } from './config/services'
@@ -48,6 +49,7 @@ const ROUTES = {
       <HomeMore />
     </>
   ),
+  '/career-counselling-in-nagpur': () => withCta(<NagpurHub />),
   '/about': () => withCta(<About />),
   '/pricing': () => withCta(<Pricing />),
   '/career-test': () => withCta(<CareerTest />),

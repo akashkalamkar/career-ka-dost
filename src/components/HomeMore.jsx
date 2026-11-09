@@ -28,6 +28,11 @@ export function HomeMore() {
             Since March 2023 we have counselled 20,000+ students, most of them from Nagpur, Bhandara and Chandrapur, and families rate us 4.9
             on Google. Sessions are in English, Hindi or Marathi. Office hours: Monday to Saturday, 10 am to 6 pm (closed on Sunday).
           </p>
+          <p className="mt-6">
+            <a href="/career-counselling-in-nagpur" className="inline-flex items-center gap-2 font-display text-lg font-extrabold underline decoration-brand decoration-4 underline-offset-4 hover:text-brass">
+              Career counselling in Nagpur: all our services, fees and office details <ArrowIcon className="h-5 w-5" />
+            </a>
+          </p>
         </div>
 
         <a href="/stream-quiz" className="mt-8 flex flex-wrap items-center justify-between gap-3 border-2 border-brand-deep bg-white p-5 transition hover:bg-brand/20">

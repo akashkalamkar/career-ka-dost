@@ -127,7 +127,7 @@ export const POSTS = [
       { type: 'h3', text: "Is online career counselling as good as in-person counselling?" },
       { type: 'p', text: "Yes, when it includes a proper assessment, a detailed discussion and clear next steps. Many families across Maharashtra now choose online sessions." },
       { type: 'h3', text: "Where can I find career counselling in Nagpur?" },
-      { type: 'p', text: "Career Ka Dost is at Buty Chambers, Sitabuldi, Nagpur. We offer [career counselling for students and parents](/pricing), [psychometric assessments](/career-test), DMIT report counselling, and admission guidance for engineering, medical, law, management and other courses, in person in Nagpur (Monday to Saturday, 10 am to 6 pm) and online across India, in English, Hindi or Marathi." },
+      { type: 'p', text: "Career Ka Dost is at Buty Chambers, Sitabuldi, Nagpur. We offer [career counselling for students and parents](/career-counselling-in-nagpur), [psychometric assessments](/career-test), DMIT report counselling, and admission guidance for engineering, medical, law, management and other courses, in person in Nagpur (Monday to Saturday, 10 am to 6 pm) and online across India, in English, Hindi or Marathi." },
       { type: 'h', text: "Take the first step" },
       { type: 'p', text: "A good decision now saves years of regret later. If your child is unsure about a stream, a course or a college, [book a session with Career Ka Dost](/contact). We will listen first, assess properly and help you leave with a clear plan." },
     ],

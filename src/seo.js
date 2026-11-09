@@ -1,6 +1,7 @@
 import { POSTS } from './config/blog.js'
 import { FAQS } from './config/faq.js'
 import { SERVICES } from './config/services.js'
+import { HUB } from './config/hub.js'
 import { FOUNDER } from './config/site.js'
 
 /**
@@ -18,6 +19,7 @@ const SITE_DESCRIPTION =
 /** The public pages (the staff portal is left out on purpose). */
 export const PAGES = {
   '/': { title: null, description: SITE_DESCRIPTION },
+  '/career-counselling-in-nagpur': { title: 'Career counselling in Nagpur', fullTitle: HUB.title, description: HUB.description },
   '/about': {
     title: 'About us',
     fullTitle: 'About Bharat Rai – Career Counsellor in Nagpur',
@@ -176,6 +178,21 @@ function extraJsonLd(key) {
     ]
   }
   if (key === '/faq') return [faqPage(FAQS.map((f) => [f.q, f.a]))]
+  if (key === '/career-counselling-in-nagpur') {
+    return [
+      faqPage(HUB.faqs),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        serviceType: 'Career counselling',
+        name: 'Career counselling in Nagpur',
+        description: HUB.description,
+        provider: { '@id': BUSINESS_ID, '@type': 'LocalBusiness', name: 'Career Ka Dost | Career Counselling' },
+        areaServed: { '@type': 'City', name: 'Nagpur' },
+        url: `${SITE_URL}/career-counselling-in-nagpur`,
+      },
+    ]
+  }
   const service = SERVICES.find((sv) => key === `/${sv.slug}`)
   return service ? [faqPage(service.faqs)] : []
 }

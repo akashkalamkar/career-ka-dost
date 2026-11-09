@@ -4,6 +4,7 @@ import { container } from '../config/ui'
 
 const MAIN = [
   ['/', 'Home'],
+  ['/career-counselling-in-nagpur', 'Career counselling in Nagpur'],
   ['/about', 'About us'],
   ['/pricing', 'Services and fees'],
   ['/career-test', 'Career test'],
