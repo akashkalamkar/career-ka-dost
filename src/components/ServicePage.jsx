@@ -2,7 +2,7 @@ import { POSTS } from '../config/blog'
 import { PRICING_CATEGORIES } from '../config/pricing'
 import { SERVICES } from '../config/services'
 import { SITE } from '../config/site'
-import { TESTIMONIALS } from '../config/testimonials'
+import { GOOGLE_REVIEWS, TESTIMONIALS } from '../config/testimonials'
 import { btnInk, btnPrimary, container } from '../config/ui'
 import { bookProps } from '../utils/leadForm'
 import { openWhatsApp } from '../utils/whatsapp'
@@ -56,7 +56,7 @@ export function ServicePage({ slug }) {
   const s = SERVICES.find((x) => x.slug === slug)
   if (!s) return null
   const plan = planNamed(s.plan)
-  const reviews = (REVIEWS_FOR[slug] || []).map((n) => TESTIMONIALS.find((t) => t.name === n)).filter(Boolean)
+  const reviews = (REVIEWS_FOR[slug] || []).map((n) => [...TESTIMONIALS, ...GOOGLE_REVIEWS].find((t) => t.name === n)).filter(Boolean)
   const posts = s.blog.map((b) => POSTS.find((p) => p.slug === b)).filter(Boolean)
   const others = SERVICES.filter((x) => x.slug !== slug)
   const ask = () => openWhatsApp({ phoneE164: SITE.whatsappE164, message: `Hi ${SITE.name}, I'd like to know more about ${s.menu}.` })

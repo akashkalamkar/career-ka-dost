@@ -3,6 +3,7 @@ import { container } from '../config/ui'
 import { Achievers } from './Achievers'
 import { BarsArt } from './Art3D'
 import { BoardIcon, ChipIcon, StarIcon, UsersIcon } from './icons'
+import { GoogleReviews } from './GoogleReviews'
 import { ReviewButton } from './ReviewButton'
 import { SectionHeading } from './SectionHeading'
 import { Testimonials } from './Testimonials'
@@ -52,6 +53,7 @@ export function Results() {
 
       <Achievers />
       <Testimonials />
+      <GoogleReviews />
 
       <section className="py-20 md:py-28">
         <div className={`${container} grid gap-12 lg:grid-cols-2 lg:gap-16`}>

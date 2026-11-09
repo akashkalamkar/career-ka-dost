@@ -44,6 +44,7 @@ const SECTIONS = [
   { title: 'Our track record', href: '/results', anchor: 'results', keywords: '20000 students counselled 5000 youth trained 4.9 google rating dmit ai numbers' },
   { title: 'Our achievers', href: '/results', anchor: 'achievers', keywords: 'achievers cap round seat allotted college toppers students congratulations' },
   { title: 'Student testimonials', href: '/results', anchor: 'testimonials', keywords: 'testimonials reviews feedback aleena shaikh parents words' },
+  { title: 'Google reviews', href: '/results', anchor: 'google-reviews', keywords: 'google reviews rating 4.9 stars what families write public reviews' },
   { title: 'Book your counselling', href: '/contact', anchor: 'lead-form', keywords: 'book counselling session appointment form enquiry register lead' },
   ...SERVICE_PAGES.map((sv) => ({ title: sv.h1, href: `/${sv.slug}`, keywords: `${sv.menu} ${sv.description} ${sv.help.join(' ')}` })),
   { title: 'Stream quiz: which stream after 10th?', href: '/stream-quiz', keywords: 'quiz stream after 10th science commerce arts pcm pcb which stream should i choose test' },

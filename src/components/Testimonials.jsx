@@ -143,23 +143,27 @@ export function Testimonials() {
           art={<QuoteArt className="max-w-[14rem]" />}
         />
       </div>
-      <div className="mt-4 overflow-hidden motion-reduce:overflow-x-auto">
-        <div className="ckd-marquee flex w-max items-stretch py-4" style={{ '--marquee-duration': `${seconds}s` }}>
+      {TESTIMONIALS.length < 4 ? (
+        // A few cards just stand still, side by side. The slow left-to-right movement starts from four cards.
+        <div className={`${container} flex flex-wrap justify-center gap-6 py-4`}>
           {TESTIMONIALS.map((t) => (
             <Card key={t.name} t={t} />
           ))}
-          <div className="contents" aria-hidden>
+        </div>
+      ) : (
+        <div className="mt-4 overflow-hidden motion-reduce:overflow-x-auto">
+          <div className="ckd-marquee flex w-max items-stretch py-4" style={{ '--marquee-duration': `${seconds}s` }}>
             {TESTIMONIALS.map((t) => (
-              <Card key={`copy-${t.name}`} t={t} />
+              <Card key={t.name} t={t} />
             ))}
+            <div className="contents" aria-hidden>
+              {TESTIMONIALS.map((t) => (
+                <Card key={`copy-${t.name}`} t={t} />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-      <p className="mt-8 text-center">
-        <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer" className="font-bold underline decoration-brand decoration-2 underline-offset-4">
-          Read all our reviews on Google (rated 4.9)
-        </a>
-      </p>
+      )}
     </section>
   )
 }

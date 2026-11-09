@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { PRICING_CATEGORIES, SERVICE_FINDER } from '../config/pricing'
 import { SERVICES } from '../config/services'
 import { SITE } from '../config/site'
-import { btnInk, btnPrimary, container } from '../config/ui'
+import { btnPrimary, container } from '../config/ui'
 import { slug } from '../utils/searchIndex'
 import { openWhatsApp } from '../utils/whatsapp'
 import { CoinsArt } from './Art3D'
@@ -76,7 +76,7 @@ function PlanCard({ plan }) {
       </ul>
 
       <div className="mt-auto pt-7">
-        <div className="[transform:translateZ(30px)]">
+        <div className="md:min-h-[6.5rem] [transform:translateZ(30px)]">
           {hasPrice ? (
             <p className="font-display text-3xl font-extrabold">
               {plan.originalPrice ? (
@@ -93,10 +93,11 @@ function PlanCard({ plan }) {
             <p className="font-display text-xl font-extrabold">{plan.priceText || 'Price on request'}</p>
           )}
         </div>
-        <button type="button" onClick={() => quote(plan.note ? `${plan.name} ${plan.note}` : plan.name)} className={`${hasPrice ? btnPrimary : btnInk} mt-4 w-full`}>
+        <button type="button" onClick={() => quote(plan.note ? `${plan.name} ${plan.note}` : plan.name)} className={`${btnPrimary} mt-4 w-full`}>
           <WhatsAppIcon className="h-4 w-4" />
           {hasPrice ? 'Book this service' : 'Get a quote'}
         </button>
+        <div className="md:min-h-[6.5rem]">
         {plan.more ? (
           <div className="mt-3 text-center text-sm">
             <p className="font-bold text-mute">Know more:</p>
@@ -115,6 +116,7 @@ function PlanCard({ plan }) {
             Know more
           </a>
         ) : null}
+        </div>
       </div>
     </Tilt>
   )
