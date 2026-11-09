@@ -2,10 +2,26 @@ import { POSTS } from '../config/blog'
 import { PRICING_CATEGORIES } from '../config/pricing'
 import { SERVICES } from '../config/services'
 import { SITE } from '../config/site'
+import { TESTIMONIALS } from '../config/testimonials'
 import { btnInk, btnPrimary, container } from '../config/ui'
 import { bookProps } from '../utils/leadForm'
 import { openWhatsApp } from '../utils/whatsapp'
 import { ArrowIcon, WhatsAppIcon } from './icons'
+
+/** Which Google reviews to show on which service page: only general or relevant ones, quoted exactly (see testimonials.js). */
+const REVIEWS_FOR = {
+  'mht-cet-counselling-nagpur': ['Sachi Bhowate', 'Ajay Umredkar'],
+  'josaa-counselling-nagpur': ['Ajay Umredkar', 'Aleena Shaikh'],
+  'neet-counselling-maharashtra': ['Sarvashree Shinkar', 'Prajwal Gaikwad'],
+  'dmit-test-nagpur': ['Sarvashree Shinkar', 'Prajwal Gaikwad'],
+  'career-counselling-after-10th-nagpur': ['Vedanshi Tamrakar', 'Kushal Humane'],
+  'career-counselling-after-12th-nagpur': ['Aleena Shaikh', 'Kushal Humane'],
+  'online-career-counselling-maharashtra': ['Prajwal Gaikwad', 'Vedanshi Tamrakar'],
+  'admission-guidance-law-bba-mba-nagpur': ['Vedanshi Tamrakar', 'Kushal Humane'],
+  'ayush-counselling-bams-bhms-bums': ['Sarvashree Shinkar', 'Prajwal Gaikwad'],
+  'physiotherapy-bpth-admission-guidance': ['Sarvashree Shinkar', 'Prajwal Gaikwad'],
+  'career-counselling-vidarbha': ['Prajwal Gaikwad', 'Vedanshi Tamrakar'],
+}
 
 const planNamed = (name) => PRICING_CATEGORIES.flatMap((c) => c.plans).find((p) => p.name === name)
 
@@ -40,6 +56,7 @@ export function ServicePage({ slug }) {
   const s = SERVICES.find((x) => x.slug === slug)
   if (!s) return null
   const plan = planNamed(s.plan)
+  const reviews = (REVIEWS_FOR[slug] || []).map((n) => TESTIMONIALS.find((t) => t.name === n)).filter(Boolean)
   const posts = s.blog.map((b) => POSTS.find((p) => p.slug === b)).filter(Boolean)
   const others = SERVICES.filter((x) => x.slug !== slug)
   const ask = () => openWhatsApp({ phoneE164: SITE.whatsappE164, message: `Hi ${SITE.name}, I'd like to know more about ${s.menu}.` })
@@ -51,7 +68,15 @@ export function ServicePage({ slug }) {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-brass">{s.eyebrow}</p>
           <h1 className="mt-3 max-w-3xl text-balance font-display text-4xl font-extrabold leading-[1.1] tracking-tight md:text-6xl">{s.h1}</h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">{s.intro}</p>
-          <div className="mt-8 flex flex-wrap gap-4">
+          <p className="mt-6 text-sm font-bold">
+            <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 underline decoration-brand decoration-2 underline-offset-4">
+              <span className="text-brass" aria-hidden>
+                &#9733;
+              </span>
+              Rated {SITE.googleRating} on Google by {SITE.googleReviewCount} families
+            </a>
+          </p>
+          <div className="mt-6 flex flex-wrap gap-4">
             <a {...bookProps} className={btnPrimary}>
               Book counselling
             </a>
@@ -90,6 +115,23 @@ export function ServicePage({ slug }) {
                 ))}
               </ol>
             </div>
+
+            {reviews.length ? (
+              <div>
+                <h2 className="font-display text-3xl font-extrabold tracking-tight">What families say on Google</h2>
+                <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+                  {reviews.map((t) => (
+                    <li key={t.name} className="flex flex-col border border-line border-t-4 border-t-brand bg-white p-5">
+                      <span className="text-brass" role="img" aria-label="5 out of 5 stars">
+                        &#9733;&#9733;&#9733;&#9733;&#9733;
+                      </span>
+                      <blockquote className="mt-3 flex-1 leading-relaxed text-ink-soft">&ldquo;{t.quote}&rdquo;</blockquote>
+                      <p className="mt-4 text-sm font-bold">{t.name} &middot; Google review</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
 
             <div>
               <h2 className="font-display text-3xl font-extrabold tracking-tight">Common questions</h2>

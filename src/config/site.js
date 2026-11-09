@@ -49,6 +49,9 @@ export const SITE = {
    * The "Ask for reviews" link from the Google Business Profile (looks like https://g.page/r/.../review).
    * Empty = the "Review us on Google" buttons are hidden.
    */
+  /** Shown on service pages as "4.9 on Google, 141 reviews". Update by hand when the profile's numbers change. */
+  googleRating: '4.9',
+  googleReviewCount: '141',
   googleReviewUrl: 'https://g.page/r/CdfWg9CjNkQ_EBM/review',
 }
 
