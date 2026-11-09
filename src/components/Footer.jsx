@@ -30,6 +30,7 @@ const LEGAL = [
   { label: 'Refund Policy', href: '/refund-policy' },
   { label: 'Terms and Conditions', href: '/terms' },
   { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Sitemap', href: '/sitemap' },
 ]
 
 function Row({ icon: Icon, iconClass = '', href, external, onClick, children }) {

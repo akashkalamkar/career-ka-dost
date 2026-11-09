@@ -325,3 +325,10 @@ This is NOT what the original packaging recipe (section 11) assumed - it predate
 - Schema areaServed: Nagpur, Wardha, Bhandara, Umred, Ramtek, Lakhani + Maharashtra + India. Personal Facebook link removed from sameAs.
 - Owner decision: KEEP the crossed-out prices on Pricing exactly as they were (Future Blueprint, Engineering, Medical, DMIT). pricing.js is unchanged from the previous version.
 - Still open: Google Maps embed iframe, storefront photo, Facebook business page, proof for "5,000+" and "scientific/AI" wording, new pages (hub, Parent & Student session, Future Blueprint, Career DNA, SAP), JoSAA deepening, cut-off pages.
+
+## 9 Nov 2026: finder, school price, breadcrumbs, HTML sitemap
+- Pricing finder (SERVICE_FINDER in pricing.js): DMIT is now suggested for every choice (Class 9/10, Class 11/12 NEET/JEE, Law/BBA/MBA..., School, Not sure). Label "Class 11 or 12, NEET or JEE".
+- School Awareness Sessions: price text "Price depends on the school, number of students and sessions" + "Get a quote" button (was "N/A").
+- Visible breadcrumbs on every page except home/admin (Breadcrumbs.jsx). The trail comes from crumbTrail() in seo.js and is also the BreadcrumbList data for Google, so both always match. Services: Home > Services & fees > service; blog: Home > Blog > article; checklist: Home > NEET counselling > Documents checklist.
+- New HTML page /sitemap (SitemapPage.jsx), linked in the footer; the XML sitemap (generated at build, blog posts carry lastmod) now lists 36 pages.
+- Crossed-out prices on Pricing are unchanged (owner decision); Future Blueprint ₹214 confirmed correct by the owner.

@@ -19,7 +19,9 @@ import { Results } from './components/Results'
 import { ServicePage } from './components/ServicePage'
 import { StreamQuiz } from './components/StreamQuiz'
 import { DocumentChecklist } from './components/DocumentChecklist'
+import { Breadcrumbs } from './components/Breadcrumbs'
 import { MoreInfo } from './components/MoreInfo'
+import { SitemapPage } from './components/SitemapPage'
 import { NotFound } from './components/NotFound'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
 import { SERVICES } from './config/services'
@@ -78,6 +80,7 @@ const ROUTES = {
       <MoreInfo page="/contact" />
     </>
   ),
+  '/sitemap': () => <SitemapPage />,
   '/refund-policy': () => <LegalPage doc={REFUND_POLICY} current="/refund-policy" />,
   '/terms': () => <LegalPage doc={TERMS} current="/terms" />,
   '/privacy': () => <LegalPage doc={PRIVACY} current="/privacy" />,
@@ -105,8 +108,8 @@ function resolve(path) {
     if (REDIRECTS[path]) window.history.replaceState(null, '', REDIRECTS[path])
   }
   if (REDIRECTS[path]) path = REDIRECTS[path]
-  if (path.startsWith('/blog/')) return { key: '/blog', Page: () => <BlogPost slug={path.slice(6)} /> }
-  return path in ROUTES ? { key: path, Page: ROUTES[path] } : { key: '/404', Page: NotFound }
+  if (path.startsWith('/blog/')) return { key: '/blog', path, Page: () => <BlogPost slug={path.slice(6)} /> }
+  return path in ROUTES ? { key: path, path, Page: ROUTES[path] } : { key: '/404', path, Page: NotFound }
 }
 
 function App({ initialPath }) {
@@ -181,6 +184,7 @@ function App({ initialPath }) {
       <LeadGateModal />
       <Header path={route.key} />
       <main>
+        {route.key !== '/admin' ? <Breadcrumbs path={route.path} /> : null}
         <Page />
       </main>
       <Footer />

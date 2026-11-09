@@ -68,11 +68,31 @@ export const PAGES = {
     fullTitle: 'NEET Counselling Documents List 2026 – Maharashtra',
     description: 'Free checklist of documents for NEET UG 2026 Maharashtra state quota counselling (MBBS, BDS, BAMS, BHMS, BPTh) from the State CET Cell. Tick, print, share.',
   },
+  '/sitemap': {
+    title: 'Sitemap',
+    fullTitle: 'Sitemap – All Pages | Career Ka Dost',
+    description: 'Every page on the Career Ka Dost website in one list: services, guides, free tools, blog articles, fees and contact details.',
+  },
   '/refund-policy': { title: 'Refund policy', description: 'Refund and cancellation policy for Career Ka Dost counselling sessions and services: when you can cancel, reschedule or get a refund, in plain language.' },
   '/terms': { title: 'Terms and conditions', description: 'Terms and conditions for using the Career Ka Dost website and booking our counselling services, including what we provide and your responsibilities.' },
   '/privacy': { title: 'Privacy policy', description: 'How Career Ka Dost collects, uses and protects the personal information you share on this website, including forms, WhatsApp, analytics and your choices.' },
   // Service pages (src/config/services.js) use their own full title, without the ' | Career Ka Dost' ending.
   ...Object.fromEntries(SERVICES.map((sv) => [`/${sv.slug}`, { title: sv.menu, fullTitle: sv.title, description: sv.description }])),
+}
+
+/**
+ * The breadcrumb trail of a page: [[name, path], ...] from Home down to the page itself (none for the home
+ * page or an unknown address). Used by the visible breadcrumbs (Breadcrumbs.jsx) and the BreadcrumbList data
+ * for Google, so both always say the same.
+ */
+export function crumbTrail(path) {
+  const post = path.startsWith('/blog/') ? POSTS.find((p) => path === `/blog/${p.slug}`) : null
+  if (post) return [['Home', '/'], ['Blog', '/blog'], [post.seoTitle || post.title, path]]
+  if (path === '/' || !(path in PAGES)) return []
+  const service = SERVICES.find((sv) => path === `/${sv.slug}`)
+  if (service) return [['Home', '/'], ['Services & fees', '/pricing'], [service.menu, path]]
+  if (path === '/neet-counselling-documents-maharashtra') return [['Home', '/'], ['NEET counselling', '/neet-counselling-maharashtra'], ['Documents checklist', path]]
+  return [['Home', '/'], [PAGES[path].title, path]]
 }
 
 const BUSINESS_ID = `${SITE_URL}/#business`
@@ -113,11 +133,7 @@ export function pageMeta(path) {
           author: { '@type': 'Person', name: 'Bharat Rai', url: `${SITE_URL}/about` },
           publisher: { '@id': BUSINESS_ID, '@type': 'Organization', name: 'Career Ka Dost', logo: { '@type': 'ImageObject', url: `${SITE_URL}/images/logo.png` } },
         },
-        crumb([
-          ['Home', '/'],
-          ['Blog', '/blog'],
-          [post.title, `/blog/${post.slug}`],
-        ]),
+        crumb(crumbTrail(path)),
       ],
     }
   }
@@ -128,7 +144,7 @@ export function pageMeta(path) {
     description: page.description,
     url: `${SITE_URL}${key}`,
     type: 'website',
-    jsonLd: key === '/' ? [] : [crumb([['Home', '/'], [page.title, key]]), ...extraJsonLd(key)],
+    jsonLd: key === '/' ? [] : [crumb(crumbTrail(key)), ...extraJsonLd(key)],
   }
 }
 
