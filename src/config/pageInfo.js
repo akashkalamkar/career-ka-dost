@@ -4,6 +4,20 @@
  * h = heading, p = paragraph, ul = list. "[text](/path)" becomes a link.
  */
 export const PAGE_INFO = {
+  '/career-test': [
+    { type: 'h', text: 'Career aptitude test in Nagpur' },
+    { type: 'p', text: 'A career aptitude test shows what a student is naturally good at, so that stream and course choices are based on strengths and not only on marks or what friends are choosing. Our online career aptitude test takes you through structured questions, and a counsellor at our Sitabuldi, Nagpur office (or online) explains the results with you and your parents.' },
+    { type: 'h', text: 'Psychometric career assessment in Nagpur' },
+    { type: 'p', text: 'Alongside the aptitude test, the career interest inventory shows what the student enjoys doing. Together they form a psychometric career assessment that points to career paths worth exploring. It is one input, never the final word: we read it together with marks, interests and goals. Read [what a psychometric test is](/blog/what-is-a-psychometric-test) and how it compares with [DMIT](/blog/dmit-vs-psychometric-test-which-to-choose).' },
+    { type: 'h', text: 'Who should take it' },
+    { type: 'ul', items: [
+      'Class 9 and 10 students choosing a stream - also try the free [stream quiz](/stream-quiz).',
+      'Class 11 and 12 students comparing courses and entrance exams.',
+      'Graduates unsure about a specialisation or a first career step.',
+      'Parents who want an objective starting point for the conversation.',
+    ] },
+    { type: 'p', text: 'After the test, [book a counselling session](/contact) or read about [career counselling in Nagpur](/career-counselling-in-nagpur).' },
+  ],
   '/blog': [
     { type: 'h', text: 'What you will find on this blog' },
     { type: 'p', text: 'Admission rules in Maharashtra change every year, and most families hear them second-hand. Our articles explain each process in plain language, step by step, using official sources such as the State CET Cell, Maharashtra, the Medical Counselling Committee (MCC), JoSAA and the National Testing Agency. Each article ends with what you should actually do next.' },

@@ -32,8 +32,8 @@ export const PAGES = {
   },
   '/career-test': {
     title: 'Career test',
-    fullTitle: 'Online Career Test – Aptitude & Interest | Career Ka Dost',
-    description: 'Take a psychometric aptitude test or a career interest inventory online, then discuss your results with a Career Ka Dost counsellor in Nagpur or online.',
+    fullTitle: 'Career Aptitude Test & Psychometric Assessment in Nagpur',
+    description: 'Career aptitude test and psychometric career assessment in Nagpur: take it online, then discuss the results with a Career Ka Dost counsellor.',
   },
   '/results': {
     title: 'Results & testimonials',

@@ -15,7 +15,7 @@ export function HomeMore() {
         <div className="max-w-3xl">
           <h2 className="font-display text-3xl font-extrabold leading-tight tracking-tight md:text-4xl">A trusted career counsellor in Nagpur - and online across India</h2>
           <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-            Career Ka Dost helps students from Class 9 onwards, and their parents, make clear decisions about streams, courses, colleges and
+            Career Ka Dost offers career guidance and career counselling in Nagpur. We help students from Class 9 onwards, and their parents, make clear decisions about streams, courses, colleges and
             careers. Founder Bharat Rai and the team offer one-to-one career counselling, DMIT report counselling, and step-by-step admission
             guidance for MHT CET and JoSAA engineering counselling, NEET medical counselling, and courses such as law, BBA, MBA, B.Sc and BCA.
             Sessions are held at our office in Sitabuldi, Nagpur, and online for families anywhere in India.

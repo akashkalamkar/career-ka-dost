@@ -65,6 +65,15 @@ export function NagpurHub() {
       <section className="py-16 md:py-20">
         <div className={`${container} max-w-4xl space-y-16`}>
           <div>
+            <h2 className="font-display text-3xl font-extrabold tracking-tight">Career guidance in Nagpur: your career consultant and counsellor</h2>
+            {HUB.consultant.map((t) => (
+              <p key={t} className="mt-5 text-lg leading-relaxed text-ink-soft">
+                {t}
+              </p>
+            ))}
+          </div>
+
+          <div>
             <h2 className="font-display text-3xl font-extrabold tracking-tight">What is career counselling, and who needs it?</h2>
             <p className="mt-5 text-lg leading-relaxed text-ink-soft">
               Career counselling helps a student understand their interests, strengths and goals, look at the real options in front of them, and make a plan they can follow. It is not one person telling a child what to become. A good counsellor gives facts, asks the right questions and involves parents, so the decision belongs to the family. Students and parents in Nagpur usually come to us:
@@ -98,6 +107,20 @@ export function NagpurHub() {
                 </li>
               ))}
             </ul>
+          </div>
+
+          <div>
+            <h2 className="font-display text-3xl font-extrabold tracking-tight">Career counselling for students in Nagpur, by need</h2>
+            <div className="mt-6 space-y-8">
+              {HUB.byNeed.map(([name, text]) => (
+                <div key={name}>
+                  <h3 className="font-display text-xl font-extrabold">{name}</h3>
+                  <p className="mt-2 text-lg leading-relaxed text-ink-soft">
+                    <RichText text={text} />
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div>
@@ -148,14 +171,26 @@ export function NagpurHub() {
           </div>
 
           <div>
-            <h2 className="font-display text-3xl font-extrabold tracking-tight">Visit our career counselling office in Sitabuldi, Nagpur</h2>
+            <h2 className="font-display text-3xl font-extrabold tracking-tight">Career counselling in Sitabuldi, Nagpur: visit our office</h2>
             <p className="mt-5 text-lg leading-relaxed text-ink-soft">
               {SITE.addressLine}. We are in the centre of Nagpur, opposite Fortune Mall. {SITE.hoursText}
+            </p>
+            <p className="mt-4 text-lg leading-relaxed text-ink-soft">
+              {HUB.areas}
             </p>
             <p className="mt-4 text-lg leading-relaxed text-ink-soft">
               Call <a className="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4" href={`tel:${SITE.phoneTel}`}>{SITE.phonePretty}</a>, message us on WhatsApp, or{' '}
               <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4">open our location in Google Maps</a>.
             </p>
+          </div>
+
+          <div>
+            <h2 className="font-display text-3xl font-extrabold tracking-tight">How to choose the best career counselling in Nagpur</h2>
+            {HUB.chooseBest.map((t) => (
+              <p key={t} className="mt-5 text-lg leading-relaxed text-ink-soft">
+                <RichText text={t} />
+              </p>
+            ))}
           </div>
 
           <div>

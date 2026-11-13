@@ -350,3 +350,13 @@ This is NOT what the original packaging recipe (section 11) assumed - it predate
 - Linked from: home page (link under the intro), footer (Explore), every service page (sidebar), the "how to find a career counsellor" article, the HTML sitemap and site search. Title "Career Counselling in Nagpur: After 10th, 12th & Admissions" (59 chars).
 - Why: competitors on Google page 1 for "career counselling in nagpur" all have a dedicated page with that phrase; the site had none.
 - Keep the fee FAQ ("Future Blueprint ₹214") and the 4.9 / 141 numbers (site.js) up to date.
+
+## Directory listings (owner confirmed 10 Nov 2026)
+- Done: Justdial (free listing), IndiaMART (seller catalogue; pincode 440012, address "2nd Floor, Buty Chambers", website and Google Maps link added).
+- Still to do: Bing Places, Apple Business Connect, Facebook business page (the share link given earlier is unconfirmed), Sulekha, Instagram business account switch. Use the same name/address/phone everywhere.
+
+## 13 Nov 2026: owner's 23 target keywords (career counselling Nagpur cluster)
+- Hub page (/career-counselling-in-nagpur, hub.js / NagpurHub.jsx) now has: "Career guidance in Nagpur: your career consultant and counsellor", "Career counselling for students in Nagpur, by need" (after 10th, after 12th, college and course selection, engineering, medical, psychometric/aptitude test, online), "How to choose the best career counselling in Nagpur", "Career counselling in Sitabuldi, Nagpur: visit our office" (+ one honest sentence listing Dharampeth, Sadar, Civil Lines etc. as areas people can come from - NO separate area pages, those would be doorway pages), and 17 FAQ answers incl. best career counselling/counsellor, near me, career guidance near me.
+- /career-test: new title "Career Aptitude Test & Psychometric Assessment in Nagpur" and text under it (pageInfo.js).
+- Extra FAQs on MHT CET (engineering career counselling), NEET (medical career guidance), After 10th, After 12th, Online and Admission Guidance pages; the "best career counsellor" article has a new section "What is the best career counselling in Nagpur?"; home text mentions career guidance in Nagpur.
+- NOT added on purpose: "study abroad career counselling in Nagpur" (not a listed service - owner must confirm it is real before any page or claim) and a Dharampeth page.

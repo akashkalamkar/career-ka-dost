@@ -52,7 +52,13 @@ const ROUTES = {
   '/career-counselling-in-nagpur': () => withCta(<NagpurHub />),
   '/about': () => withCta(<About />),
   '/pricing': () => withCta(<Pricing />),
-  '/career-test': () => withCta(<CareerTest />),
+  '/career-test': () =>
+    withCta(
+      <>
+        <CareerTest />
+        <MoreInfo page="/career-test" />
+      </>,
+    ),
   '/results': () => withCta(<Results />),
   '/resources': () =>
     withCta(
