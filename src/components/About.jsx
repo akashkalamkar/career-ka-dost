@@ -95,7 +95,7 @@ export function About() {
             {inclusive.map((p, i) => (
               <Tilt key={p.title} as="article" className="border border-line border-t-4 border-t-brand bg-white p-8 hover:shadow-2xl">
                 <span className="font-display text-sm font-extrabold text-ink/40 [transform:translateZ(20px)]">0{i + 1}</span>
-                <h3 className="mt-6 font-display text-2xl font-extrabold leading-tight [transform:translateZ(30px)]">{p.title}</h3>
+                <h2 className="mt-6 font-display text-2xl font-extrabold leading-tight [transform:translateZ(30px)]">{p.title}</h2>
                 <p className="mt-3 leading-relaxed text-ink-soft [transform:translateZ(14px)]">{p.text}</p>
               </Tilt>
             ))}

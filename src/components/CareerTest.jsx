@@ -120,7 +120,7 @@ export function CareerTest() {
                 <s.icon className="h-7 w-7" />
               </span>
               <p className="mt-6 text-xs font-bold uppercase tracking-[0.16em] text-mute">Step {i + 1}</p>
-              <h3 className="mt-1 font-display text-2xl font-extrabold [transform:translateZ(26px)]">{s.t}</h3>
+              <h2 className="mt-1 font-display text-2xl font-extrabold [transform:translateZ(26px)]">{s.t}</h2>
               <p className="mt-3 leading-relaxed text-ink-soft [transform:translateZ(12px)]">{s.d}</p>
             </Tilt>
           ))}

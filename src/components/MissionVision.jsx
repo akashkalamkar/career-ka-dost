@@ -97,7 +97,7 @@ export function MissionVision() {
             <span className="flex h-12 w-12 items-center justify-center bg-brand text-ink shadow-[0_4px_0_0_#b97f00] transition-colors group-hover/tilt:bg-white group-hover/tilt:text-brass group-hover/tilt:shadow-[0_4px_0_0_#a86400] [transform:translateZ(40px)]">
               <EyeIcon className="h-6 w-6" />
             </span>
-            <h3 className="mt-8 font-display text-3xl font-extrabold tracking-tight md:text-4xl [transform:translateZ(28px)]">Our Vision</h3>
+            <h2 className="mt-8 font-display text-3xl font-extrabold tracking-tight md:text-4xl [transform:translateZ(28px)]">Our Vision</h2>
             <p className="mt-4 text-lg leading-relaxed text-ink-soft transition-colors group-hover/tilt:text-ink [transform:translateZ(18px)]">
               To become a trusted career guidance partner for every student, ensuring that no career decision is made in
               confusion, pressure or lack of awareness.
@@ -108,7 +108,7 @@ export function MissionVision() {
             <span className="flex h-12 w-12 items-center justify-center bg-brand text-ink shadow-[0_4px_0_0_#b97f00] transition-colors group-hover/tilt:bg-white group-hover/tilt:text-brass group-hover/tilt:shadow-[0_4px_0_0_#a86400] [transform:translateZ(40px)]">
               <TargetIcon className="h-6 w-6" />
             </span>
-            <h3 className="mt-8 font-display text-3xl font-extrabold tracking-tight md:text-4xl [transform:translateZ(28px)]">Our Mission</h3>
+            <h2 className="mt-8 font-display text-3xl font-extrabold tracking-tight md:text-4xl [transform:translateZ(28px)]">Our Mission</h2>
             <p className="mt-4 text-lg leading-relaxed text-ink-soft transition-colors group-hover/tilt:text-ink [transform:translateZ(18px)]">
               To guide students towards the right career through clarity, confidence and correct direction, based on aptitude,
               interests and real opportunities, not pressure or trends.

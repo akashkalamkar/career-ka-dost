@@ -366,3 +366,9 @@ This is NOT what the original packaging recipe (section 11) assumed - it predate
 - Home page: "In Nagpur? Visit our office" / "Elsewhere? Take the session online" cards and an "Admissions across Maharashtra" link row.
 - Every blog article's side box links to /career-counselling-in-nagpur. Related-guide lists updated on the DMIT, after-10th, after-12th, MHT CET and admission-guidance pages; DMIT page FAQs add full form and "free online DMIT".
 - Update yearly: FYJC and engineering guides (dates/rules change every year).
+
+## 14 Nov 2026: final deep SEO audit (built copy of the uploaded files)
+- 48 pages: all in sitemap, unique titles/descriptions/H1s, 1 H1 each, canonical correct, no broken internal links, no orphan pages, max 2 clicks from home, structured data valid (no self-serving ratings), no overflow at 320/390/1280, no broken images, no console errors.
+- Fixed: heading order on About (Vision/Mission, MissionVision.jsx), Blog (post cards, Blog.jsx) and Career Test (steps, CareerTest.jsx) - card titles are now H2 instead of H3 after the H1.
+- Lighthouse (phone, 8 pages): performance 93-98, accessibility 96, best practices 96, SEO 100. Remaining flags: yellow "Dost" logo contrast (brand), no public source maps (deliberate), console errors only from the test machine blocking Google/Firebase.
+- Text-to-HTML ratio 5-22% (avg 11%): not a Google ranking factor; caused by design/icon code.
