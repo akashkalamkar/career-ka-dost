@@ -37,7 +37,7 @@ export const SERVICES = [
       ["Which engineering admission guidance is best for MHT CET students?", "Look for a service that builds your college list from previous years' official cut-offs, helps you fill the CAP option form carefully and supports you after every round. Our guide on how to choose JEE and JoSAA counselling guidance lists the questions to ask any counsellor."],
       ["Do you offer engineering career counselling in Nagpur?", "Yes. We help students choose an engineering branch and college, and then guide them through MHT CET CAP rounds and JoSAA, in person at our Sitabuldi, Nagpur office or online."],
     ],
-    blog: ['mht-cet-cap-round-process-maharashtra-engineering-admission', 'how-to-choose-jee-josaa-counselling-guidance', 'questions-to-ask-before-choosing-a-college'],
+    blog: ['engineering-colleges-in-nagpur-admission', 'mht-cet-cap-round-process-maharashtra-engineering-admission', 'how-to-choose-jee-josaa-counselling-guidance'],
   },
   {
     slug: 'josaa-counselling-nagpur',
@@ -136,8 +136,10 @@ export const SERVICES = [
       ["How much does a DMIT test cost in Nagpur?", "Our DMIT test with report counselling is currently offered at ₹2,000 per student (regular price ₹4,000). The fee is confirmed with you before you pay."],
       ["Is the DMIT test scientific?", "Independent, peer-reviewed research has not established that fingerprint patterns predict talent or success. We use DMIT as one conversation starter and never as the only basis for a career choice."],
       ["Which is better, DMIT or a psychometric test?", "They measure different things. Read our guide to DMIT vs psychometric tests, or book a session and we will suggest what suits your child."],
+      ["What is the full form of DMIT?", "Dermatoglyphics Multiple Intelligence Test. It analyses fingerprint patterns and produces a report on learning style and strengths."],
+      ["Can I take a DMIT test online for free?", "A genuine DMIT needs the fingerprints to be scanned, so a free online quiz is not a DMIT. You can start with our free stream quiz or the online career aptitude test."],
     ],
-    blog: ['how-to-choose-dmit-test-in-nagpur', 'dmit-vs-psychometric-test-which-to-choose', 'what-is-a-psychometric-test'],
+    blog: ['what-is-dmit-test-full-form-price', 'how-to-choose-dmit-test-in-nagpur', 'dmit-vs-psychometric-test-which-to-choose'],
   },
   {
     slug: 'career-counselling-for-schools',
@@ -200,7 +202,7 @@ export const SERVICES = [
       ["Do you provide career guidance for students after 10th in Nagpur?", "Yes. Career guidance after 10th is one of our main services. We compare Science, Commerce and Arts for each student and explain the career options after 10th."],
       ["What are the career options after 10th, and can counselling help me choose?", "After 10th you can choose Science, Commerce or Arts in Class 11, or routes such as diploma courses. Career options after 10th counselling in Nagpur helps you compare them using your interests, aptitude and marks. Read our guide on how to choose a stream after 10th."],
     ],
-    blog: ['how-to-choose-a-stream-after-class-10', 'what-is-a-psychometric-test', 'career-options-after-12th-science-pcm-pcb'],
+    blog: ['how-to-choose-a-stream-after-class-10', 'fyjc-11th-admission-nagpur', 'confused-about-career-what-to-do'],
   },
   {
     slug: 'online-career-counselling-maharashtra',
@@ -263,7 +265,7 @@ export const SERVICES = [
       ['Do you offer this guidance online?', 'Yes, for students anywhere in Maharashtra.'],
       ["Do you offer college and course selection counselling in Nagpur?", "Yes. We help you choose the right course and college, understand eligibility and the admission process, and prepare documents, for Law, BBA, MBA, B.Sc, BCA and other degrees."],
     ],
-    blog: ['questions-to-ask-before-choosing-a-college', 'career-options-after-12th-science-pcm-pcb', 'how-to-choose-a-stream-after-class-10'],
+    blog: ['what-to-do-after-12th-commerce', 'what-to-do-after-12th-arts', 'questions-to-ask-before-choosing-a-college'],
   },
   {
     slug: 'career-counselling-after-12th-nagpur',
@@ -297,7 +299,7 @@ export const SERVICES = [
       ["What are the career options after 12th, and can counselling in Nagpur help me choose?", "The career options after 12th depend on your stream and scores: engineering, medicine, pharmacy, law, management, design, pure sciences and many more. Career options after 12th counselling in Nagpur helps you compare them with facts and plan the entrance exams and admission steps."],
       ["Do you offer college and course selection counselling in Nagpur?", "Yes. We help you shortlist courses and colleges, compare fees and eligibility, and complete the admission steps."],
     ],
-    blog: ['career-options-after-12th-science-pcm-pcb', 'questions-to-ask-before-choosing-a-college', 'mht-cet-cap-round-process-maharashtra-engineering-admission'],
+    blog: ['what-to-do-after-12th', 'career-options-after-12th-science-pcm-pcb', 'what-to-do-after-12th-commerce'],
   },
   {
     slug: 'ayush-counselling-bams-bhms-bums',

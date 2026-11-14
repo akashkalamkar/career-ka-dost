@@ -13,9 +13,11 @@ import { ArrowIcon, WhatsAppIcon } from './icons'
 const REVIEW_NAMES = ['Prajwal Gaikwad', 'Vedanshi Tamrakar', 'Kushal Humane']
 const GUIDES = [
   'career-counselling-in-nagpur-how-to-choose-a-career-counsellor',
+  'confused-about-career-what-to-do',
+  'what-to-do-after-12th',
   'how-to-choose-a-stream-after-class-10',
-  'career-options-after-12th-science-pcm-pcb',
-  'what-is-a-psychometric-test',
+  'fyjc-11th-admission-nagpur',
+  'engineering-colleges-in-nagpur-admission',
 ]
 
 /** Current fee of a plan: the price, or "On request". */

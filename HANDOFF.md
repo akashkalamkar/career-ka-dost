@@ -360,3 +360,9 @@ This is NOT what the original packaging recipe (section 11) assumed - it predate
 - /career-test: new title "Career Aptitude Test & Psychometric Assessment in Nagpur" and text under it (pageInfo.js).
 - Extra FAQs on MHT CET (engineering career counselling), NEET (medical career guidance), After 10th, After 12th, Online and Admission Guidance pages; the "best career counsellor" article has a new section "What is the best career counselling in Nagpur?"; home text mentions career guidance in Nagpur.
 - NOT added on purpose: "study abroad career counselling in Nagpur" (not a listed service - owner must confirm it is real before any page or claim) and a Dharampeth page.
+
+## 14 Nov 2026: problem-aware guides, Nagpur local guides, home blocks
+- 7 new articles (blog.js), all from official/verified facts: what-to-do-after-12th (all streams), what-to-do-after-12th-commerce, what-to-do-after-12th-arts, confused-about-career-what-to-do, what-is-dmit-test-full-form-price (honest: no free online DMIT, evidence not established), fyjc-11th-admission-nagpur (statewide centralised process on mahafyjcadmissions.in from 2025-26, CAP + quota rounds), engineering-colleges-in-nagpur-admission (VNIT and IIIT Nagpur via JoSAA; others via MHT CET CAP; LIT is now Laxminarayan Innovation Technological University). Keyword research (Ubersuggest, India): "what to do after 12th" 2,900, commerce 2,900+1,900, "dmit test" 5,400, "dmit test price" 880, "confused about career" 260.
+- Home page: "In Nagpur? Visit our office" / "Elsewhere? Take the session online" cards and an "Admissions across Maharashtra" link row.
+- Every blog article's side box links to /career-counselling-in-nagpur. Related-guide lists updated on the DMIT, after-10th, after-12th, MHT CET and admission-guidance pages; DMIT page FAQs add full form and "free online DMIT".
+- Update yearly: FYJC and engineering guides (dates/rules change every year).

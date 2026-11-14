@@ -45,6 +45,46 @@ export function HomeMore() {
           </span>
         </a>
 
+        <div className="mt-12 grid gap-4 md:grid-cols-2">
+          <a href="/career-counselling-in-nagpur" className="flex flex-col border-2 border-brand-deep bg-white p-6 transition hover:-translate-y-0.5 hover:bg-brand/20">
+            <span className="text-xs font-bold uppercase tracking-[0.16em] text-brass">In Nagpur?</span>
+            <span className="mt-2 font-display text-xl font-extrabold">Visit our office in Sitabuldi</span>
+            <span className="mt-2 text-sm text-ink-soft">One-to-one career counselling at Buty Chambers, opposite Fortune Mall. Monday to Saturday, 10 am to 6 pm.</span>
+            <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold">
+              Career counselling in Nagpur <ArrowIcon className="h-4 w-4" />
+            </span>
+          </a>
+          <a href="/online-career-counselling-maharashtra" className="flex flex-col border-2 border-brand-deep bg-white p-6 transition hover:-translate-y-0.5 hover:bg-brand/20">
+            <span className="text-xs font-bold uppercase tracking-[0.16em] text-brass">Elsewhere in Maharashtra or India?</span>
+            <span className="mt-2 font-display text-xl font-extrabold">Take the full session online</span>
+            <span className="mt-2 text-sm text-ink-soft">The same one-to-one counselling by video call, in English, Hindi or Marathi. No need to travel.</span>
+            <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold">
+              Online career counselling <ArrowIcon className="h-4 w-4" />
+            </span>
+          </a>
+        </div>
+
+        <h2 className="mt-12 font-display text-2xl font-extrabold">Admissions across Maharashtra</h2>
+        <p className="mt-3 max-w-3xl text-ink-soft">These processes are the same for every student in Maharashtra, wherever you live.</p>
+        <ul className="mt-5 flex flex-wrap gap-3">
+          {[
+            ['/blog/fyjc-11th-admission-nagpur', 'FYJC (Class 11) admission'],
+            ['/mht-cet-counselling-nagpur', 'MHT CET CAP rounds'],
+            ['/josaa-counselling-nagpur', 'JoSAA (IIT, NIT, IIIT)'],
+            ['/neet-counselling-maharashtra', 'NEET state quota'],
+            ['/ayush-counselling-bams-bhms-bums', 'BAMS, BHMS, BUMS'],
+            ['/physiotherapy-bpth-admission-guidance', 'Physiotherapy (BPTh)'],
+            ['/neet-counselling-documents-maharashtra', 'NEET documents checklist'],
+            ['/blog/what-to-do-after-12th', 'What to do after 12th'],
+          ].map(([href, label]) => (
+            <li key={href}>
+              <a href={href} className="inline-block border border-ink/20 bg-white px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5 hover:border-brand-deep hover:bg-brand">
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
         <h2 className="mt-12 font-display text-2xl font-extrabold">Our services</h2>
         <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {SERVICES.map((sv) => (

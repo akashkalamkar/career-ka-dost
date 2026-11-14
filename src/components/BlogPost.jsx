@@ -216,7 +216,13 @@ export function BlogPost({ slug }) {
           <div className="lg:sticky lg:top-28">
             <div className="border-t-8 border-brand bg-paper-2 p-7">
               <p className="font-display text-2xl font-extrabold leading-tight">Want advice for your situation?</p>
-              <p className="mt-3 text-ink-soft">Book counselling and we will guide you step by step.</p>
+              <p className="mt-3 text-ink-soft">
+                Book counselling and we will guide you step by step. See our{' '}
+                <a href="/career-counselling-in-nagpur" className="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4">
+                  career counselling in Nagpur
+                </a>
+                .
+              </p>
               <a {...bookProps} className={`${btnPrimary} mt-6 w-full`}>
                 Book counselling
               </a>
