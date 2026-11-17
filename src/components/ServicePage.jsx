@@ -6,6 +6,7 @@ import { GOOGLE_REVIEWS, TESTIMONIALS } from '../config/testimonials'
 import { btnInk, btnPrimary, container } from '../config/ui'
 import { bookProps } from '../utils/leadForm'
 import { openWhatsApp } from '../utils/whatsapp'
+import { RichText } from './BlogPost'
 import { ArrowIcon, WhatsAppIcon } from './icons'
 
 /** Which Google reviews to show on which service page: only general or relevant ones, quoted exactly (see testimonials.js). */
@@ -139,7 +140,9 @@ export function ServicePage({ slug }) {
                 {s.faqs.map(([q, a]) => (
                   <div key={q} className="py-5">
                     <h3 className="font-display text-lg font-extrabold">{q}</h3>
-                    <p className="mt-2 leading-relaxed text-ink-soft">{a}</p>
+                    <p className="mt-2 leading-relaxed text-ink-soft">
+                      <RichText text={a} />
+                    </p>
                   </div>
                 ))}
               </div>

@@ -372,3 +372,19 @@ This is NOT what the original packaging recipe (section 11) assumed - it predate
 - Fixed: heading order on About (Vision/Mission, MissionVision.jsx), Blog (post cards, Blog.jsx) and Career Test (steps, CareerTest.jsx) - card titles are now H2 instead of H3 after the H1.
 - Lighthouse (phone, 8 pages): performance 93-98, accessibility 96, best practices 96, SEO 100. Remaining flags: yellow "Dost" logo contrast (brand), no public source maps (deliberate), console errors only from the test machine blocking Google/Firebase.
 - Text-to-HTML ratio 5-22% (avg 11%): not a Google ranking factor; caused by design/icon code.
+- 14 Nov 2026 (owner confirmed): /career-counselling-in-nagpur, /, /blog/what-to-do-after-12th, /blog/what-to-do-after-12th-commerce, /blog/what-is-dmit-test-full-form-price, /blog/confused-about-career-what-to-do, /dmit-test-nagpur, /career-test, /blog/what-to-do-after-12th-arts, /blog/fyjc-11th-admission-nagpur
+- 17 Nov 2026 (owner confirmed): /blog/engineering-colleges-in-nagpur-admission, /career-counselling-after-12th-nagpur, /career-counselling-after-10th-nagpur, /mht-cet-counselling-nagpur, /neet-counselling-maharashtra, /pricing, /contact, /about, /blog, /online-career-counselling-maharashtra
+- Remaining after 17 Nov: josaa service, admission guidance, ayush, physiotherapy, vidarbha, results, stream-quiz, resources, faq, schools, sitemap, checklist, 8 older blog posts + 3 how-to-choose guides, 3 legal pages.
+
+## 17 Nov 2026: NEET keyword plan (title fix + 5 medical guides)
+- NEET service page: title now "NEET Counselling in Nagpur & Maharashtra – MBBS, BDS, BAMS", H1 "NEET counselling in Nagpur and Maharashtra", intro names Vidarbha districts (no district pages - doorway risk), 6 new FAQs (FAQPage schema), related reading now 6 guides.
+- Service page FAQ answers now render [words](/page) links (ServicePage.jsx uses RichText); seo.js faqPage() strips the link markup for Google.
+- New guides (blog.js, dated 2026-11-17), facts only from official State CET Cell 2025-26 documents (seat matrices, notices 08/13/18/19/22/25/31, fee list):
+  - /blog/medical-colleges-in-nagpur-mbbs-bds-bams (colleges, seats, FRA fees; Nagpur + Vidarbha)
+  - /blog/how-to-fill-maharashtra-neet-option-form
+  - /blog/maharashtra-neet-counselling-rounds-explained
+  - /blog/government-vs-private-mbbs-maharashtra-fees (govt MBBS ₹1,62,100 open; private ₹6,21,500-₹15,57,000)
+  - /blog/neet-category-domicile-maharashtra (no reservation percentages - official brochure host was blocked; percentages not verified)
+- Linked from: NEET page, AYUSH page, Nagpur hub, state quota guide, AIQ vs state guide.
+- Owner said NO to NEET PG and NRI quota content. Seats/fees are 2025-26 - update when 2026-27 lists come out.
+- Build: 53 pages. Audit: no broken links, descriptions <=155.

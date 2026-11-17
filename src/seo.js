@@ -154,7 +154,8 @@ export function pageMeta(path) {
 const faqPage = (pairs) => ({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: pairs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  // [words](/page) links in answers are shown as plain words to Google.
+  mainEntity: pairs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a.replace(/\[([^\]]+)\]\([^)\s]+\)/g, '$1') } })),
 })
 
 /** Extra structured data for some pages: the founder on About, questions and answers on FAQ and service pages. */
