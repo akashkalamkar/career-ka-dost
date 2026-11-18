@@ -24,7 +24,7 @@ const PAGES = [
   { title: 'Pricing and services', href: '/pricing', keywords: 'pricing price fees cost services plans packages charges rates' },
   { title: 'Career Test', href: '/career-test', keywords: 'career test psychometric assessment aptitude quiz dmit' },
   { title: 'Results and testimonials', href: '/results', keywords: 'results testimonials reviews achievers success stories rating toppers' },
-  { title: 'Free Resources', href: '/resources', keywords: 'free resources sample papers downloads pdf practice question papers study material checklists checklist syllabus documents sign in' },
+  { title: 'Free Resources', href: '/resources', keywords: 'free resources sample papers downloads pdf practice question papers study material' },
   { title: 'Blog', href: '/blog', keywords: 'blog articles guides news reading' },
   { title: 'NEET counselling documents checklist', href: '/neet-counselling-documents-maharashtra', keywords: 'documents checklist required documents neet counselling maharashtra state quota cet cell domicile caste validity non creamy layer annexure mbbs bds bams bhms bpth' },
   { title: 'FAQ', href: '/faq', keywords: 'faq questions answers help doubts' },

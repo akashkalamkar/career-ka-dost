@@ -18,8 +18,7 @@ import { Resources } from './components/Resources'
 import { Results } from './components/Results'
 import { ServicePage } from './components/ServicePage'
 import { StreamQuiz } from './components/StreamQuiz'
-import { Checklist } from './components/Checklist'
-import { SignInModal } from './components/SignIn'
+import { DocumentChecklist } from './components/DocumentChecklist'
 import { Breadcrumbs } from './components/Breadcrumbs'
 import { MoreInfo } from './components/MoreInfo'
 import { SitemapPage } from './components/SitemapPage'
@@ -27,7 +26,6 @@ import { NagpurHub } from './components/NagpurHub'
 import { NotFound } from './components/NotFound'
 import { PRIVACY, REFUND_POLICY, TERMS } from './config/legal'
 import { SERVICES } from './config/services'
-import { CHECKLISTS } from './config/checklists'
 import { applyPendingJump } from './utils/jump'
 import { trackPageView } from './utils/analytics'
 import { countThisVisit } from './utils/visits'
@@ -83,7 +81,7 @@ const ROUTES = {
         <MoreInfo page="/stream-quiz" />
       </>,
     ),
-  ...Object.fromEntries(CHECKLISTS.map((list) => [`/${list.slug}`, () => <Checklist key={list.slug} list={list} />])),
+  '/neet-counselling-documents-maharashtra': () => <DocumentChecklist />,
   '/contact': () => (
     <>
       <LeadForm />
@@ -192,7 +190,6 @@ function App({ initialPath }) {
   return (
     <div className="min-h-svh bg-paper text-ink antialiased">
       <LeadGateModal />
-      <SignInModal />
       <Header path={route.key} />
       <main>
         {route.key !== '/admin' ? <Breadcrumbs path={route.path} /> : null}

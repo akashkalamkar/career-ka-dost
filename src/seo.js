@@ -1,4 +1,3 @@
-import { CHECKLISTS } from './config/checklists.js'
 import { POSTS } from './config/blog.js'
 import { FAQS } from './config/faq.js'
 import { SERVICES } from './config/services.js'
@@ -66,7 +65,11 @@ export const PAGES = {
     fullTitle: 'Which Stream After 10th? Free Quiz | Career Ka Dost',
     description: 'Free 3-minute quiz for Class 9 and 10 students: 12 everyday questions to find whether Science (PCM or PCB), Commerce or Arts suits you best.',
   },
-  ...Object.fromEntries(CHECKLISTS.map((list) => [`/${list.slug}`, list.seo])),
+  '/neet-counselling-documents-maharashtra': {
+    title: 'NEET documents checklist',
+    fullTitle: 'NEET Counselling Documents List 2026 – Maharashtra',
+    description: 'Free checklist of documents for NEET UG 2026 Maharashtra state quota counselling (MBBS, BDS, BAMS, BHMS, BPTh) from the State CET Cell. Tick, print, share.',
+  },
   '/sitemap': {
     title: 'Sitemap',
     fullTitle: 'Sitemap – All Pages | Career Ka Dost',
@@ -90,8 +93,7 @@ export function crumbTrail(path) {
   if (path === '/' || !(path in PAGES)) return []
   const service = SERVICES.find((sv) => path === `/${sv.slug}`)
   if (service) return [['Home', '/'], ['Services & fees', '/pricing'], [service.menu, path]]
-  const list = CHECKLISTS.find((l) => `/${l.slug}` === path)
-  if (list) return [['Home', '/'], list.crumb, [list.seo.title, path]]
+  if (path === '/neet-counselling-documents-maharashtra') return [['Home', '/'], ['NEET counselling', '/neet-counselling-maharashtra'], ['Documents checklist', path]]
   return [['Home', '/'], [PAGES[path].title, path]]
 }
 

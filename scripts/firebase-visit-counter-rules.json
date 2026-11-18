@@ -8,18 +8,6 @@
         ".write": true,
         ".validate": "newData.isNumber() && newData.val() === (data.exists() ? data.val() : 0) + 1"
       }
-    },
-    "progress": {
-      "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid",
-        "$list": {
-          ".validate": "$list.matches(/^[a-z0-9-]{1,60}$/) && newData.hasChildren(['t']) && newData.child('t').hasChildren()",
-          "t": { "$key": { ".validate": "newData.val() === true && $key.matches(/^[a-z0-9_-]{1,80}$/)" } },
-          "u": { ".validate": "newData.isNumber()" },
-          "$other": { ".validate": false }
-        }
-      }
     }
   }
 }

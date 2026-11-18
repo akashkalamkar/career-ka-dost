@@ -1,16 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { CHECKLISTS } from '../config/checklists'
 import { RESOURCE_CLASSES } from '../config/resources'
 import { SITE } from '../config/site'
-import { btnInk, btnPrimary, container } from '../config/ui'
-import { trackEvent } from '../utils/analytics'
+import { btnPrimary, container } from '../config/ui'
 import { SELECT_CLASS_EVENT } from '../utils/jump'
 import { openWhatsApp } from '../utils/whatsapp'
 import { BooksArt } from './Art3D'
 import { SectionHeading } from './SectionHeading'
 import { Tilt } from './Tilt'
-import { ArrowIcon, BookIcon, DownloadIcon, EyeIcon, WhatsAppIcon } from './icons'
-import { GatedDownload } from './SignIn'
+import { ArrowIcon, BookIcon, DownloadIcon, WhatsAppIcon } from './icons'
 
 const url = (path) => `${import.meta.env.BASE_URL}${path}`
 
@@ -35,31 +32,10 @@ function FileRow({ item }) {
           ))}
         </ul>
       ) : null}
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <a
-          href={url(item.path)}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackEvent('resource_view', { file: item.path })}
-          className={`${btnInk} !px-3 !py-2.5`}
-          aria-label={`View ${item.title} (PDF)`}
-        >
-          <EyeIcon className="h-5 w-5" />
-          View
-        </a>
-        <GatedDownload
-          href={url(item.path)}
-          download
-          label={item.title}
-          reason="Free practice papers are for registered students."
-          onDownload={() => trackEvent('resource_download', { file: item.path })}
-          className={`${btnPrimary} !px-3 !py-2.5`}
-          aria-label={`Download ${item.title} (PDF)`}
-        >
-          <DownloadIcon className="h-5 w-5" />
-          Download
-        </GatedDownload>
-      </div>
+      <a href={url(item.path)} download className={`${btnPrimary} mt-4 w-full !py-2.5`} aria-label={`Download ${item.title} (PDF)`}>
+        <DownloadIcon className="h-5 w-5" />
+        Download PDF
+      </a>
     </li>
   )
 }
@@ -177,7 +153,7 @@ export function Resources() {
         <SectionHeading as="h1"
           eyebrow="Free resources"
           title="Practice papers for every class."
-          subtitle="Pick your class and subject, then view any PDF right away. To download, sign in once with your Gmail - it is free."
+          subtitle="Pick your class and subject, open it, then download the PDF to your phone or computer. Print it or solve it on screen."
           art={<BooksArt />}
         />
 
@@ -207,28 +183,6 @@ export function Resources() {
           {current.subjects.map((s) => (
             <SubjectCard key={`${current.id}-${s.id}`} subject={s} onOpen={(subject) => setOpened({ classLabel: current.label, subject })} />
           ))}
-        </div>
-
-        <div className="mt-16" id="checklists">
-          <div className="mb-6 flex flex-col gap-1 border-b-2 border-brand pb-4 md:flex-row md:items-end md:justify-between">
-            <h2 className="font-display text-3xl font-extrabold tracking-tight">Free checklists</h2>
-            <p className="text-ink-soft">Tick as you go. Sign in with Gmail and your ticks are saved on every device.</p>
-          </div>
-          <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {CHECKLISTS.map((list) => (
-              <li key={list.slug}>
-                <a href={`/${list.slug}`} className="group flex h-full flex-col border border-line border-t-4 border-t-brand bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-2xl">
-                  <span className="text-xs font-bold uppercase tracking-[0.14em] text-brass">{list.card.tag}</span>
-                  <span className="mt-2 font-display text-xl font-extrabold leading-tight">{list.card.title}</span>
-                  <span className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">{list.card.text}</span>
-                  <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold">
-                    Open checklist
-                    <ArrowIcon className="h-4 w-4 transition group-hover:translate-x-1" />
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div className="mt-14 flex flex-col items-start justify-between gap-5 border border-line bg-paper-2 p-6 md:flex-row md:items-center md:p-8">

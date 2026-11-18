@@ -84,21 +84,13 @@ export const TERMS = {
 
 export const PRIVACY = {
   title: 'Privacy Policy',
-  /** Changed 18 Nov 2026 (Google sign-in for checklists and downloads); the other pages keep LEGAL_UPDATED. */
-  updated: '18 November 2026',
+  /** Changed 1 Nov 2026 (Google Analytics added); the other pages keep LEGAL_UPDATED. */
+  updated: '1 November 2026',
   intro: 'We respect your privacy. This page explains what information we collect through this website and how we use it.',
   sections: [
     {
       h: 'What we collect',
       p: ['When you fill in our booking form, we collect the student’s name, phone number, email, class or exam, school name (if given) and city.'],
-    },
-    {
-      h: 'Signing in with Google',
-      p: [
-        'You can sign in with your Google (Gmail) account to download free resources and daily notices and to save your ticks on our free checklists. Sign-in is handled by Google Firebase: Google shares your name, email address and profile picture with us for this.',
-        'We use your sign-in only to give you the downloads and to save your checklist ticks to your account, so they appear on any device where you sign in. Your ticks are stored in Google Firebase and only you can read or change them. We do not use your sign-in to send you messages or for advertising.',
-        'You can sign out at any time with the "Sign out" link. Viewing resources and notices never needs signing in. To have your sign-in record and saved ticks deleted, contact us using the details on the Contact page.',
-      ],
     },
     {
       h: 'How we use it',
@@ -114,12 +106,12 @@ export const PRIVACY = {
     },
     {
       h: 'Third parties',
-      p: ['This website uses Google (for example Google Maps, Google Sheets and Google Firebase for sign-in and saved checklists) and WhatsApp. Their own privacy policies apply to how they handle data.'],
+      p: ['This website uses Google (for example Google Maps and Google Sheets) and WhatsApp. Their own privacy policies apply to how they handle data.'],
     },
     {
       h: 'Cookies and browser storage',
       p: [
-        'We do not use advertising cookies. Your browser remembers for the current visit that you have closed the booking pop-up, so it does not appear again. It also keeps your checklist ticks on your device, and, if you signed in, that you are signed in.',
+        'We do not use advertising cookies. Your browser remembers for the current visit that you have closed the booking pop-up, so it does not appear again.',
         'We use Google Analytics to understand how visitors use this website (for example which pages are viewed). It collects anonymous usage information through cookies; we do not use it to identify you.',
       ],
     },
