@@ -41,6 +41,21 @@ export const SITE = {
    */
   visitCounterDbUrl: 'https://career-ka-dost-7ba24-default-rtdb.asia-southeast1.firebasedatabase.app',
   /**
+   * "Sign in with Google" for students (free Firebase Authentication, same Firebase project as the visit
+   * counter). Copy these from Firebase console > Project settings > Your apps > Web app > SDK setup
+   * (they are public settings, not passwords). While apiKey is empty, sign-in is switched off: the
+   * checklists still work (ticks saved on that phone only) and downloads open without signing in.
+   * Ticks of signed-in students are saved in the Realtime Database above, under progress/<student id>.
+   */
+  firebaseWeb: {
+    apiKey: 'AIzaSyDXD4BuvzTMqaWSM3svcMdbNUYIVViKzgk',
+    authDomain: 'career-ka-dost-7ba24.firebaseapp.com',
+    databaseURL: 'https://career-ka-dost-7ba24-default-rtdb.asia-southeast1.firebasedatabase.app',
+    projectId: 'career-ka-dost-7ba24',
+    messagingSenderId: '535884440055',
+    appId: '1:535884440055:web:fe64399b3f1bc20c818ef2',
+  },
+  /**
    * Google Analytics 4 "Measurement ID" (looks like G-XXXXXXXXXX; Google Analytics > Admin > Data streams).
    * Empty = no statistics are collected. The staff portal is never counted.
    */

@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { trackEvent } from '../utils/analytics'
+import { GatedDownload } from './SignIn'
 
 /**
  * The hanging "Daily Notice" sign in the header and its pop-up (opened in document.body, outside the header). The daily notice routines save their PDF into Google
@@ -52,9 +53,16 @@ function Links({ id, compact }) {
       <a href={viewUrl(id)} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('notice_view')} className={compact ? cls : `${cls} border-[#c40000] bg-white text-[#c40000]`}>
         View
       </a>
-      <a href={downloadUrl(id)} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('notice_download')} className={compact ? cls : `${cls} border-[#c40000] bg-[#c40000] text-white`}>
+      <GatedDownload
+        href={downloadUrl(id)}
+        newTab
+        label="Daily notice PDF"
+        reason="Daily notice downloads are for registered students."
+        onDownload={() => trackEvent('notice_download')}
+        className={compact ? cls : `${cls} border-[#c40000] bg-[#c40000] text-white`}
+      >
         Download PDF
-      </a>
+      </GatedDownload>
     </>
   )
 }
