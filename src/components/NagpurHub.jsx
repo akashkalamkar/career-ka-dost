@@ -230,7 +230,9 @@ export function NagpurHub() {
               {HUB.faqs.map(([q, a]) => (
                 <div key={q} className="py-5">
                   <h3 className="font-display text-lg font-extrabold">{q}</h3>
-                  <p className="mt-2 leading-relaxed text-ink-soft">{a}</p>
+                  <p className="mt-2 leading-relaxed text-ink-soft">
+                    <RichText text={a} />
+                  </p>
                 </div>
               ))}
             </div>

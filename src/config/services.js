@@ -9,11 +9,11 @@ export const SERVICES = [
   {
     slug: 'mht-cet-counselling-nagpur',
     menu: 'MHT CET counselling',
-    title: 'MHT CET Counselling in Nagpur – CAP Round Guidance',
-    description: 'MHT CET counselling in Nagpur and online across Maharashtra: CAP round guidance, college and branch shortlisting, option form and document help.',
+    title: 'MHT CET Counselling in Nagpur – Engineering & Pharmacy CAP',
+    description: 'MHT CET counselling in Nagpur for engineering and pharmacy (B.Pharm, Pharm.D): CAP rounds, college shortlisting, option form and documents. Online too.',
     eyebrow: 'Engineering admission',
     h1: 'MHT CET counselling in Nagpur',
-    intro: 'One-to-one help through the Maharashtra engineering CAP rounds: from your MHT CET or JEE Main score to a seat you are happy with. In person at Sitabuldi, Nagpur, or online for students anywhere in Maharashtra.',
+    intro: 'One-to-one help through the Maharashtra engineering and pharmacy CAP rounds: from your MHT CET or JEE Main score to a seat you are happy with. In person at Sitabuldi, Nagpur, or online for students anywhere in Maharashtra.',
     plan: 'Engineering Counselling',
     help: [
       'A realistic shortlist of colleges and branches for your score, category and home university, using previous years’ official cut-offs.',
@@ -21,6 +21,7 @@ export const SERVICES = [
       'Clear advice on freeze, betterment and auto-freeze rules for the current year, round by round.',
       'A checklist of documents (domicile, caste validity, non-creamy layer, EWS, TFWS) well before the deadlines.',
       'JoSAA guidance too, if you are also aiming for IITs, NITs or IIITs with your JEE Main score (see our JoSAA counselling page).',
+      'Pharmacy admission: B.Pharm and Pharm.D seats in Maharashtra are filled through their own CAP rounds by the State CET Cell, separate from engineering. We help with the college list, option form and documents.',
     ],
     steps: [
       ['Share your details', 'Score, category, home university, budget and the branches you like.'],
@@ -32,6 +33,7 @@ export const SERVICES = [
       ['Do you help students outside Nagpur?', 'Yes. Sessions are available online for students anywhere in Maharashtra, as well as in person at our Nagpur office.'],
       ['Can you guarantee a particular college?', 'No honest counsellor can. Seats depend on merit, category and the choices of other students. We help you make the best possible choices with the facts available.'],
       ['When should I contact you?', 'Ideally before CAP registration opens, so certificates and the shortlist are ready in time. We can still help once the rounds have started.'],
+      ['Do you guide B.Pharm and Pharm.D admission through MHT CET?', 'Yes. In Maharashtra, B.Pharm and Pharm.D seats are filled through a separate pharmacy CAP run by the State CET Cell, using MHT CET scores as per that year\u2019s rules. We help you shortlist pharmacy colleges, check fees and fill the option form, in Nagpur or online.'],
       ['Do you also guide JoSAA counselling?', 'Yes. Engineering counselling covers JoSAA (IITs, NITs, IIITs) and MHT CET together - see our JoSAA counselling page for details.'],
       ["What is the fee for MHT CET counselling in Nagpur?", "Our Engineering Counselling fee, which covers MHT CET and JoSAA, is listed on the services and fees page and is confirmed with you before you pay."],
       ["Which engineering admission guidance is best for MHT CET students?", "Look for a service that builds your college list from previous years' official cut-offs, helps you fill the CAP option form carefully and supports you after every round. Our guide on how to choose JEE and JoSAA counselling guidance lists the questions to ask any counsellor."],
@@ -42,10 +44,10 @@ export const SERVICES = [
   {
     slug: 'josaa-counselling-nagpur',
     menu: 'JoSAA counselling (JEE)',
-    title: 'JoSAA Counselling for IIT, NIT & IIIT Admission – Nagpur',
-    description: 'JoSAA counselling help for JEE Main and Advanced students: choice filling, freeze, float and slide decisions, documents and rounds. Nagpur and online.',
+    title: 'JEE & JoSAA Counselling in Nagpur – IIT, NIT, IIIT',
+    description: 'JEE and JoSAA counselling in Nagpur for JEE Main and Advanced students: choice filling, freeze, float and slide, documents and rounds. Online too.',
     eyebrow: 'JEE: IIT, NIT and IIIT admission',
-    h1: 'JoSAA counselling for JEE students in Nagpur',
+    h1: 'JEE and JoSAA counselling in Nagpur',
     intro: 'JoSAA is the common online counselling for the IITs, NITs, IIITs and other government-funded technical institutes. A good JEE rank is only half the journey - the seat you get depends on how carefully you fill your choices and how you respond in every round. We guide students and parents step by step, in person at Sitabuldi, Nagpur, or online.',
     plan: 'Engineering Counselling',
     help: [
@@ -318,10 +320,10 @@ export const SERVICES = [
     slug: 'ayush-counselling-bams-bhms-bums',
     checklist: '/neet-counselling-documents-maharashtra',
     menu: 'AYUSH counselling (BAMS, BHMS, BUMS)',
-    title: 'BAMS, BHMS, BUMS Admission – AYUSH Counselling Guide',
-    description: 'BAMS, BHMS and BUMS admission guidance through NEET UG: Maharashtra state counselling and AACCC All India Quota counselling, choice filling and documents.',
+    title: 'BHMS, BAMS & BUMS Admission Counselling in Nagpur',
+    description: 'BHMS, BAMS and BUMS admission counselling in Nagpur through NEET UG: Maharashtra state and AACCC All India Quota rounds, choice filling and documents.',
     eyebrow: 'AYUSH admission',
-    h1: 'AYUSH counselling for BAMS, BHMS and BUMS',
+    h1: 'BHMS, BAMS and BUMS admission counselling in Nagpur',
     intro: 'Admission to BAMS (Ayurveda), BHMS (Homoeopathy) and BUMS (Unani) is based on your NEET UG score. We guide students and parents through Maharashtra state counselling and All India Quota AYUSH counselling, from choosing colleges to reporting for admission. In Nagpur or online.',
     plan: 'Medical Counselling',
     help: [
@@ -340,10 +342,11 @@ export const SERVICES = [
     faqs: [
       ['Who conducts AYUSH counselling?', 'In Maharashtra, the State CET Cell conducts counselling for state quota BAMS, BHMS and BUMS seats. AACCC, under the Ministry of Ayush, conducts counselling for the 15% All India Quota seats in government and aided AYUSH colleges, and for seats in central universities, national institutes and deemed universities. Always check the current year’s official notice.'],
       ['Is NEET UG required for BAMS, BHMS and BUMS?', 'Yes. Admission to these courses is through NEET UG.'],
+      ['Is there a BHMS college in Nagpur?', 'In the State CET Cell\u2019s 2025-26 seat matrices, no BHMS college was listed in Nagpur itself. In Vidarbha, BHMS colleges were listed in Akola, Buldhana, Khamgaon, Chandrapur, Gondia and Washim. We guide Nagpur families for BHMS admission across Maharashtra - see our [BHMS admission guide](/blog/bhms-admission-maharashtra-neet).'],
       ['Is BAMS or BHMS a good choice if I miss MBBS?', 'They are full professional degrees with their own careers in practice, hospitals, research and the wellness sector. We help you compare them honestly with your interests and budget.'],
       ['Do you guarantee admission?', 'No. Allotment depends on merit, category and seat availability. We help you make the best choices with the facts available.'],
     ],
-    blog: ['medical-colleges-in-nagpur-mbbs-bds-bams', 'maharashtra-neet-counselling-state-quota-mbbs-bams-bds', 'maharashtra-neet-counselling-rounds-explained'],
+    blog: ['bhms-admission-maharashtra-neet', 'medical-colleges-in-nagpur-mbbs-bds-bams', 'maharashtra-neet-counselling-rounds-explained'],
   },
   {
     slug: 'physiotherapy-bpth-admission-guidance',

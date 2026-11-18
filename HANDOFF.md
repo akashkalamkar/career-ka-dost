@@ -388,3 +388,12 @@ This is NOT what the original packaging recipe (section 11) assumed - it predate
 - Linked from: NEET page, AYUSH page, Nagpur hub, state quota guide, AIQ vs state guide.
 - Owner said NO to NEET PG and NRI quota content. Seats/fees are 2025-26 - update when 2026-27 lists come out.
 - Build: 53 pages. Audit: no broken links, descriptions <=155.
+
+## 17 Nov 2026 (later): owner's big keyword list - fixes, pharmacy, BHMS guide
+- Titles: JoSAA page "JEE & JoSAA Counselling in Nagpur – IIT, NIT, IIIT" (H1 "JEE and JoSAA counselling in Nagpur"); AYUSH page "BHMS, BAMS & BUMS Admission Counselling in Nagpur" (H1 to match); MHT CET page "MHT CET Counselling in Nagpur – Engineering & Pharmacy CAP".
+- Owner said YES to pharmacy: MHT CET page now mentions B.Pharm/Pharm.D CAP (help point + FAQ). Owner said NO to graduates/working professionals - do not add career-change pages.
+- Nagpur hub: 4 new FAQs (what a counsellor does, what to ask, how parents can help, how an aptitude test helps). Hub FAQ answers now render links (NagpurHub.jsx uses RichText).
+- AYUSH page: FAQ "Is there a BHMS college in Nagpur?" (none listed in Nagpur in the 2025-26 state seat matrices; Vidarbha ones in Akola, Buldhana, Khamgaon, Chandrapur, Gondia, Washim).
+- New guide /blog/bhms-admission-maharashtra-neet (official 2025-26 AYUSH seat matrix + Group B notices).
+- NOT built yet: MHT CET CAP and JoSAA document checklists. They must be copied from the official lists (like the NEET one); this session could not open cetcell.mahacet.org / josaa.nic.in. Owner to send screenshots of the official "required documents" lists, or allow the download.
+- Build: 54 pages.
