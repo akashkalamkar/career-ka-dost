@@ -179,7 +179,7 @@ export const RESOURCE_CLASSES = [
     subjects: [
       {
         id: 'pcm',
-        name: 'PCM Group',
+        name: 'MHT CET Checklist',
         files: [
           file('MHT CET PCM Chapterwise Checklist', '(2027)', 'mht-cet', 'mht-cet-pcm-chapterwise-checklist.pdf', [
             'For MHT CET 2027 PCM students',
