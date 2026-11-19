@@ -2,7 +2,7 @@
  * Free Resources page. Each class has subjects; each subject has downloads (`files`).
  *
  * To add a new PDF:
- *   1. Put the file in `public/resources/class-10/` (use a simple name, no spaces).
+ *   1. Put the file in that class's folder, e.g. `public/resources/class-10/` or `public/resources/mht-cet/` (simple name, no spaces).
  *   2. Add it to the `files` list of the subject below. `file` is the name inside that class folder.
  * A subject with no files shows "Coming soon".
  */
@@ -170,6 +170,26 @@ export const RESOURCE_CLASSES = [
       { id: 'physics', name: 'Physics', files: [] },
       { id: 'chemistry', name: 'Chemistry', files: [] },
       { id: 'biology', name: 'Biology', files: [] },
+    ],
+  },
+  {
+    id: 'mht-cet',
+    label: 'MHT CET',
+    blurb: 'Free resources for MHT CET 2027 students (PCM group).',
+    subjects: [
+      {
+        id: 'pcm',
+        name: 'PCM Group',
+        files: [
+          file('MHT CET PCM Chapterwise Checklist', '(2027)', 'mht-cet', 'mht-cet-pcm-chapterwise-checklist.pdf', [
+            'For MHT CET 2027 PCM students',
+            'Physics 26, Chemistry 25 and Maths 25 chapters',
+            'Class 11 and Class 12 chapters in syllabus order',
+            'High Yield chapters marked',
+            'Tick boxes: Completed, Revised and Chapter Mock',
+          ]),
+        ],
+      },
     ],
   },
 ]
