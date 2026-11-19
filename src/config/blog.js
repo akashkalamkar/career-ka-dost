@@ -8,16 +8,16 @@
 export const POSTS = [
   {
     slug: "mht-cet-cap-round-process-maharashtra-engineering-admission",
-    seoTitle: "MHT CET CAP Round Explained: Step-by-Step Guide",
+    seoTitle: "What Is CAP Round? Full Form & MHT CET Process",
     title: "MHT CET CAP round explained: Maharashtra engineering admission step by step",
     category: "Engineering",
     date: "2026-10-31",
     readTime: "9 min read",
-    excerpt: "What the MHT CET CAP round is, how many rounds there are, how to fill the option form, freeze and betterment, and documents needed for Maharashtra engineering.",
+    excerpt: "CAP round meaning and full form, how the MHT CET CAP round works, how many rounds there are, how to fill the option form, freeze and betterment, and documents needed for Maharashtra engineering.",
     body: [
       { type: 'p', text: "Every year, lakhs of students across Maharashtra take MHT CET and then face a second, often more confusing test: the CAP round. A good score can still end in a poor college if the option form is filled in a hurry. This guide explains the MHT CET CAP round process for engineering, step by step, in plain language for students and parents in Nagpur and across Maharashtra." },
-      { type: 'h', text: "What is the CAP round in MHT CET?" },
-      { type: 'p', text: "CAP stands for Centralised Admission Process. It is how the State Common Entrance Test Cell, Maharashtra (State CET Cell) fills engineering seats in government, government-aided, university-run and private unaided colleges across the state. Instead of applying to each college separately, you register once, list the colleges and branches you want in order of preference, and seats are allotted by merit, category and the preferences you have given." },
+      { type: 'h', text: "What is CAP round? Full form and meaning" },
+      { type: 'p', text: "The full form of CAP is Centralised Admission Process. It is how the State Common Entrance Test Cell, Maharashtra (State CET Cell) fills engineering seats in government, government-aided, university-run and private unaided colleges across the state. Instead of applying to each college separately, you register once, list the colleges and branches you want in order of preference, and seats are allotted by merit, category and the preferences you have given." },
       { type: 'p', text: "CAP covers most seats in Maharashtra engineering colleges. Seats left after the CAP rounds are filled through institute-level rounds, where colleges admit students directly according to the rules for that year." },
       { type: 'h', text: "Who can take part?" },
       { type: 'ul', items: ["Candidates with a valid MHT CET (PCM) score, for Maharashtra state seats.", "Candidates with a JEE Main score, for the All India seats in Maharashtra colleges and, under the rules of that year, for any seats left over.", "Maharashtra candidates who meet the eligibility in Class 12 marks and subjects set out in that year's information brochure."] },
@@ -179,7 +179,7 @@ export const POSTS = [
   },
   {
     slug: "josaa-counselling-explained-for-parents",
-    seoTitle: "JoSAA Counselling Explained: Rounds, Documents, Tips",
+    seoTitle: "How JoSAA Counselling Works: Rounds & Documents",
     title: "JoSAA counselling explained: process, rounds, documents and tips for parents",
     category: "Engineering",
     date: "2026-11-01",
@@ -261,7 +261,7 @@ export const POSTS = [
   },
   {
     slug: "how-to-choose-a-stream-after-class-10",
-    seoTitle: "What After 10th? How to Choose the Right Stream",
+    seoTitle: "Which Stream Is Best After 10th? How to Choose",
     title: "What after 10th? How to choose the right stream (Science, Commerce or Arts)",
     category: "Career guidance",
     date: "2026-11-01",
@@ -282,7 +282,7 @@ export const POSTS = [
       { type: 'h', text: "When should you decide?" },
       { type: 'p', text: "Ideally in Class 9 or early in Class 10, so there is time to explore interests, talk to people in different careers and prepare for FYJC admission without panic. Deciding at the last minute after results is when most mistakes happen." },
       { type: 'h', text: "Frequently asked questions" },
-      { type: 'h3', text: "What is the best stream after 10th?" },
+      { type: 'h3', text: "Which stream is best after 10th?" },
       { type: 'p', text: "The best stream is the one that matches the student's interests, abilities and goals. A stream that suits one student well can be a poor fit for another." },
       { type: 'h3', text: "Can I change my stream after Class 12?" },
       { type: 'p', text: "Yes, for many courses. Law, management, design, journalism, hotel management and many others accept students from all streams. Some courses, like MBBS or engineering, need specific subjects in Class 12." },
@@ -642,7 +642,7 @@ export const POSTS = [
     readTime: "6 min read",
     excerpt: "DMIT full form, how the test is done, what the report shows, what it costs, whether free online DMIT is real, and what the evidence says.",
     body: [
-      { type: 'p', text: "DMIT is one of the most searched career tests in India, and parents often hear very different things about it. This guide explains what a DMIT test is, how it is done, what it costs and what the evidence says, in plain language." },
+      { type: 'p', text: "DMIT full form: Dermatoglyphics Multiple Intelligence Test. It is one of the most searched career tests in India, and parents often hear very different things about it. This guide explains what a DMIT test is, how it is done, what it costs and what the evidence says, in plain language." },
       { type: 'h', text: "DMIT full form" },
       { type: 'p', text: "DMIT stands for Dermatoglyphics Multiple Intelligence Test. Dermatoglyphics is the study of fingerprint and skin-ridge patterns." },
       { type: 'h', text: "How is a DMIT test done?" },

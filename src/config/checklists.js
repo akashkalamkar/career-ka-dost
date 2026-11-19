@@ -38,4 +38,19 @@ export const NEET_DOCUMENTS = {
     },
     { name: 'Student photo' },
   ],
+  /** Shown under the list and given to Google as questions and answers. Keep them to what the official list says. */
+  faqs: [
+    [
+      'Which documents are required for NEET counselling in Maharashtra?',
+      'For NEET UG 2026 state quota counselling, the State CET Cell, Maharashtra lists 11 documents: NEET admit card, NEET score card, proof of Indian nationality, domicile certificate, HSC (Class 12) marksheet, SSC (Class 10) passing certificate, medical fitness certificate (Annexure-H), caste certificate and caste validity certificate (reserved categories only), non-creamy layer certificate (where it applies) and a photo. All 11 are in the checklist above.',
+    ],
+    [
+      'Is a gap certificate, migration certificate or character certificate needed for NEET counselling in Maharashtra?',
+      'These are not on the State CET Cell "Required documents" list for NEET UG 2026 state quota counselling. If the college you join asks for any extra document when you report for admission, follow that college\u2019s list, and always check the latest official notice before each round.',
+    ],
+    [
+      'What is the medical fitness certificate (Annexure-H)?',
+      'It is the medical fitness certificate in the format the State CET Cell gives as Annexure-H. Download the format from the official State CET Cell website (cetcell.mahacet.org), get it filled in as the format says and keep it with your other documents.',
+    ],
+  ],
 }

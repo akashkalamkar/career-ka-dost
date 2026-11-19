@@ -2,6 +2,7 @@ import { POSTS } from './config/blog.js'
 import { FAQS } from './config/faq.js'
 import { SERVICES } from './config/services.js'
 import { HUB } from './config/hub.js'
+import { NEET_DOCUMENTS } from './config/checklists.js'
 import { FOUNDER } from './config/site.js'
 
 /**
@@ -67,7 +68,7 @@ export const PAGES = {
   },
   '/neet-counselling-documents-maharashtra': {
     title: 'NEET documents checklist',
-    fullTitle: 'NEET Counselling Documents List 2026 – Maharashtra',
+    fullTitle: 'Documents Required for NEET Counselling 2026 – Maharashtra',
     description: 'Free checklist of documents for NEET UG 2026 Maharashtra state quota counselling (MBBS, BDS, BAMS, BHMS, BPTh) from the State CET Cell. Tick, print, share.',
   },
   '/sitemap': {
@@ -194,6 +195,7 @@ function extraJsonLd(key) {
       },
     ]
   }
+  if (key === `/${NEET_DOCUMENTS.slug}`) return [faqPage(NEET_DOCUMENTS.faqs)]
   const service = SERVICES.find((sv) => key === `/${sv.slug}`)
   return service ? [faqPage(service.faqs)] : []
 }

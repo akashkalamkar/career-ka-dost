@@ -418,3 +418,11 @@ This is NOT what the original packaging recipe (section 11) assumed - it predate
 - New tab "MHT CET" on /resources (src/config/resources.js), subject card "MHT CET Checklist", file public/resources/mht-cet/mht-cet-pcm-chapterwise-checklist.pdf ("MHT CET PCM Chapterwise Checklist (2027)"). Plain download, no sign-in (login was removed on 18 Nov at the owner's request).
 - Told the owner where the PDF differs from the official MHT CET 2026 syllabus (cetcell Syllabus-Technical-2026.pdf) Std XI list: Chemistry is missing "Chemistry in everyday life"; Maths has "Measures of Dispersion", which is not on the official Std XI list. The map link in the PDF footer (maps.app.goo.gl/CfPyMR75UqJGrcSw5) differs from SITE.mapsUrl. The PDF was not edited.
 - Zip CKD-mhtcet-checklist.zip includes public/resources/mht-cet.
+
+## 19 Nov 2026 (later): titles from the owner's own Search Console + Business Profile data
+- Ubersuggest (India): "career counselling nagpur" 480/month, "neet counselling" 18,100, "mht cet counselling" 6,600. GBP searches: "career counselling in nagpur" 328, "dost" 642 (brand), "resume" 43, Marathi "मार्गदर्शन" 44 / "करिअर" 16.
+- Search Console: ~370 impressions, 0 clicks on "cap round / full form / meaning / what is cap round" -> CAP guide seoTitle now "What Is CAP Round? Full Form & MHT CET Process", heading "What is CAP round? Full form and meaning", first line gives the full form.
+- Stream guide seoTitle "Which Stream Is Best After 10th? How to Choose" (FAQ "Which stream is best after 10th?"); JoSAA guide seoTitle "How JoSAA Counselling Works: Rounds & Documents"; DMIT guide first line now starts with the full form.
+- NEET documents checklist: Google title "Documents Required for NEET Counselling 2026 – Maharashtra"; new "Common questions" (NEET_DOCUMENTS.faqs in src/config/checklists.js, FAQPage schema in seo.js): which documents, gap/migration/character certificate (not on the official list), Annexure-H. Nagpur hub already had the area line (HUB.areas) - unchanged.
+- Owner said NO to colleges and teacher training on the Schools page (do not add).
+- GBP advice given to owner (he does it himself): add "Educational consultant" category if missing, prices in Services, optional one Marathi line in the description, "Resume writing" service only if offered.

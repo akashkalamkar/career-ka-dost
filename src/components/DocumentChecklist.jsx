@@ -4,6 +4,7 @@ import { SITE } from '../config/site'
 import { btnInk, btnPrimary, container } from '../config/ui'
 import { trackEvent } from '../utils/analytics'
 import { bookProps } from '../utils/leadForm'
+import { RichText } from './BlogPost'
 import { ShareWhatsApp } from './ShareButtons'
 
 /**
@@ -124,6 +125,20 @@ export function DocumentChecklist() {
           <p className="mt-1 font-semibold text-[#8a0000]">
             Source: {LIST.source}. Documents and formats (Annexures) can change during counselling - check the State CET Cell website ({LIST.sourceUrl.replace('https://', '')}) before every round.
           </p>
+        </div>
+
+        <div className="mt-12 print:hidden">
+          <h2 className="font-display text-2xl font-extrabold leading-tight md:text-3xl">Common questions</h2>
+          <div className="mt-5 divide-y divide-line border-y border-line">
+            {LIST.faqs.map(([q, a]) => (
+              <div key={q} className="py-5">
+                <h3 className="font-display text-lg font-extrabold">{q}</h3>
+                <p className="mt-2 leading-relaxed text-ink-soft">
+                  <RichText text={a} />
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="mt-10 border-t-8 border-brand bg-paper-2 p-7 print:hidden">
